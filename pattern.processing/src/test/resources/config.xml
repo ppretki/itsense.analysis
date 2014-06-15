@@ -1,0 +1,11 @@
+<config>
+   	<event id="988" fileid="apache">
+   		<pattern>material-988_0_m</pattern>
+  	</event>
+
+   	<event id="680" fileid="apache">
+   		<pattern>material-680_0_m</pattern>
+  	</event>
+
+   	<file id="apache" path="/home/ppretki/Downloads/access.log.10"  timestampproducer="pl.com.itsense.analysis.event.ApacheLogDateTimeConverter"/>
+</config>
