@@ -2,9 +2,11 @@ package pl.com.itsense.analysis.event;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class EventProcessingEngine implements EEngine
 {
@@ -16,7 +18,8 @@ public class EventProcessingEngine implements EEngine
 	private String[] eventIds;
 	/** */
 	private ArrayList<EventProcessingHandler> handlers = new ArrayList<EventProcessingHandler>(); 
-	
+	/** */
+	private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
 	/** */
 	public void process(final EventProvider[] providers)
 	{
@@ -106,5 +109,37 @@ public class EventProcessingEngine implements EEngine
 	    {
 	        handlers.add(handler);
 	    }
+	}
+
+	/**
+	 * 
+	 */
+	public void log(final String msg, final LogLevel level) 
+	{
+		ArrayList<String> log = logs.get(level);
+		if (log == null)
+		{
+			log = new ArrayList<String>();
+			logs.put(level, log);
+		}
+		log.add(msg);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<String> getLogs(LogLevel level) 
+	{
+		return logs.get(level);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<EventProcessingHandler> getHandlers() 
+	{
+		return handlers;
 	}
 }

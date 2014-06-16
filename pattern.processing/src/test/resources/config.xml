@@ -1,11 +1,16 @@
 <config>
-   	<event id="988" fileid="apollo">
-   		<pattern>material-988_0_m</pattern>
+   	<event id="start" fileid="apollo">
+   		<pattern>start</pattern>
   	</event>
 
    	<event id="680" fileid="apollo">
    		<pattern>material-680_0_m</pattern>
   	</event>
 
+	<handler type="pl.com.itsense.analysis.event.log.StatisticsCollector">
+		<param value="DIFF(start)<6767->LOG.WARN('Start takes too long')">
+	</handler>
+	
    	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log"/>
+   	
 </config>

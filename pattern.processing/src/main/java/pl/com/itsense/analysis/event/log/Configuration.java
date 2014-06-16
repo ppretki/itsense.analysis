@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import org.apache.commons.digester3.Digester;
 import org.xml.sax.SAXException;
 
-import pl.com.itsense.analysis.event.Event;
-
 /**
  * 
  * @author ppretki
@@ -20,6 +18,9 @@ public class Configuration
 	private final ArrayList<EventConf> events = new ArrayList<EventConf>();
 	/** */
 	private final ArrayList<FileConf> files = new ArrayList<FileConf>();
+	/** */
+	private final ArrayList<HandlerConf> handlers = new ArrayList<HandlerConf>();
+
 	/** */
 	private String decimalFormat;
 	
@@ -34,17 +35,22 @@ public class Configuration
 		final Digester digester = new Digester();
 		digester.setValidating( false );
 		digester.addObjectCreate( "config", "pl.com.itsense.analysis.event.log.Configuration" );
+		digester.addObjectCreate( "config/handler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addObjectCreate( "config/file", "pl.com.itsense.analysis.event.log.FileConf" );
 		digester.addObjectCreate( "config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf" );
-		
+		digester.addObjectCreate( "config/handler/param", "pl.com.itsense.analysis.event.log.HandlerParamConf" );
+
+		digester.addSetNext( "config/handler", "addHandler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addSetNext( "config/event", "addEvent", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addSetNext( "config/file", "addFile", "pl.com.itsense.analysis.log.event.FileConf" );
 		digester.addSetNext( "config/event/pattern", "addPattern", "pl.com.itsense.analysis.event.log.Pattern" );
+		digester.addSetNext( "config/handler/param", "addParam", "pl.com.itsense.analysis.event.log.HandlerParamConf" );
 		
 		digester.addCallMethod( "config/event/pattern", "setValue", 0);
-		
 		digester.addSetProperties( "config" );
+		digester.addSetProperties( "config/handler" );
+		digester.addSetProperties( "config/handler/param" );
 		digester.addSetProperties( "config/event" );
 		digester.addSetProperties( "config/file" );
 		
@@ -98,6 +104,25 @@ public class Configuration
 	{
 		files.add(file);
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<HandlerConf> getHandlers() 
+	{
+		return handlers;
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 */
+	public void addHandler(final HandlerConf handler)
+	{
+		handlers.add(handler);
+	}
+	
 	
 	/**
 	 * 

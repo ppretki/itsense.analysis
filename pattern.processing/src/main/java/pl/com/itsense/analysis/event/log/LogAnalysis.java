@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import pl.com.itsense.analysis.event.EventProcessingEngine;
+import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProvider;
 
 /**
@@ -33,10 +34,24 @@ public class LogAnalysis
 			}
 			eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]), file.getFrom());
 		}
-		final StatisticsCollector collector = new StatisticsCollector();
-		engine.addProcessingHandler(collector);
+		
+		for (final HandlerConf handlers : configuration.getHandlers())
+		{
+			try 
+			{
+				Class<?> type = Class.forName(handlers.getType());
+				if (type.isAssignableFrom(EventProcessingHandler.class))
+				{
+					final EventProcessingHandler handler = (EventProcessingHandler)type.newInstance();
+					engine.addProcessingHandler(handler);
+				}
+			} 
+			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
+			{
+				e.printStackTrace();
+			}
+		}
 		engine.process(eventProviders);
-		System.out.println(collector);
 		final DecimalFormat formatter = (configuration.getDecimalFormat() != null) ? new DecimalFormat(configuration.getDecimalFormat()) : null; 
 		StatisticsCollector.createReport("/home/P.Pretki/MyProjects/results/Pings.html", collector.getStatistics(), formatter);
 	}

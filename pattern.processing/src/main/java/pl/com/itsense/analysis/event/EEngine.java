@@ -1,9 +1,16 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface EEngine 
 {
+	enum LogLevel
+	{
+		INFO,
+		WARNING,
+		ERROR
+	}
 	/**
 	 * 
 	 * @param eventId
@@ -19,4 +26,16 @@ public interface EEngine
 	 * 
 	 */
 	Collection<Event> getEvents(String eventId);
+	/**
+	 * 
+	 */
+	void log(String msg, LogLevel level);
+	/**
+	 * 
+	 */
+	List<String> getLogs(LogLevel level);
+	/**
+	 * 
+	 */
+	List<EventProcessingHandler> getHandlers();
 }

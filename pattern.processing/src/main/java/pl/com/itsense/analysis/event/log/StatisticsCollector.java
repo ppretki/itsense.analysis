@@ -174,4 +174,20 @@ public class StatisticsCollector implements EventProcessingHandler
             }
     }
 
+    /**
+     * 
+     */
+	@Override
+	public void init(final HandlerParamConf[] params) 
+	{
+		for (final HandlerParamConf param : params)
+		{
+			final String value = param.getValue();
+			
+		}
+	}
+    
+    
+    
+
 }

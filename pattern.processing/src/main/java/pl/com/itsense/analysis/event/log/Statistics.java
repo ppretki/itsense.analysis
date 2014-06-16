@@ -1,7 +1,5 @@
 package pl.com.itsense.analysis.event.log;
 
-import java.util.LinkedList;
-
 /**
  * 
  * @author ppretki
@@ -98,11 +96,21 @@ public class Statistics
             return min;
         }
         
-        public String getMaxLine() {
+        /**
+         * 
+         * @return
+         */
+        public String getMaxLine() 
+        {
             return maxLine;
         }
         
-        public String getMinLine() {
+        /**
+         * 
+         * @return
+         */
+        public String getMinLine() 
+        {
             return minLine;
         }
 }
