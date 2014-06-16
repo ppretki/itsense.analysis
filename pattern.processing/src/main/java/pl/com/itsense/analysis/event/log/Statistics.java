@@ -18,35 +18,27 @@ public class Statistics
         /** */
         private double max= Double.MIN_VALUE;
         /** */
-        private LinkedList<String> maxLines = new LinkedList<String>();
+        private String maxLine = new String();
         /** */
-        private LinkedList<String> minLines = new LinkedList<String>();
+        private String minLine = new String();
         
         /**
          * 
          * @param timestamp
          */
-        public void add(final double value, final long timestamp, final LinkedList<String> lines)
+        public void add(final double value, final long timestamp, final String line)
         {
                 avg = (avg * count + value)/( count + 1 );  
                 count++;
                 if (value < min)
                 {
                         min = value;
-                        if ((lines != null) && (lines.size() > 0))
-                        {
-                            minLines.clear();
-                            minLines.addAll(lines);
-                        }
+                        maxLine = line;
                 }
                 if (value > max)
                 {
                         max = value;
-                        if ((lines != null) && (lines.size() > 0))
-                        {
-                            maxLines.clear();
-                            maxLines.addAll(lines);
-                        }
+                        minLine = line;
                 }
         }
         
@@ -59,14 +51,14 @@ public class Statistics
                 final StringBuffer sb = new StringBuffer();
                 sb.append("count = " + count + ", AVG = " + avg + ", MAX = " +  max + ", MIN = " +  min).append("\n");
                 sb.append("MAX Line:").append("\n");
-                for (final String line : maxLines)
+                if (maxLine != null)
                 {
-                        sb.append(line).append("\n");
+                        sb.append(maxLine).append("\n");
                 }
-                sb.append("MIN Line:").append("\n").append(minLines).append("\n");
-                for (final String line : minLines)
+                sb.append("MIN Line:").append("\n");
+                if (minLine != null)
                 {
-                        sb.append(line).append("\n");
+                        sb.append(minLine).append("\n");
                 }
                 return sb.toString();
         }
@@ -104,5 +96,13 @@ public class Statistics
         public double getMin() 
         {
             return min;
+        }
+        
+        public String getMaxLine() {
+            return maxLine;
+        }
+        
+        public String getMinLine() {
+            return minLine;
         }
 }

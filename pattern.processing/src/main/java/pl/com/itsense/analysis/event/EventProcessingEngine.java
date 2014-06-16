@@ -95,39 +95,6 @@ public class EventProcessingEngine implements EEngine
 		return events.get(eventId);
 	}
 	
-	/**
-	 * 
-	 * @author ppretki
-	 *
-	 */
-	private class EventWrapper implements Event
-	{
-		/** */
-		private final Event event;
-		/** */
-		private EventWrapper next;
-		/** */
-		public EventWrapper(final Event event) 
-		{
-			this.event = event;
-		}
-		/**
-		 * 
-		 */
-		public long getTimestamp() 
-		{
-			return event.getTimestamp();
-		}
-		/**
-		 * 
-		 */
-		public String getId() 
-		{
-			return event.getId();
-		}
-		
-	}
-	
 	
 	/**
 	 * 

@@ -11,6 +11,8 @@ public class FileConf
 	private String id;
 	/** */
 	private String path;
+	/** */
+	private String from;
 	
 	/**
 	 * 
@@ -46,6 +48,23 @@ public class FileConf
 	{
 		this.path = path;
 	}
+	
+	/**
+	 * 
+	 * @param from
+	 */
+	public void setFrom(final String from) 
+	{
+            this.from = from;
+        }
+	/**
+	 * 
+	 * @return
+	 */
+	public String getFrom() 
+	{
+            return from;
+        }
 	
 	/**
 	 * 

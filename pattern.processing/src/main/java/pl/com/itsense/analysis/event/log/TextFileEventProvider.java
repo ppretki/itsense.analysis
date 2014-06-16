@@ -29,12 +29,15 @@ public class TextFileEventProvider implements EventProvider
 	private Iterator<Event> iterator;
 	/** */
 	private final EventConf[] events;
+	/** */
+	private String from;
 
 	/** */
-	public TextFileEventProvider(final File file, final EventConf[] events)
+	public TextFileEventProvider(final File file, final EventConf[] events, final String from)
 	{
 		this.file = file;
 		this.events = events;
+		this.from = from;
 	}
 	
 	/** */
@@ -143,6 +146,14 @@ public class TextFileEventProvider implements EventProvider
 			{
 				while ((line = reader.readLine()) != null)
 				{
+				        if (from != null)
+				        {
+				            if (line.contains(from))
+				            {
+				                from = null; 
+				            }
+                                            continue;
+				        }
 					for (final EventConf event : events)
 					{
 						for (final PatternConf pattern : event.getPatterns())
@@ -153,7 +164,7 @@ public class TextFileEventProvider implements EventProvider
 								final long timestamp = parseDateTimeStamp(line);
 								if (timestamp > -1)
 								{
-									return new TextLine(event.getId(), timestamp); 	
+									return new TextLine(event.getId(), timestamp, line); 	
 								}
 							}
 						}
@@ -206,13 +217,16 @@ public class TextFileEventProvider implements EventProvider
 			private final long timestamp;
 			/** */
 			private final String eventId;
+			/** */
+			private final String line;
 			/**
 			 * 
 			 */
-			public TextLine(final String eventId, final long timestamp) 
+			public TextLine(final String eventId, final long timestamp, final String line) 
 			{
 				this.eventId = eventId;
 				this.timestamp = timestamp;
+				this.line = line;
 			}
 			
 			/** */
@@ -228,6 +242,13 @@ public class TextFileEventProvider implements EventProvider
 				return eventId;
 			}
 			
+			/**
+			 * 
+			 */
+			public Object getData() 
+			{
+			    return line;
+			}
 		}
 		
 	}

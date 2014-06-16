@@ -12,4 +12,8 @@ public interface Event
 	 * @return
 	 */
 	String getId();
+	/**
+	 * 
+	 */
+	Object getData();
 }

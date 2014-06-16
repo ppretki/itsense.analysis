@@ -31,7 +31,7 @@ public class LogAnalysis
 					events.add(event);
 				}
 			}
-			eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]));
+			eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]), file.getFrom());
 		}
 		final StatisticsCollector collector = new StatisticsCollector();
 		engine.addProcessingHandler(collector);

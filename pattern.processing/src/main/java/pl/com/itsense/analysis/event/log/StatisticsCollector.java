@@ -46,7 +46,8 @@ public class StatisticsCollector implements EventProcessingHandler
                         stat = new Statistics();
                         eventRow.put(e.getId(), stat);
                     }
-                    stat.add(event.getTimestamp() - t, event.getTimestamp() , null);
+                    
+                    stat.add(event.getTimestamp() - t, event.getTimestamp() , event.getData().toString());
                 }
             }
         }
@@ -134,6 +135,27 @@ public class StatisticsCollector implements EventProcessingHandler
                     }
                     sb.append("</tr>\n");
             }
+            sb.append("</table>\n");
+    
+            
+            sb.append("<table>\n");
+            for (final String pattern0 : patterns)
+            {
+                final HashMap<String,Statistics> stats = data.get(pattern0);
+                for (final String pattern1 : patterns)
+                {
+                    final Statistics statistics = stats.get(pattern1);
+                    if (statistics != null)
+                    {
+                        sb.append("<tr>\n");
+                        sb.append("<td><b>" + pattern0 + "</b> -> <b>" + pattern1 + "</b> </td>\n");
+                        sb.append("<td>" + statistics.getMinLine() + " </td>\n");
+                        sb.append("<td>" + statistics.getMinLine() + " </td>\n");
+                        sb.append("</tr>\n");
+                    }
+                }
+            }
+            
             sb.append("</table>\n");
             sb.append("</body>\n");
             sb.append("</html>\n");

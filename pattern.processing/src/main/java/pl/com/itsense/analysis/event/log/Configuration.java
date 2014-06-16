@@ -22,6 +22,7 @@ public class Configuration
 	private final ArrayList<FileConf> files = new ArrayList<FileConf>();
 	/** */
 	private String decimalFormat;
+	
 	/**
 	 * 
 	 * @param xmlConfigFile
