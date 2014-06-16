@@ -60,13 +60,13 @@ public class EventProcessingEngine implements EEngine
 			}
 			else
 			{
-				events.get(event.getId()).add(event);
-				lastEvents.put(event.getId(), event);
-				currentEvents[eventIndex] = null;
 				for (final EventProcessingHandler handler : handlers)
 				{
 					handler.processEvent(event, this);
 				}
+				events.get(event.getId()).add(event);
+				lastEvents.put(event.getId(), event);
+				currentEvents[eventIndex] = null;
 			}
 		}
 	}
@@ -126,5 +126,18 @@ public class EventProcessingEngine implements EEngine
 			return event.getId();
 		}
 		
+	}
+	
+	
+	/**
+	 * 
+	 * @param handler
+	 */
+	public void addProcessingHandler(final EventProcessingHandler handler)
+	{
+	    if (!handlers.contains(handler))
+	    {
+	        handlers.add(handler);
+	    }
 	}
 }

@@ -22,20 +22,18 @@ public class TextFileEventProvider implements EventProvider
 {
 	/** */
 	private final File file;
+	//16-11:32:58.816
 	/** */
-	private final Pattern timeStampPattern;
-	/** */
-	private final int[] groups;
+	private final Pattern timeStampPattern = Pattern.compile("^(\\d{2})-(\\d{2}):(\\d{2}):(\\d{2}).(\\d{3})");
 	/** */
 	private Iterator<Event> iterator;
 	/** */
 	private final EventConf[] events;
+
 	/** */
-	public TextFileEventProvider(final File file, final EventConf[] events, final TimeS)
+	public TextFileEventProvider(final File file, final EventConf[] events)
 	{
 		this.file = file;
-		this.timeStampPattern = timeStampPattern;
-		this.groups = groups;
 		this.events = events;
 	}
 	
@@ -54,7 +52,12 @@ public class TextFileEventProvider implements EventProvider
 	 */
 	public String[] getEventIds() 
 	{
-		return null;
+	    final String[] ids = new String[events.length];
+	    for (int i = 0 ; i < events.length ; i++)
+	    {
+	        ids[i] = events[i].getId();
+	    }
+	    return ids;
 	}
 
 	/**
@@ -117,13 +120,14 @@ public class TextFileEventProvider implements EventProvider
 		private long parseDateTimeStamp(final String line)
 		{
 			final Matcher matcher = timeStampPattern.matcher(line);
-			if (matcher.find() && (matcher.groupCount() == (groups.length-1)))
+			if (matcher.find() && (matcher.groupCount() == 5))
 			{
-				for (int i = 1 ; i < matcher.groupCount(); i++)
-				{
-					calendar.set(groups[i-1], Integer.parseInt(matcher.group(i)));
-				}
-				return calendar.getTimeInMillis();
+			    calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(matcher.group(1)));
+			    calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(matcher.group(2)));
+			    calendar.set(Calendar.MINUTE, Integer.parseInt(matcher.group(3)));
+			    calendar.set(Calendar.SECOND, Integer.parseInt(matcher.group(4)));
+			    calendar.set(Calendar.MILLISECOND, Integer.parseInt(matcher.group(5)));
+			    return calendar.getTimeInMillis();
 			}
 			return -1;
 		}

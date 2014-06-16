@@ -11,8 +11,6 @@ public class FileConf
 	private String id;
 	/** */
 	private String path;
-	/** */
-	private String timestampProducer;
 	
 	/**
 	 * 
@@ -48,24 +46,6 @@ public class FileConf
 	{
 		this.path = path;
 	}
-
-	/**
-	 * 
-	 * @param timestampproducer
-	 */
-	public void setTimestampProducer(final String timestampProducer) 
-	{
-		this.timestampProducer = timestampProducer;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getTimestampProducer() 
-	{
-		return timestampProducer;
-	}
 	
 	/**
 	 * 
@@ -73,7 +53,7 @@ public class FileConf
 	@Override
 	public String toString() 
 	{
-		return "File: id = " + id + ", path = " + path + ", timestampProducer = " + timestampProducer;
+		return "File: id = " + id + ", path = " + path;
 	}
 	
 }
