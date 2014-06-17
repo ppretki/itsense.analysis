@@ -8,9 +8,13 @@
   	</event>
 
 	<handler type="pl.com.itsense.analysis.event.log.StatisticsCollector">
-		<param value="DIFF(start)<6767->LOG.WARN('Start takes too long')">
+		<property name="report" value="/home/P.Pretki/stb/logfileAppolo.log"/>
 	</handler>
 	
+	<report fileid="result" type="pl.com.itsense.analysis.event.log.HTMLReport">
+		<property name=>
+	</report>
    	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log"/>
+   	<file id="result" path="/home/P.Pretki/stb/logfileAppolo.log"/>
    	
 </config>

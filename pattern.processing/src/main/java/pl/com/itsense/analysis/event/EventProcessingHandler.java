@@ -1,6 +1,6 @@
 package pl.com.itsense.analysis.event;
 
-import pl.com.itsense.analysis.event.log.HandlerParamConf;
+import pl.com.itsense.analysis.event.log.PropertyConf;
 
 /**
  * 
@@ -12,5 +12,5 @@ public interface EventProcessingHandler
 	/** */
 	void processEvent(Event event, EEngine engine);
 	/** */
-	void init(HandlerParamConf[] params);
+	void init(PropertyConf[] params);
 }

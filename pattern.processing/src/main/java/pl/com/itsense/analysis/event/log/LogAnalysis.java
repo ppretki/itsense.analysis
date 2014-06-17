@@ -44,6 +44,10 @@ public class LogAnalysis
 				{
 					final EventProcessingHandler handler = (EventProcessingHandler)type.newInstance();
 					engine.addProcessingHandler(handler);
+					if (!handlers.getParams().isEmpty())
+					{
+						handler.init(handlers.getParams().toArray(new PropertyConf[0]));
+					}
 				}
 			} 
 			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 

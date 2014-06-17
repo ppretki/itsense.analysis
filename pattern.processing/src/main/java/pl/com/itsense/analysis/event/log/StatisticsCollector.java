@@ -18,6 +18,16 @@ import pl.com.itsense.analysis.event.EventProcessingHandler;
  */
 public class StatisticsCollector implements EventProcessingHandler 
 {
+	/**
+	 * 
+	 * @author ppretki
+	 *
+	 */
+	public enum Parameters
+	{
+		REPORT
+	}
+	
     /** */
     private final HashMap<String,HashMap<String,Statistics>> statistics = new HashMap<String,HashMap<String,Statistics>>();
     
@@ -178,9 +188,9 @@ public class StatisticsCollector implements EventProcessingHandler
      * 
      */
 	@Override
-	public void init(final HandlerParamConf[] params) 
+	public void init(final PropertyConf[] params) 
 	{
-		for (final HandlerParamConf param : params)
+		for (final PropertyConf param : params)
 		{
 			final String value = param.getValue();
 			

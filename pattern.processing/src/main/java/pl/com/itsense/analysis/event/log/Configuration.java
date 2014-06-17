@@ -39,13 +39,13 @@ public class Configuration
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addObjectCreate( "config/file", "pl.com.itsense.analysis.event.log.FileConf" );
 		digester.addObjectCreate( "config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf" );
-		digester.addObjectCreate( "config/handler/param", "pl.com.itsense.analysis.event.log.HandlerParamConf" );
+		digester.addObjectCreate( "config/handler/param", "pl.com.itsense.analysis.event.log.PropertyConf" );
 
 		digester.addSetNext( "config/handler", "addHandler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addSetNext( "config/event", "addEvent", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addSetNext( "config/file", "addFile", "pl.com.itsense.analysis.log.event.FileConf" );
 		digester.addSetNext( "config/event/pattern", "addPattern", "pl.com.itsense.analysis.event.log.Pattern" );
-		digester.addSetNext( "config/handler/param", "addParam", "pl.com.itsense.analysis.event.log.HandlerParamConf" );
+		digester.addSetNext( "config/handler/param", "addParam", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		
 		digester.addCallMethod( "config/event/pattern", "setValue", 0);
 		digester.addSetProperties( "config" );
