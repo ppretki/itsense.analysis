@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log;
+package pl.com.itsense.analysis.event.log.providers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.log.EventConf;
+import pl.com.itsense.analysis.event.log.PatternConf;
 
 /**
  * 

@@ -20,9 +20,8 @@ public class Configuration
 	private final ArrayList<FileConf> files = new ArrayList<FileConf>();
 	/** */
 	private final ArrayList<HandlerConf> handlers = new ArrayList<HandlerConf>();
-
 	/** */
-	private String decimalFormat;
+	private final ArrayList<ReportConf> reports = new ArrayList<ReportConf>();
 	
 	/**
 	 * 
@@ -36,6 +35,7 @@ public class Configuration
 		digester.setValidating( false );
 		digester.addObjectCreate( "config", "pl.com.itsense.analysis.event.log.Configuration" );
 		digester.addObjectCreate( "config/handler", "pl.com.itsense.analysis.event.log.HandlerConf" );
+		digester.addObjectCreate( "config/report", "pl.com.itsense.analysis.event.log.ReportConf" );
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addObjectCreate( "config/file", "pl.com.itsense.analysis.event.log.FileConf" );
 		digester.addObjectCreate( "config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf" );
@@ -44,6 +44,7 @@ public class Configuration
 		digester.addSetNext( "config/handler", "addHandler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addSetNext( "config/event", "addEvent", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addSetNext( "config/file", "addFile", "pl.com.itsense.analysis.log.event.FileConf" );
+		digester.addSetNext( "config/report", "addReport", "pl.com.itsense.analysis.log.event.ReportConf" );
 		digester.addSetNext( "config/event/pattern", "addPattern", "pl.com.itsense.analysis.event.log.Pattern" );
 		digester.addSetNext( "config/handler/property", "addProperty", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		
@@ -53,6 +54,7 @@ public class Configuration
 		digester.addSetProperties( "config/handler/param" );
 		digester.addSetProperties( "config/event" );
 		digester.addSetProperties( "config/file" );
+		digester.addSetProperties( "config/report" );
 		
 		try 
 		{
@@ -123,39 +125,50 @@ public class Configuration
 		handlers.add(handler);
 	}
 	
-	
-	/**
-	 * 
-	 * @param decimalFormat
-	 */
-	public void setDecimalFormat(final String decimalFormat) 
-	{
-            this.decimalFormat = decimalFormat;
-        }
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public String getDecimalFormat() 
+	public ArrayList<ReportConf> getReports() 
 	{
-            return decimalFormat;
-        }
+		return reports;
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 */
+	public void addReport(final ReportConf report)
+	{
+		reports.add(report);
+	}
+	
+	
 	
 	
 	@Override
 	public String toString() 
 	{
 	    final StringBuffer sb = new StringBuffer();
-	    sb.append("Configuration: decimalFormat = " + decimalFormat).append("\n");
+	    sb.append("Configuration:").append("\n");
 	    for (final EventConf event : events)
 	    {
 	        sb.append(event).append("\n");    
 	    }
-            for (final FileConf file : files)
-            {
-                sb.append(file).append("\n");    
-            }
+        for (final FileConf file : files)
+        {
+        	sb.append(file).append("\n");    
+        }
+        for (final HandlerConf handler : handlers)
+        {
+        	sb.append(handler).append("\n");
+        }
+        for (final ReportConf report : reports)
+        {
+        	sb.append(report).append("\n");
+        }
+            
 	    return sb.toString();
 	}
 	

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
 /**
  * 

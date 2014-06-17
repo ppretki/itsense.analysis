@@ -7,13 +7,12 @@
    		<pattern>material-680_0_m</pattern>
   	</event>
 
-	<handler type="pl.com.itsense.analysis.event.log.StatisticsCollector">
+	<handler type="pl.com.itsense.analysis.event.log.handlers.StatisticsCollector">
 	</handler>
 	
-	<report fileid="result" type="pl.com.itsense.analysis.event.log.HTMLReport">
+	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
 		<property name="" value=""/>
 	</report>
    	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log"/>
-   	<file id="result" path="/home/P.Pretki/stb/logfileAppolo.log"/>
    	
 </config>

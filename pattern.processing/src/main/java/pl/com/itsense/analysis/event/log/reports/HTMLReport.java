@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log;
+package pl.com.itsense.analysis.event.log.reports;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,85 +8,49 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
+import pl.com.itsense.analysis.event.Report;
+import pl.com.itsense.analysis.event.log.Statistics;
+import pl.com.itsense.analysis.event.log.handlers.StatisticsCollector;
 
 /**
  * 
- * @author P.Pretki
+ * @author ppretki
  *
  */
-public class StatisticsCollector extends PropertyHolderImpl implements EventProcessingHandler 
+public class HTMLReport extends PropertyHolderImpl implements Report 
 {
+	/**
+	 * 
+	 */
+	public enum Properties 
+	{
+		FILE,
+		FORMATTER
+	}
 	
-    /** */
-    private final HashMap<String,HashMap<String,Statistics>> statistics = new HashMap<String,HashMap<String,Statistics>>();
-    
-    /**
-     * 
-     */
-    public void processEvent(final Event event, final EEngine engine) 
-    {
-        HashMap<String,Statistics> eventRow = statistics.get(event.getId());
-        if (eventRow == null)
-        {
-            eventRow = new HashMap<String,Statistics>();
-            statistics.put(event.getId(), eventRow);
-        }
-        for (final String id : engine.getEventIds())
-        {
-            final Event e = engine.getEvent(id);
-            if (e != null)
-            {
-                final long t = e.getTimestamp();
-                if (t > -1)
-                {
-                    Statistics stat = eventRow.get(e.getId());
-                    if (stat == null)
-                    {
-                        stat = new Statistics();
-                        eventRow.put(e.getId(), stat);
-                    }
-                    
-                    stat.add(event.getTimestamp() - t, event.getTimestamp() , event.getData().toString());
-                }
-            }
-        }
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public HashMap<String, HashMap<String, Statistics>> getStatistics() 
-    {
-        return statistics;
-    }
-    /**
-     * 
-     */
-    @Override
-    public String toString() 
-    {
-        final StringBuffer sb = new StringBuffer();
-        for (final String p0 : statistics.keySet())
-        {
-            final HashMap<String,Statistics> stats = statistics.get(p0);
-            for (final String p1 : stats.keySet())
-            {
-                sb.append(p0 + " -> " + p1 + ": " + stats.get(p1).toString()).append("\n");
-            }
-        }
-        return sb.toString();
-    }
-    
-    
+	@Override
+	public void create(final EEngine engine) 
+	{
+		for (final EventProcessingHandler handler : engine.getHandlers())
+		{
+			if (handler instanceof StatisticsCollector)
+			{
+				final String fileName = getProperty(Properties.FILE.name());
+				final String forrmatter = getProperty(Properties.FORMATTER.name());
+				final HashMap<String, HashMap<String, Statistics>> statistics = ((StatisticsCollector)handler).getStatistics();
+				createReport(fileName, statistics, forrmatter != null ? new DecimalFormat(forrmatter) : null);
+			}
+		}
+	}
+	
+	
     /**
      * 
      * @param data
      */
-    public static void createReport(final String fileName, final HashMap<String,HashMap<String,Statistics>> data, final DecimalFormat formatter)
+    public void createReport(final String fileName, final HashMap<String,HashMap<String,Statistics>> data, final DecimalFormat formatter)
     {
             final StringBuffer sb = new StringBuffer();
             sb.append("<html>\n");
@@ -176,8 +140,5 @@ public class StatisticsCollector extends PropertyHolderImpl implements EventProc
             }
     }
 
-    
-    
-    
 
 }
