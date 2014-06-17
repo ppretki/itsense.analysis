@@ -12,7 +12,7 @@ public class HandlerConf
 	/** */
 	private String type;
 	/** */
-	private ArrayList<PropertyConf> params = new ArrayList<PropertyConf>();
+	private ArrayList<PropertyConf> properties = new ArrayList<PropertyConf>();
 	/**
 	 * 
 	 * @return
@@ -35,18 +35,18 @@ public class HandlerConf
 	 * 
 	 * @return
 	 */
-	public ArrayList<PropertyConf> getParams() 
+	public ArrayList<PropertyConf> getProperties() 
 	{
-		return params;
+		return properties;
 	}
 	
 	/**
 	 * 
 	 * @param params
 	 */
-	public void setParams(final ArrayList<PropertyConf> params) 
+	public void setParams(final ArrayList<PropertyConf> properties) 
 	{
-		this.params = params;
+		this.properties = properties;
 	}
 	
 	
@@ -54,9 +54,9 @@ public class HandlerConf
 	 * 
 	 * @param param
 	 */
-	public void addParam(final PropertyConf param)
+	public void addProperty(final PropertyConf property)
 	{
-		params.add(param);
+		properties.add(property);
 	}
 	
 }

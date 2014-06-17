@@ -1,7 +1,6 @@
 package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import pl.com.itsense.analysis.event.EventProcessingEngine;
@@ -35,18 +34,18 @@ public class LogAnalysis
 			eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]), file.getFrom());
 		}
 		
-		for (final HandlerConf handlers : configuration.getHandlers())
+		for (final HandlerConf handler : configuration.getHandlers())
 		{
 			try 
 			{
-				Class<?> type = Class.forName(handlers.getType());
+				Class<?> type = Class.forName(handler.getType());
 				if (type.isAssignableFrom(EventProcessingHandler.class))
 				{
-					final EventProcessingHandler handler = (EventProcessingHandler)type.newInstance();
-					engine.addProcessingHandler(handler);
-					if (!handlers.getParams().isEmpty())
+					final EventProcessingHandler handlerInstance = (EventProcessingHandler)type.newInstance();
+					engine.addProcessingHandler(handlerInstance);
+					for (final PropertyConf property : handler.getProperties())
 					{
-						handler.init(handlers.getParams().toArray(new PropertyConf[0]));
+						handlerInstance.setProperty(property.getName(), property.getValue());
 					}
 				}
 			} 
@@ -56,8 +55,6 @@ public class LogAnalysis
 			}
 		}
 		engine.process(eventProviders);
-		final DecimalFormat formatter = (configuration.getDecimalFormat() != null) ? new DecimalFormat(configuration.getDecimalFormat()) : null; 
-		StatisticsCollector.createReport("/home/P.Pretki/MyProjects/results/Pings.html", collector.getStatistics(), formatter);
 	}
 
 }

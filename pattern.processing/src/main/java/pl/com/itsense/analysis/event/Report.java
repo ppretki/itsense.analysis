@@ -7,6 +7,5 @@ package pl.com.itsense.analysis.event;
  */
 public interface Report 
 {
-	
-	void set(String property, String value);
+	void create(EEngine engine);
 }

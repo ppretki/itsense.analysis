@@ -8,11 +8,10 @@
   	</event>
 
 	<handler type="pl.com.itsense.analysis.event.log.StatisticsCollector">
-		<property name="report" value="/home/P.Pretki/stb/logfileAppolo.log"/>
 	</handler>
 	
 	<report fileid="result" type="pl.com.itsense.analysis.event.log.HTMLReport">
-		<property name=>
+		<property name="" value=""/>
 	</report>
    	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log"/>
    	<file id="result" path="/home/P.Pretki/stb/logfileAppolo.log"/>
