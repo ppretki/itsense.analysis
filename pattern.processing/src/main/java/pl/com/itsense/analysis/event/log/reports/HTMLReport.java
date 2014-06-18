@@ -37,8 +37,8 @@ public class HTMLReport extends PropertyHolderImpl implements Report
 		{
 			if (handler instanceof StatisticsCollector)
 			{
-				final String fileName = getProperty(Properties.FILE.name());
-				final String forrmatter = getProperty(Properties.FORMATTER.name());
+				final String fileName = getProperty(Properties.FILE.name().toLowerCase());
+				final String forrmatter = getProperty(Properties.FORMATTER.name().toLowerCase());
 				final HashMap<String, HashMap<String, Statistics>> statistics = ((StatisticsCollector)handler).getStatistics();
 				createReport(fileName, statistics, forrmatter != null ? new DecimalFormat(forrmatter) : null);
 			}

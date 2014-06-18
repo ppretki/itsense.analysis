@@ -38,4 +38,9 @@ public interface EEngine
 	 * 
 	 */
 	List<EventProcessingHandler> getHandlers();
+	       /**
+         * 
+         */
+        List<Report> getReports();
+
 }

@@ -17,7 +17,9 @@ public class EventProcessingEngine implements EEngine
 	/** */
 	private String[] eventIds;
 	/** */
-	private ArrayList<EventProcessingHandler> handlers = new ArrayList<EventProcessingHandler>(); 
+	private ArrayList<EventProcessingHandler> handlers = new ArrayList<EventProcessingHandler>()
+	        ;
+	private ArrayList<Report> reports = new ArrayList<Report>();
 	/** */
 	private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
 	/** */
@@ -72,6 +74,10 @@ public class EventProcessingEngine implements EEngine
 				currentEvents[eventIndex] = null;
 			}
 		}
+		for (final Report report : reports)
+		{
+		    report.create(this);
+		}
 	}
 
 	/**
@@ -110,6 +116,17 @@ public class EventProcessingEngine implements EEngine
 	        handlers.add(handler);
 	    }
 	}
+        /**
+         * 
+         * @param handler
+         */
+        public void addReport(final Report report)
+        {
+            if (!reports.contains(report))
+            {
+                reports.add(report);
+            }
+        }
 
 	/**
 	 * 
@@ -142,4 +159,11 @@ public class EventProcessingEngine implements EEngine
 	{
 		return handlers;
 	}
+
+
+    @Override
+    public List<Report> getReports() 
+    {
+        return reports;
+    }
 }

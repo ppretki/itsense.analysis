@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
 /**
@@ -40,7 +41,7 @@ public class LogAnalysis
 			try 
 			{
 				Class<?> type = Class.forName(handler.getType());
-				if (type.isAssignableFrom(EventProcessingHandler.class))
+				if (EventProcessingHandler.class.isAssignableFrom(type))
 				{
 					final EventProcessingHandler handlerInstance = (EventProcessingHandler)type.newInstance();
 					engine.addProcessingHandler(handlerInstance);
@@ -55,6 +56,27 @@ public class LogAnalysis
 				e.printStackTrace();
 			}
 		}
+
+		for (final ReportConf reportConf : configuration.getReports())
+                {
+                        try 
+                        {
+                                Class<?> type = Class.forName(reportConf.getType());
+                                if (Report.class.isAssignableFrom(type))
+                                {
+                                        final Report reportInstance = (Report)type.newInstance();
+                                        engine.addReport(reportInstance);
+                                        for (final PropertyConf property : reportConf.getProperties())
+                                        {
+                                                reportInstance.setProperty(property.getName(), property.getValue());
+                                        }
+                                }
+                        } 
+                        catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
+                        {
+                                e.printStackTrace();
+                        }
+                }
 		engine.process(eventProviders);
 	}
 

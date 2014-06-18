@@ -45,4 +45,12 @@ public class PropertyConf
 	{
 		return name;
 	}
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() 
+	{
+	return "Property: name = " + name + ", value = " + value;
+	}
 }
