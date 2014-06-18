@@ -11,6 +11,8 @@ public class Statistics
         private int count;
         /** */
         private double avg;
+        /** http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance */
+        private double M2;
         /** */
         private double min = Double.MAX_VALUE;
         /** */
@@ -26,18 +28,20 @@ public class Statistics
          */
         public void add(final double value, final long timestamp, final String line)
         {
-                avg = (avg * count + value)/( count + 1 );  
-                count++;
-                if (value < min)
-                {
-                        min = value;
-                        maxLine = line;
-                }
-                if (value > max)
-                {
-                        max = value;
-                        minLine = line;
-                }
+            count++;
+            final double  delta = (value - avg);
+            avg += delta/count;
+            M2  += delta * (value - avg);
+            if (value < min)
+            {
+                min = value;
+                maxLine = line;
+            }
+            if (value > max)
+            {
+                max = value;
+                minLine = line;
+            }
         }
         
         /**
@@ -112,5 +116,14 @@ public class Statistics
         public String getMinLine() 
         {
             return minLine;
+        }
+        
+        /**
+         * 
+         * @return
+         */
+        public double getStd() 
+        {
+            return count > 1 ? Math.sqrt(M2/(count-1)) : 0.0;
         }
 }
