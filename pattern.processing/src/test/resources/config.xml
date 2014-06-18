@@ -1,18 +1,30 @@
 <config>
-   	<event id="start" fileid="apollo">
-   		<pattern>start</pattern>
+   	<event id="RECEIVED" fileid="apollo">
+	  <pattern>PING RECEIVED</pattern>
   	</event>
 
-   	<event id="680" fileid="apollo">
-   		<pattern>material-680_0_m</pattern>
+   	<event id="SEND" fileid="apollo">
+	  <pattern>MultiroomConnectionEventManager.sendPingNotification</pattern>
   	</event>
+
+  	<event id="START DECODING" fileid="apollo">
+	  <pattern>[PNG Decoder] starting decoding</pattern>
+  	</event>
+
+  	<event id="END DECODING" fileid="apollo">
+	  <pattern>[PNG Decoder] decoder took</pattern>
+  	</event>
+	
+	
+	
 
 	<handler type="pl.com.itsense.analysis.event.log.handlers.StatisticsCollector">
 	</handler>
 	
 	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
-		<property name="" value=""/>
+	    <property name="file" value="/home/ppretki/MyProjects/logs/report.html"/>
+	    <property name="formatter" value="#.##"/>
 	</report>
-   	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log"/>
+	<file id="apollo" path="/home/ppretki/MyProjects/logs/logfileAppolo.log"/>
    	
 </config>

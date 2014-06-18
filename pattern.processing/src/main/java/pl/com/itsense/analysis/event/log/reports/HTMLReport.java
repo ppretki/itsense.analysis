@@ -90,6 +90,7 @@ public class HTMLReport extends PropertyHolderImpl implements Report
                                         sb.append("<span> avg = " + formatter.format(statistics.getAvg()) + "</span><br>\n");
                                     }
                                     
+                                    sb.append("<span> std = " + statistics.getStd() + "</span><br>\n");
                                     sb.append("<span> max = " + statistics.getMax() + "</span><br>\n");
                                     sb.append("<span> min = " + statistics.getMin() + "</span>\n");
                                     sb.append("</td>\n");
@@ -116,7 +117,7 @@ public class HTMLReport extends PropertyHolderImpl implements Report
                         sb.append("<tr>\n");
                         sb.append("<td><b>" + pattern0 + "</b> -> <b>" + pattern1 + "</b> </td>\n");
                         sb.append("<td>" + statistics.getMinLine() + " </td>\n");
-                        sb.append("<td>" + statistics.getMinLine() + " </td>\n");
+                        sb.append("<td>" + statistics.getMaxLine() + " </td>\n");
                         sb.append("</tr>\n");
                     }
                 }

@@ -35,12 +35,12 @@ public class Statistics
             if (value < min)
             {
                 min = value;
-                maxLine = line;
+                minLine = line;
             }
             if (value > max)
             {
                 max = value;
-                minLine = line;
+                maxLine = line;
             }
         }
         
