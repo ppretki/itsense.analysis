@@ -1,15 +1,19 @@
 package pl.com.itsense.analysis.event;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class EventProcessingEngine implements EEngine
 {
+	private static final String ALL = (new BigInteger(128, new Random())).toString(); 
 	/** */
 	private final LinkedHashMap<String,LinkedList<Event>> events = new LinkedHashMap<String,LinkedList<Event>>();
 	/** */
@@ -17,8 +21,10 @@ public class EventProcessingEngine implements EEngine
 	/** */
 	private String[] eventIds;
 	/** */
-	private ArrayList<EventProcessingHandler> handlers = new ArrayList<EventProcessingHandler>()
-	        ;
+	private Event lastEvent;
+	/** */
+	private HashMap<String,List<EventProcessingHandler>> handlers = new HashMap<String,List<EventProcessingHandler>>();
+	/** */
 	private ArrayList<Report> reports = new ArrayList<Report>();
 	/** */
 	private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
@@ -65,18 +71,30 @@ public class EventProcessingEngine implements EEngine
 			}
 			else
 			{
-				for (final EventProcessingHandler handler : handlers)
-				{
-					handler.processEvent(event, this);
-				}
-				events.get(event.getId()).add(event);
-				lastEvents.put(event.getId(), event);
+				dispatchEvent(event, handlers.get(event.getId()));
+				dispatchEvent(event, handlers.get(ALL));
+				lastEvent = event;
+				events.get(lastEvent.getId()).add(lastEvent);
+				lastEvents.put(lastEvent.getId(), lastEvent);
 				currentEvents[eventIndex] = null;
 			}
 		}
 		for (final Report report : reports)
 		{
 		    report.create(this);
+		}
+	}
+	/**
+	 * 
+	 */
+	private void dispatchEvent(final Event event, final List<EventProcessingHandler> dest)
+	{
+		if ((dest != null) && !dest.isEmpty())
+		{
+			for (final EventProcessingHandler handler : dest)
+			{
+				handler.processEvent(event, this);
+			}
 		}
 	}
 
@@ -111,10 +129,39 @@ public class EventProcessingEngine implements EEngine
 	 */
 	public void addProcessingHandler(final EventProcessingHandler handler)
 	{
-	    if (!handlers.contains(handler))
-	    {
-	        handlers.add(handler);
-	    }
+		final String values = handler.getProperty("events");
+		
+		if ((values == null) || (values.length() == 0))
+		{
+			List<EventProcessingHandler> list = handlers.get(ALL);
+			if (list == null)
+			{
+				list = new ArrayList<EventProcessingHandler>();
+				handlers.put(ALL, list);
+			}
+			if (!list.contains(handler))
+			{
+				list.add(handler);
+			}
+		}
+		else
+		{
+			for (final String eventId : values.split(","))
+			{
+				final String trimmedEventId = eventId.trim();
+				List<EventProcessingHandler> list = handlers.get(trimmedEventId);
+				if (list == null)
+				{
+					list = new ArrayList<EventProcessingHandler>();
+					handlers.put(trimmedEventId, list);
+				}
+				if (!list.contains(handler))
+				{
+					list.add(handler);
+				}
+				
+			}
+		}
 	}
         /**
          * 
@@ -155,15 +202,26 @@ public class EventProcessingEngine implements EEngine
 	 * 
 	 */
 	@Override
-	public List<EventProcessingHandler> getHandlers() 
+	public EventProcessingHandler[] getHandlers() 
 	{
-		return handlers;
+		final HashSet<EventProcessingHandler> set = new HashSet<EventProcessingHandler>(); 
+		for (final String eventId : handlers.keySet())
+		{
+			set.addAll(handlers.get(eventId));
+		}
+		return set.toArray(new EventProcessingHandler[0]);
 	}
 
 
     @Override
-    public List<Report> getReports() 
+    public Report[] getReports() 
     {
-        return reports;
+        return reports.toArray(new Report[0]);
     }
+
+	@Override
+	public Event getEvent() 
+	{
+		return lastEvent;
+	}
 }

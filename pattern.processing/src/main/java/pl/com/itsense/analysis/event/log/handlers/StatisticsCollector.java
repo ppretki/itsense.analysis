@@ -30,23 +30,20 @@ public class StatisticsCollector extends PropertyHolderImpl implements EventProc
             eventRow = new HashMap<String,Statistics>();
             statistics.put(event.getId(), eventRow);
         }
-        for (final String id : engine.getEventIds())
+        
+        final Event e = engine.getEvent();
+        if (e != null)
         {
-            final Event e = engine.getEvent(id);
-            if (e != null)
+        	final long t = e.getTimestamp();
+            if (t > -1)
             {
-                final long t = e.getTimestamp();
-                if (t > -1)
+            	Statistics stat = eventRow.get(e.getId());
+                if (stat == null)
                 {
-                    Statistics stat = eventRow.get(e.getId());
-                    if (stat == null)
-                    {
-                        stat = new Statistics();
-                        eventRow.put(e.getId(), stat);
-                    }
-                    
-                    stat.add(event.getTimestamp() - t, event.getTimestamp() , event.getData().toString());
+                	stat = new Statistics();
+                    eventRow.put(e.getId(), stat);
                 }
+                stat.add(event.getTimestamp() - t, event.getTimestamp() , event.getData().toString());
             }
         }
     }

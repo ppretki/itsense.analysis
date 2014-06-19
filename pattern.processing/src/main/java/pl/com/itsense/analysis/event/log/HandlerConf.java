@@ -59,4 +59,16 @@ public class HandlerConf
 		properties.add(property);
 	}
 	
+	
+    @Override
+    public String toString() 
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Handler: type = " + type).append("\n");
+        for (final PropertyConf property : properties)
+        {
+            sb.append(property).append("\n");
+        }
+        return sb.toString();
+    }
 }

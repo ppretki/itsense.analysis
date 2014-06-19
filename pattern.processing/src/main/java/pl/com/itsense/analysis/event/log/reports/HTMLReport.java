@@ -83,14 +83,14 @@ public class HTMLReport extends PropertyHolderImpl implements Report
                                     sb.append("<span> count = " + statistics.getCount() + "</span><br>\n");
                                     if (formatter == null)
                                     {
-                                        sb.append("<span> avg = " + statistics.getAvg() + "</span><br>\n");    
+                                        sb.append("<span> avg = " + statistics.getAvg() + "</span><br>\n");
+                                        sb.append("<span> std = " + statistics.getStd() + "</span><br>\n");
                                     }
                                     else
                                     {
                                         sb.append("<span> avg = " + formatter.format(statistics.getAvg()) + "</span><br>\n");
+                                        sb.append("<span> avg = " + formatter.format(statistics.getStd()) + "</span><br>\n");
                                     }
-                                    
-                                    sb.append("<span> std = " + statistics.getStd() + "</span><br>\n");
                                     sb.append("<span> max = " + statistics.getMax() + "</span><br>\n");
                                     sb.append("<span> min = " + statistics.getMin() + "</span>\n");
                                     sb.append("</td>\n");

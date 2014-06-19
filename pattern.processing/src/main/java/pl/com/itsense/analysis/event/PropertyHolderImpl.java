@@ -23,6 +23,6 @@ public class PropertyHolderImpl implements PropertyHolder
 	{
 		return properties.get(name);
 	}	
-
+	
 	
 }

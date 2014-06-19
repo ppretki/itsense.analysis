@@ -21,6 +21,11 @@ public interface EEngine
 	 * 
 	 * @return
 	 */
+	Event getEvent();
+	/**
+	 * 
+	 * @return
+	 */
 	String[] getEventIds();
 	/**
 	 * 
@@ -37,10 +42,10 @@ public interface EEngine
 	/**
 	 * 
 	 */
-	List<EventProcessingHandler> getHandlers();
-	       /**
-         * 
-         */
-        List<Report> getReports();
+	EventProcessingHandler[] getHandlers();
+	/**
+	 * 
+    */
+	Report[] getReports();
 
 }

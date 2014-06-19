@@ -40,15 +40,15 @@ public class LogAnalysis
 		{
 			try 
 			{
-				Class<?> type = Class.forName(handler.getType());
+				final Class<?> type = Class.forName(handler.getType());
 				if (EventProcessingHandler.class.isAssignableFrom(type))
 				{
 					final EventProcessingHandler handlerInstance = (EventProcessingHandler)type.newInstance();
-					engine.addProcessingHandler(handlerInstance);
 					for (final PropertyConf property : handler.getProperties())
 					{
 						handlerInstance.setProperty(property.getName(), property.getValue());
 					}
+					engine.addProcessingHandler(handlerInstance);
 				}
 			} 
 			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
@@ -58,25 +58,25 @@ public class LogAnalysis
 		}
 
 		for (final ReportConf reportConf : configuration.getReports())
+        {
+			try 
+            {
+				final Class<?> type = Class.forName(reportConf.getType());
+				if (Report.class.isAssignableFrom(type))
                 {
-                        try 
-                        {
-                                Class<?> type = Class.forName(reportConf.getType());
-                                if (Report.class.isAssignableFrom(type))
-                                {
-                                        final Report reportInstance = (Report)type.newInstance();
-                                        engine.addReport(reportInstance);
-                                        for (final PropertyConf property : reportConf.getProperties())
-                                        {
-                                                reportInstance.setProperty(property.getName(), property.getValue());
-                                        }
-                                }
-                        } 
-                        catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
-                        {
-                                e.printStackTrace();
-                        }
+					final Report reportInstance = (Report)type.newInstance();
+                    for (final PropertyConf property : reportConf.getProperties())
+                    {
+                    	reportInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    engine.addReport(reportInstance);
                 }
+            } 
+            catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
+            {
+            	e.printStackTrace();
+            }
+        }
 		engine.process(eventProviders);
 	}
 
