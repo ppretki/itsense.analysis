@@ -55,10 +55,11 @@ public class Configuration
 		digester.addSetProperties( "config/handler" );
 		digester.addSetProperties( "config/handler/param" );
 		digester.addSetProperties( "config/event" );
+		digester.addSetProperties( "config/event/pattern" );
 		digester.addSetProperties( "config/file" );
 		digester.addSetProperties( "config/report" );
-                digester.addSetProperties( "config/handler/property" );
-                digester.addSetProperties( "config/report/property" );
+        digester.addSetProperties( "config/handler/property" );
+        digester.addSetProperties( "config/report/property" );
 		
 		try 
 		{

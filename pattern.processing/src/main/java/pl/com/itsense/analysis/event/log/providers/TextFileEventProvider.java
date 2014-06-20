@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +35,39 @@ public class TextFileEventProvider implements EventProvider
 	private final EventConf[] events;
 	/** */
 	private String from;
-
+	/** */
+	private HashMap<EventConf,Pattern[]> patterns = new HashMap<EventConf,Pattern[]>();   
+	/** */
+	private HashMap<Pattern, PatternConf> patternDefs = new HashMap<Pattern,PatternConf>();
+	
 	/** */
 	public TextFileEventProvider(final File file, final EventConf[] events, final String from)
 	{
 		this.file = file;
 		this.events = events;
 		this.from = from;
+		init();
+	}
+	
+	/** */
+	private void init()
+	{
+		for (final EventConf event : events)
+		{
+			final List<PatternConf> list = event.getPatterns();
+			if (!list.isEmpty())
+			{
+				int i = 0;
+				final Pattern[] p = new Pattern[list.size()]; 
+				for (final PatternConf pattern : list)
+				{
+					p[i] = Pattern.compile(pattern.getRegExp());
+					patternDefs.put(p[i], pattern);
+					i++;
+				}
+				patterns.put(event, p);
+			}
+		}
 	}
 	
 	/** */
@@ -148,25 +176,36 @@ public class TextFileEventProvider implements EventProvider
 			{
 				while ((line = reader.readLine()) != null)
 				{
-				        if (from != null)
+					if (from != null)
+				    {
+						if (line.contains(from))
 				        {
-				            if (line.contains(from))
-				            {
-				                from = null; 
-				            }
-                                            continue;
+							from = null; 
 				        }
-					for (final EventConf event : events)
+				        continue;
+				    }
+					
+					for (final EventConf event : patterns.keySet())
 					{
-						for (final PatternConf pattern : event.getPatterns())
+						
+						for (final Pattern pattern : patterns.get(event))
 						{
-							final int index = line.indexOf(pattern.getValue());
-							if (index > -1)
+							final Matcher matcher = pattern.matcher(line);
+							if (matcher.find())
 							{
 								final long timestamp = parseDateTimeStamp(line);
 								if (timestamp > -1)
 								{
-									return new TextLine(event.getId(), timestamp, line); 	
+									final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
+									if (matcher.groupCount() > 0)
+									{
+										final PatternConf patternConf = patternDefs.get(pattern);
+										for (int i = 1 ; i < (matcher.groupCount()+1); i++)
+										{
+											textLineEvent.addField("$" + patternConf.getId() + "[" + i + "]", matcher.group(i));
+										}
+									}
+									return textLineEvent; 	
 								}
 							}
 						}
@@ -220,15 +259,14 @@ public class TextFileEventProvider implements EventProvider
 			/** */
 			private final String eventId;
 			/** */
-			private final String line;
+			private final HashMap<String,String> fields = new HashMap<String,String>(); 
 			/**
 			 * 
 			 */
-			public TextLine(final String eventId, final long timestamp, final String line) 
+			public TextLine(final String eventId, final long timestamp) 
 			{
 				this.eventId = eventId;
 				this.timestamp = timestamp;
-				this.line = line;
 			}
 			
 			/** */
@@ -247,9 +285,18 @@ public class TextFileEventProvider implements EventProvider
 			/**
 			 * 
 			 */
-			public Object getData() 
+			public void addField(final String field, final String value)
 			{
-			    return line;
+				fields.put(field, value);
+			}
+			
+			/**
+			 * 
+			 */
+			@Override
+			public String getField(final String field) 
+			{
+				return fields.get(field);
 			}
 		}
 		

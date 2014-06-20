@@ -43,7 +43,7 @@ public class StatisticsCollector extends PropertyHolderImpl implements EventProc
                 	stat = new Statistics();
                     eventRow.put(e.getId(), stat);
                 }
-                stat.add(event.getTimestamp() - t, event.getTimestamp() , event.getData().toString());
+                stat.add(event.getTimestamp() - t, event.getTimestamp());
             }
         }
     }

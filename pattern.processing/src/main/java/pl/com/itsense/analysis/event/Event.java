@@ -15,5 +15,5 @@ public interface Event
 	/**
 	 * 
 	 */
-	Object getData();
+	String getField(String field);
 }

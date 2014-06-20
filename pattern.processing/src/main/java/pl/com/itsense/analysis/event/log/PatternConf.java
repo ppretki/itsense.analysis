@@ -8,31 +8,49 @@ package pl.com.itsense.analysis.event.log;
 public class PatternConf 
 {
 	/** */
-	private String value;
+	private String id;
+	/** */
+	private String regExp;
 	
 	/**
 	 * 
-	 * @param value
+	 * @param id
 	 */
-	public void setValue(String value) 
+	public void setId(final String id) 
 	{
-		this.value = value;
+		this.id = id;
+	}
+	
+	public void setRegExp(final String regExp) 
+	{
+		this.regExp = regExp;
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public String getValue() 
+	public String getId() 
 	{
-		return value;
+		return id;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getRegExp() 
+	{
+		return regExp;
+	}
+
+	
 	/**
 	 * 
 	 */
 	@Override
 	public String toString() 
 	{
-		return "Pattern: value = " + value;
+		return "Pattern: id = " + id + ", regExp = " + regExp;
 	}
 }

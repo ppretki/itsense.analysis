@@ -116,8 +116,8 @@ public class HTMLReport extends PropertyHolderImpl implements Report
                     {
                         sb.append("<tr>\n");
                         sb.append("<td><b>" + pattern0 + "</b> -> <b>" + pattern1 + "</b> </td>\n");
-                        sb.append("<td>" + statistics.getMinLine() + " </td>\n");
-                        sb.append("<td>" + statistics.getMaxLine() + " </td>\n");
+                        //sb.append("<td>" + statistics.getMinLine() + " </td>\n");
+                        //sb.append("<td>" + statistics.getMaxLine() + " </td>\n");
                         sb.append("</tr>\n");
                     }
                 }

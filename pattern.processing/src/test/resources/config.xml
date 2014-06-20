@@ -14,10 +14,25 @@
   	<event id="END DECODING" fileid="apollo">
 	  <pattern>[PNG Decoder] decoder took</pattern>
   	</event>
-	
+
+  	<event id="STATE_ACTIVATE" fileid="apollo">
+		<pattern>[STATE_ACTIVATE] (\w+)</pattern>
+  	</event>
+
+  	<event id="STATES_PATH_CHANGE" fileid="apollo">
+  		<pattern>[STATES_PATH_CHANGE] source: (\w+), target: (\w+)</pattern>
+  	</event>
+  	
 	<handler type="pl.com.itsense.analysis.event.log.handlers.StatisticsCollector">
-	  <property name="events" value="RECEIVED,SEND,START DECODING,END DECODING"/>
+		<property name="events" value="RECEIVED,SEND,START DECODING,END DECODING"/>
 	</handler>
+
+	<handler type="pl.com.itsense.analysis.event.log.handlers.Counter">
+		<property name="events" value="STATE_ACTIVATE"/>
+	</handler>
+	
+	
+	
 	
 	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
 	    <property name="file" value="/home/ppretki/MyProjects/logs/report.html"/>

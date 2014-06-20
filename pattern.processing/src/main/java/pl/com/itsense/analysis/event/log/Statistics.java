@@ -17,16 +17,12 @@ public class Statistics
         private double min = Double.MAX_VALUE;
         /** */
         private double max= Double.MIN_VALUE;
-        /** */
-        private String maxLine = new String();
-        /** */
-        private String minLine = new String();
         
         /**
          * 
          * @param timestamp
          */
-        public void add(final double value, final long timestamp, final String line)
+        public void add(final double value, final long timestamp)
         {
             count++;
             final double  delta = (value - avg);
@@ -35,12 +31,10 @@ public class Statistics
             if (value < min)
             {
                 min = value;
-                minLine = line;
             }
             if (value > max)
             {
                 max = value;
-                maxLine = line;
             }
         }
         
@@ -53,15 +47,7 @@ public class Statistics
                 final StringBuffer sb = new StringBuffer();
                 sb.append("count = " + count + ", AVG = " + avg + ", MAX = " +  max + ", MIN = " +  min).append("\n");
                 sb.append("MAX Line:").append("\n");
-                if (maxLine != null)
-                {
-                        sb.append(maxLine).append("\n");
-                }
                 sb.append("MIN Line:").append("\n");
-                if (minLine != null)
-                {
-                        sb.append(minLine).append("\n");
-                }
                 return sb.toString();
         }
         
@@ -70,7 +56,8 @@ public class Statistics
          * 
          * @return
          */
-        public double getAvg() {
+        public double getAvg() 
+        {
             return avg;
         }
         
@@ -78,7 +65,8 @@ public class Statistics
          * 
          * @return
          */
-        public double getMax() {
+        public double getMax() 
+        {
             return max;
         }
         
@@ -100,23 +88,6 @@ public class Statistics
             return min;
         }
         
-        /**
-         * 
-         * @return
-         */
-        public String getMaxLine() 
-        {
-            return maxLine;
-        }
-        
-        /**
-         * 
-         * @return
-         */
-        public String getMinLine() 
-        {
-            return minLine;
-        }
         
         /**
          * 
