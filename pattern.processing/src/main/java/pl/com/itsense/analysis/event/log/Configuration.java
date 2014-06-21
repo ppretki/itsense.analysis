@@ -22,6 +22,8 @@ public class Configuration
 	private final ArrayList<HandlerConf> handlers = new ArrayList<HandlerConf>();
 	/** */
 	private final ArrayList<ReportConf> reports = new ArrayList<ReportConf>();
+	/** */
+	private final ArrayList<ActionConf> actions = new ArrayList<ActionConf>();
 	
 	/**
 	 * 
@@ -34,6 +36,7 @@ public class Configuration
 		final Digester digester = new Digester();
 		digester.setValidating( false );
 		digester.addObjectCreate( "config", "pl.com.itsense.analysis.event.log.Configuration" );
+		digester.addObjectCreate( "config/action", "pl.com.itsense.analysis.event.log.ActionConf" );
 		digester.addObjectCreate( "config/handler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addObjectCreate( "config/report", "pl.com.itsense.analysis.event.log.ReportConf" );
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
@@ -42,6 +45,7 @@ public class Configuration
 		digester.addObjectCreate( "config/handler/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		digester.addObjectCreate( "config/report/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
 
+		digester.addSetNext( "config/action", "addAction", "pl.com.itsense.analysis.event.log.ActionConf" );
 		digester.addSetNext( "config/handler", "addHandler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addSetNext( "config/event", "addEvent", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addSetNext( "config/file", "addFile", "pl.com.itsense.analysis.log.event.FileConf" );
@@ -52,6 +56,7 @@ public class Configuration
 		
 		digester.addCallMethod( "config/event/pattern", "setValue", 0);
 		digester.addSetProperties( "config" );
+		digester.addSetProperties( "config/action" );
 		digester.addSetProperties( "config/handler" );
 		digester.addSetProperties( "config/handler/param" );
 		digester.addSetProperties( "config/event" );
@@ -129,6 +134,15 @@ public class Configuration
 	{
 		handlers.add(handler);
 	}
+
+	/**
+	 * 
+	 * @param file
+	 */
+	public void addAction(final ActionConf action)
+	{
+		actions.add(action);
+	}
 	
 
 	/**
@@ -149,7 +163,14 @@ public class Configuration
 		reports.add(report);
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<ActionConf> getActions() 
+	{
+		return actions;
+	}
 	
 	
 	@Override
@@ -172,6 +193,10 @@ public class Configuration
         for (final ReportConf report : reports)
         {
         	sb.append(report).append("\n");
+        }
+        for (final ActionConf action : actions)
+        {
+        	sb.append(action).append("\n");
         }
             
 	    return sb.toString();

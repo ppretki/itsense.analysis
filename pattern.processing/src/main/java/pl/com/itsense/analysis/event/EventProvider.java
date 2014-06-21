@@ -8,5 +8,4 @@ package pl.com.itsense.analysis.event;
  */
 public interface EventProvider extends Iterable<Event> 
 {
-	String[] getEventIds();
 }

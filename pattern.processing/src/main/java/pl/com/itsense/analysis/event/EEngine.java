@@ -42,7 +42,12 @@ public interface EEngine
 	/**
 	 * 
 	 */
-	EventProcessingHandler[] getHandlers();
+	ActionProcessingHandler[] getActionHandlers();
+	/**
+	 * 
+	 */
+	EventProcessingHandler[] getEventHandlers();
+
 	/**
 	 * 
     */

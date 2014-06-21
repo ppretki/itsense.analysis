@@ -22,7 +22,7 @@ public class Statistics
          * 
          * @param timestamp
          */
-        public void add(final double value, final long timestamp)
+        public void add(final double value)
         {
             count++;
             final double  delta = (value - avg);

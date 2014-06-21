@@ -7,8 +7,8 @@ import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import pl.com.itsense.analysis.event.ActionProcessingHandler;
 import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.Statistics;
@@ -33,7 +33,7 @@ public class HTMLReport extends PropertyHolderImpl implements Report
 	@Override
 	public void create(final EEngine engine) 
 	{
-		for (final EventProcessingHandler handler : engine.getHandlers())
+		for (final ActionProcessingHandler handler : engine.getActionHandlers())
 		{
 			if (handler instanceof StatisticsCollector)
 			{

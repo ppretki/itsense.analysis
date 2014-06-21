@@ -1,6 +1,6 @@
 package pl.com.itsense.analysis.event;
 
-public interface Event
+public interface Event  extends PropertyHolder
 {
 	/**
 	 * 
@@ -12,8 +12,4 @@ public interface Event
 	 * @return
 	 */
 	String getId();
-	/**
-	 * 
-	 */
-	String getField(String field);
 }

@@ -3,6 +3,7 @@ package pl.com.itsense.analysis.event.log;
 import java.io.File;
 import java.util.ArrayList;
 
+import pl.com.itsense.analysis.event.ActionProcessingHandler;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProvider;
@@ -41,14 +42,23 @@ public class LogAnalysis
 			try 
 			{
 				final Class<?> type = Class.forName(handler.getType());
-				if (EventProcessingHandler.class.isAssignableFrom(type))
+				if (ActionProcessingHandler.class.isAssignableFrom(type))
+				{
+					final ActionProcessingHandler handlerInstance = (ActionProcessingHandler)type.newInstance();
+					for (final PropertyConf property : handler.getProperties())
+					{
+						handlerInstance.setProperty(property.getName(), property.getValue());
+					}
+					engine.addActionProcessingHandler(handlerInstance);
+				}
+				else if (EventProcessingHandler.class.isAssignableFrom(type))
 				{
 					final EventProcessingHandler handlerInstance = (EventProcessingHandler)type.newInstance();
 					for (final PropertyConf property : handler.getProperties())
 					{
 						handlerInstance.setProperty(property.getName(), property.getValue());
 					}
-					engine.addProcessingHandler(handlerInstance);
+					engine.addEventProcessingHandler(handlerInstance);
 				}
 			} 
 			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 

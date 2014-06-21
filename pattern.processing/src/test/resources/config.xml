@@ -16,24 +16,20 @@
   	</event>
 
   	<event id="STATE_ACTIVATE" fileid="apollo">
-		<pattern>[STATE_ACTIVATE] (\w+)</pattern>
-  	</event>
-
-  	<event id="STATES_PATH_CHANGE" fileid="apollo">
-  		<pattern>[STATES_PATH_CHANGE] source: (\w+), target: (\w+)</pattern>
+		<pattern id="activate" regExp="[STATE_ACTIVATE] (\w+)"/>
   	</event>
   	
+  	<event id="STATES_PATH_CHANGE" fileid="apollo">
+  		<pattern id="change" regExp="[STATES_PATH_CHANGE] source: (\w+), target: (\w+)"/>
+  	</event>
+
+  	
 	<handler type="pl.com.itsense.analysis.event.log.handlers.StatisticsCollector">
-		<property name="events" value="RECEIVED,SEND,START DECODING,END DECODING"/>
+		<property name="actions" value="CONNECTION, TRANSITION"/>
 	</handler>
 
-	<handler type="pl.com.itsense.analysis.event.log.handlers.Counter">
-		<property name="events" value="STATE_ACTIVATE"/>
-	</handler>
-	
-	
-	
-	
+	<handler type="pl.com.itsense.analysis.event.db.EventDBHandler"/>
+
 	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
 	    <property name="file" value="/home/ppretki/MyProjects/logs/report.html"/>
 	    <property name="formatter" value="#.##"/>

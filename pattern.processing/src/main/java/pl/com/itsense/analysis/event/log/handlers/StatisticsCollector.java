@@ -2,9 +2,10 @@ package pl.com.itsense.analysis.event.log.handlers;
 
 import java.util.HashMap;
 
+import pl.com.itsense.analysis.event.Action;
+import pl.com.itsense.analysis.event.ActionProcessingHandler;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.Statistics;
 
@@ -13,7 +14,7 @@ import pl.com.itsense.analysis.event.log.Statistics;
  * @author P.Pretki
  *
  */
-public class StatisticsCollector extends PropertyHolderImpl implements EventProcessingHandler 
+public class StatisticsCollector extends PropertyHolderImpl implements ActionProcessingHandler 
 {
 	
     /** */
@@ -22,13 +23,13 @@ public class StatisticsCollector extends PropertyHolderImpl implements EventProc
     /**
      * 
      */
-    public void processEvent(final Event event, final EEngine engine) 
+    public void processAction(final Action action, final EEngine engine) 
     {
-        HashMap<String,Statistics> eventRow = statistics.get(event.getId());
+        HashMap<String,Statistics> eventRow = statistics.get(action.getId());
         if (eventRow == null)
         {
             eventRow = new HashMap<String,Statistics>();
-            statistics.put(event.getId(), eventRow);
+            statistics.put(action.getId(), eventRow);
         }
         
         final Event e = engine.getEvent();
@@ -43,7 +44,7 @@ public class StatisticsCollector extends PropertyHolderImpl implements EventProc
                 	stat = new Statistics();
                     eventRow.put(e.getId(), stat);
                 }
-                stat.add(event.getTimestamp() - t, event.getTimestamp());
+                stat.add(action.getClose() - action.getOpen());
             }
         }
     }

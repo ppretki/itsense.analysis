@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class PropertyHolderImpl implements PropertyHolder 
 {
@@ -22,6 +23,15 @@ public class PropertyHolderImpl implements PropertyHolder
 	public String getProperty(final String name) 
 	{
 		return properties.get(name);
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public Set<String> getProperties() 
+	{
+		return properties.keySet();
 	}	
 	
 	

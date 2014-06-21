@@ -11,6 +11,8 @@ public class PatternConf
 	private String id;
 	/** */
 	private String regExp;
+	/** */
+	private String value;
 	
 	/**
 	 * 
@@ -47,10 +49,28 @@ public class PatternConf
 	
 	/**
 	 * 
+	 * @return
+	 */
+	public String getValue() 
+	{
+		return value;
+	}
+	
+	/**
+	 * 
+	 * @param exp
+	 */
+	public void setValue(final String value) 
+	{
+		this.value = value;
+	}
+	
+	/**
+	 * 
 	 */
 	@Override
 	public String toString() 
 	{
-		return "Pattern: id = " + id + ", regExp = " + regExp;
+		return "Pattern: id = " + id + ", regExp = " + regExp + ", value = " + value;
 	}
 }

@@ -14,11 +14,14 @@ import java.util.regex.Pattern;
 
 import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.EventConf;
 import pl.com.itsense.analysis.event.log.PatternConf;
 
 /**
  * 
+ * 
+ * TODO: add events to dispatch queue - single line may produce multiple events. 
  * @author ppretki
  *
  */
@@ -61,7 +64,8 @@ public class TextFileEventProvider implements EventProvider
 				final Pattern[] p = new Pattern[list.size()]; 
 				for (final PatternConf pattern : list)
 				{
-					p[i] = Pattern.compile(pattern.getRegExp());
+					final String expression = pattern.getRegExp() == null ? pattern.getValue() : pattern.getRegExp();
+					p[i] = Pattern.compile(expression);
 					patternDefs.put(p[i], pattern);
 					i++;
 				}
@@ -197,12 +201,13 @@ public class TextFileEventProvider implements EventProvider
 								if (timestamp > -1)
 								{
 									final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
+									textLineEvent.setProperty("line", line);
 									if (matcher.groupCount() > 0)
 									{
 										final PatternConf patternConf = patternDefs.get(pattern);
 										for (int i = 1 ; i < (matcher.groupCount()+1); i++)
 										{
-											textLineEvent.addField("$" + patternConf.getId() + "[" + i + "]", matcher.group(i));
+											textLineEvent.setProperty(patternConf.getId() + "$" + i, matcher.group(i));
 										}
 									}
 									return textLineEvent; 	
@@ -252,14 +257,12 @@ public class TextFileEventProvider implements EventProvider
 		 * @author ppretki
 		 *
 		 */
-		private class TextLine implements Event
+		private class TextLine extends PropertyHolderImpl implements Event
 		{
 			/** */
 			private final long timestamp;
 			/** */
 			private final String eventId;
-			/** */
-			private final HashMap<String,String> fields = new HashMap<String,String>(); 
 			/**
 			 * 
 			 */
@@ -285,18 +288,10 @@ public class TextFileEventProvider implements EventProvider
 			/**
 			 * 
 			 */
-			public void addField(final String field, final String value)
-			{
-				fields.put(field, value);
-			}
-			
-			/**
-			 * 
-			 */
 			@Override
-			public String getField(final String field) 
+			public String getProperty(String name) 
 			{
-				return fields.get(field);
+				return super.getProperty(name);
 			}
 		}
 		
