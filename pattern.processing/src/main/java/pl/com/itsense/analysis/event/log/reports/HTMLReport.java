@@ -12,7 +12,7 @@ import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.Statistics;
-import pl.com.itsense.analysis.event.log.handlers.StatisticsCollector;
+import pl.com.itsense.analysis.event.log.handler.action.StatisticsCollector;
 
 /**
  * 

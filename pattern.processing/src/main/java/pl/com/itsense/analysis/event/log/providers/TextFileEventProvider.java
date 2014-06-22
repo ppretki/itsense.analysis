@@ -115,6 +115,7 @@ public class TextFileEventProvider implements EventProvider
 		{
 			try 
 			{
+				calendar.setTimeInMillis(file.lastModified());
 				reader = new BufferedReader(new FileReader(file));
 				
 			} 

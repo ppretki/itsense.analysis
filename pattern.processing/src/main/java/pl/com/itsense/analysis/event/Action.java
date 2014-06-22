@@ -4,17 +4,14 @@ public interface Action
 {
 	enum Status
 	{
-		OPENED,
-		TERMINATED,
-		CLOSED
+		OPEN,
+		TERMINATE,
+		CLOSE
 	}
-	/** */
-	long getOpen();
-	/** */
-	long getClose();
 	/** */
 	Status getStatus();
 	/** */
 	String getId();
-	
+	/** */
+	Event getEvent(Status status);
 }

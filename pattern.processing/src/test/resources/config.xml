@@ -1,39 +1,19 @@
 <config>
    	<event id="RECEIVED" fileid="apollo">
-	  <pattern>PING RECEIVED</pattern>
+	  <pattern id="receivedPing">PING RECEIVED: (\w+)</pattern>
   	</event>
 
-   	<event id="SEND" fileid="apollo">
-	  <pattern>MultiroomConnectionEventManager.sendPingNotification</pattern>
+  	<event id="SEND" fileid="apollo">
+	  <pattern id="sendPing">HnSecEventManager.sendNotification\(\) MultiroomNotification\(MRCon,(\w+)\)</pattern>
   	</event>
 
-  	<event id="START DECODING" fileid="apollo">
-	  <pattern>[PNG Decoder] starting decoding</pattern>
-  	</event>
-
-  	<event id="END DECODING" fileid="apollo">
-	  <pattern>[PNG Decoder] decoder took</pattern>
-  	</event>
-
-  	<event id="STATE_ACTIVATE" fileid="apollo">
-		<pattern id="activate" regExp="[STATE_ACTIVATE] (\w+)"/>
-  	</event>
+	<action id="CONNECTION_HEART_BEAT" open="SEND" close="RECEIVED">
+	  <openactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.ConnectionMonitor"/> 
+	  <closeactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.ConnectionMonitor"/>
+	</action>
   	
-  	<event id="STATES_PATH_CHANGE" fileid="apollo">
-  		<pattern id="change" regExp="[STATES_PATH_CHANGE] source: (\w+), target: (\w+)"/>
-  	</event>
-
-  	
-	<handler type="pl.com.itsense.analysis.event.log.handlers.StatisticsCollector">
-		<property name="actions" value="CONNECTION, TRANSITION"/>
-	</handler>
-
 	<handler type="pl.com.itsense.analysis.event.db.EventDBHandler"/>
 
-	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
-	    <property name="file" value="/home/ppretki/MyProjects/logs/report.html"/>
-	    <property name="formatter" value="#.##"/>
-	</report>
 	<file id="apollo" path="/home/ppretki/MyProjects/logs/logfileAppolo.log"/>
    	
 </config>

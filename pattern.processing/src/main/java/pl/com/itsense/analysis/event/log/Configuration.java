@@ -41,6 +41,8 @@ public class Configuration
 		digester.addObjectCreate( "config/report", "pl.com.itsense.analysis.event.log.ReportConf" );
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addObjectCreate( "config/file", "pl.com.itsense.analysis.event.log.FileConf" );
+		digester.addObjectCreate( "config/action/openactionhandler", "pl.com.itsense.analysis.event.log.OpenActionHandlerConf" );
+		digester.addObjectCreate( "config/action/closeactionhandler", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf" );
 		digester.addObjectCreate( "config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf" );
 		digester.addObjectCreate( "config/handler/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		digester.addObjectCreate( "config/report/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
@@ -53,6 +55,9 @@ public class Configuration
 		digester.addSetNext( "config/event/pattern", "addPattern", "pl.com.itsense.analysis.event.log.Pattern" );
 		digester.addSetNext( "config/handler/property", "addProperty", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		digester.addSetNext( "config/report/property", "addProperty", "pl.com.itsense.analysis.event.log.PropertyConf" );
+		digester.addSetNext( "config/action/openactionhandler", "setOpenActionHandlerConf", "pl.com.itsense.analysis.event.log.OpenActionHandlerConf");
+		digester.addSetNext( "config/action/closectionhandler", "setCloseActionHandlerConf", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf");
+		
 		
 		digester.addCallMethod( "config/event/pattern", "setValue", 0);
 		digester.addSetProperties( "config" );
@@ -65,6 +70,8 @@ public class Configuration
 		digester.addSetProperties( "config/report" );
         digester.addSetProperties( "config/handler/property" );
         digester.addSetProperties( "config/report/property" );
+		digester.addSetProperties( "config/action/openactionhandler" );
+		digester.addSetProperties( "config/action/closeactionhandler" );
 		
 		try 
 		{

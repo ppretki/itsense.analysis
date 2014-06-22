@@ -13,8 +13,10 @@ public class ActionConf
 	private String open;
 	/**	 */
 	private String close;
-	/**	 */
-	private String terminate;
+	/** */
+	private OpenActionHandlerConf openActionHandlerConf;
+	/** */
+	private CloseActionHandlerConf closeActionHandlerConf;
 	/**
 	 * 
 	 * @return
@@ -63,31 +65,47 @@ public class ActionConf
 	{
 		this.close = close;
 	}
+	
+	/**
+	 * 
+	 * @param closeActionHandlerConf
+	 */
+	public void setCloseActionHandlerConf(final CloseActionHandlerConf closeActionHandlerConf) 
+	{
+		this.closeActionHandlerConf = closeActionHandlerConf;
+	}
+	
 	/**
 	 * 
 	 * @return
 	 */
-	public String getTerminate() 
+	public CloseActionHandlerConf getCloseActionHandlerConf() 
 	{
-		return terminate;
+		return closeActionHandlerConf;
 	}
-	
 	/**
 	 * 
-	 * @param terminate
+	 * @param openActionHandlerConf
 	 */
-	public void setTerminate(final String terminate) 
+	public void setOpenActionHandlerConf(final OpenActionHandlerConf openActionHandlerConf) 
 	{
-		this.terminate = terminate;
+		this.openActionHandlerConf = openActionHandlerConf;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public OpenActionHandlerConf getOpenActionHandlerConf() 
+	{
+		return openActionHandlerConf;
+	}
 	/**
 	 * 
 	 */
 	@Override
 	public String toString() 
 	{
-		return "Action: id = " + id + ", open = " + open + ", close = " + close + ", terminate = " + terminate;
+		return "Action: id = " + id + ", open = " + open + ", close = " + close + "\n" + (openActionHandlerConf == null ? "" : openActionHandlerConf) + "\n" + (closeActionHandlerConf == null ? "" : closeActionHandlerConf);
 	}
 	
 }

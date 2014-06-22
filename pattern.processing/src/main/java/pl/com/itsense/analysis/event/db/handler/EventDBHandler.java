@@ -1,4 +1,6 @@
-package pl.com.itsense.analysis.event.db;
+package pl.com.itsense.analysis.event.db.handler;
+
+import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -13,6 +15,8 @@ import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProcessingListener;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
+import pl.com.itsense.analysis.event.db.EventDB;
+import pl.com.itsense.analysis.event.db.PatternDB;
 
 /**
  * 
@@ -21,7 +25,7 @@ import pl.com.itsense.analysis.event.PropertyHolderImpl;
  */
 public class EventDBHandler extends PropertyHolderImpl implements EventProcessingListener, EventProcessingHandler
 {
-	// SELECT e.timestamp, e.id, p.group1  FROM event as e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND ep.patterns_patternid=p.patternid;
+	// CREATE TABLE events AS (SELECT e.timestamp, e.id, p.group1 FROM event as e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND ep.patterns_patternid=p.patternid);
 	/** */
 	private SessionFactory sessionFactory;
 	/** */
@@ -93,10 +97,11 @@ public class EventDBHandler extends PropertyHolderImpl implements EventProcessin
 	{
 		if (transaction != null)
 		{
+			final String line = event.getProperty("line");
 			final EventDB eventDB = new EventDB();
 			eventDB.setId(event.getId());
-			eventDB.setTimestamp(event.getTimestamp());
-			final String line = event.getProperty("line");
+			eventDB.setTimestamp(new Date(event.getTimestamp()));
+			eventDB.setLine(line);
 			for (final String name : event.getProperties())
 			{
 				final int index = name.indexOf('$');
@@ -116,7 +121,6 @@ public class EventDBHandler extends PropertyHolderImpl implements EventProcessin
 					{
 						final PatternDB patternDB = new PatternDB();
 						patternDB.setId(name.substring(0, index));
-						patternDB.setLine(line);
 						if (groupId == 1) patternDB.setGroup1(event.getProperty(name));
 						if (groupId == 2) patternDB.setGroup2(event.getProperty(name));
 						eventDB.getPatterns().add(patternDB);

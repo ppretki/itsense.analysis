@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event.db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,9 +24,12 @@ public class EventDB
 	@GenericGenerator(name="increment", strategy = "increment")
 	private long eventId;
 	/** */
-	private long timestamp;
+	private Date timestamp;
 	/** */
 	private String id;
+	/** */
+	private String line;
+	
 	/** */
 	@OneToMany(targetEntity=PatternDB.class, cascade={CascadeType.ALL})
 	private List<PatternDB> patterns = new ArrayList<PatternDB>(); 
@@ -33,7 +37,7 @@ public class EventDB
 	 * 
 	 * @return
 	 */
-	public long getTimestamp() 
+	public Date getTimestamp() 
 	{
 		return timestamp;
 	}
@@ -42,7 +46,7 @@ public class EventDB
 	 * 
 	 * @param timestamp
 	 */
-	public void setTimestamp(long timestamp) 
+	public void setTimestamp(Date timestamp) 
 	{
 		this.timestamp = timestamp;
 	}
@@ -102,4 +106,20 @@ public class EventDB
 		return patterns;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLine() 
+	{
+		return line;
+	}
+	/**
+	 * 
+	 * @param line
+	 */
+	public void setLine(final String line) 
+	{
+		this.line = line;
+	}
 }

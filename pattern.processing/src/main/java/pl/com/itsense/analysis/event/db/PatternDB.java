@@ -20,8 +20,6 @@ public class PatternDB
 	/** */
 	private String id;
 	/** */
-	private String line;
-	/** */
 	private String group1;
 	/** */
 	private String group2;
@@ -44,31 +42,37 @@ public class PatternDB
 		this.id = id;
 	}
 
-	public String getLine() 
-	{
-		return line;
-	}
-	
-	public void setLine(final String line) 
-	{
-		this.line = line;
-	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getGroup1() 
 	{
 		return group1;
 	}
 	
+	/**
+	 * 
+	 * @param group1
+	 */
 	public void setGroup1(final String group1) 
 	{
 		this.group1 = group1;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getGroup2() 
 	{
 		return group2;
 	}
 	
+	/**
+	 * 
+	 * @param group2
+	 */
 	public void setGroup2(final String group2) 
 	{
 		this.group2 = group2;

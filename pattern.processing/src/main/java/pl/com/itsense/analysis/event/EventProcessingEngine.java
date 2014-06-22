@@ -18,11 +18,21 @@ public class EventProcessingEngine implements EEngine
 	/** */
 	private final LinkedList<Event> events = new LinkedList<Event>();
 	/** */
+	private final HashMap<Action.Status,LinkedList<Action>> actions = new HashMap<Action.Status,LinkedList<Action>>();
+	/** */
 	private Event lastEvent;
 	/** */
 	private HashMap<String,List<ActionProcessingHandler>> actionHandlers = new HashMap<String,List<ActionProcessingHandler>>();
 	/** */
 	private HashMap<String,List<EventProcessingHandler>> eventHandlers = new HashMap<String,List<EventProcessingHandler>>();
+	/** */
+	private HashMap<String,List<String>> openEventActionMap = new HashMap<String,List<String>>();
+	/** */
+	private HashMap<String,List<String>> closeEventActionMap = new HashMap<String,List<String>>();
+	/** */
+	private HashMap<String,OpenActionHandler> openActionHandlerMap = new HashMap<String,OpenActionHandler>();
+	/** */
+	private HashMap<String,CloseActionHandler> closeActionHandlerMap = new HashMap<String,CloseActionHandler>();
 	/** */
 	private ArrayList<Report> reports = new ArrayList<Report>();
 	/** */
@@ -36,7 +46,6 @@ public class EventProcessingEngine implements EEngine
 		{
 			iterators[i] = providers[i].iterator();
 		}
-		
 		beginProcessing();
 		while (true)
 		{
@@ -58,7 +67,6 @@ public class EventProcessingEngine implements EEngine
 					event = currentEvents[i];
 				}
 			}
-			
 			if (event == null)
 			{
 				break;
@@ -66,9 +74,12 @@ public class EventProcessingEngine implements EEngine
 			else
 			{
 				dispatchEvent(event);
+				closeActions(event);
+				openActions(event);
 				lastEvent = event;
 				events.add(lastEvent);
 				currentEvents[eventIndex] = null;
+				
 			}
 		}
 		endProcessing();
@@ -79,10 +90,110 @@ public class EventProcessingEngine implements EEngine
 	}
 	/**
 	 * 
+	 * @param event
+	 */
+	private void openActions(final Event event)
+	{
+		final List<String> actionIds = openEventActionMap.get(event.getId());
+		if (actionIds != null)
+		{
+			for (final String actionId : actionIds)
+			{
+				final OpenActionHandler openActionHandler = openActionHandlerMap.get(actionId);
+				final Status status;
+				if (openActionHandler != null)
+				{
+					status = openActionHandler.processOpenActionEvent(event, this);
+				}
+				else
+				{
+					status = Status.OPEN;
+				}
+				if (Status.OPEN.equals(status))
+				{
+					final ActionImpl actionImpl = new ActionImpl(actionId);
+					actionImpl.setStatus(Status.OPEN, event);
+					addActionToQueue(actionImpl);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void addActionToQueue(final Action action)
+	{
+		LinkedList<Action> queue = actions.get(action.getStatus());
+		if (queue == null)
+		{
+			queue = new LinkedList<Action>();
+			actions.put(action.getStatus(), queue);
+		}
+		queue.add(action);
+		if (Status.CLOSE.equals(action.getStatus()))
+		{
+			dispatchAction(action, actionHandlers.get(action.getId()));
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void removeActionFromQueue(final Action action)
+	{
+		LinkedList<Action> queue = actions.get(action.getStatus());
+		if (queue != null)
+		{
+			queue.remove(action);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void closeActions(final Event event)
+	{
+		final List<String> actionIds = closeEventActionMap.get(event.getId());
+		if (actionIds != null)
+		{
+			for (final String actionId : actionIds)
+			{
+				final LinkedList<Action> queue = actions.get(Status.OPEN);
+				if (queue != null)
+				{
+					final CloseActionHandler closeActionHandler = closeActionHandlerMap.get(actionId);
+					for (final Action action : queue)
+					{
+						final Status status;
+						if (closeActionHandler != null)
+						{
+							status = closeActionHandler.processCloseActionEvent(action, event, this);
+						
+						}
+						else
+						{
+							status = Status.CLOSE;
+						}
+						if (Status.CLOSE.equals(status) || Status.TERMINATE.equals(status))
+						{
+							removeActionFromQueue(action);
+							((ActionImpl)action).setStatus(status, event);
+							addActionToQueue(action);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	
+	/**
+	 * 
 	 */
 	private void dispatchAction(final Action action, final List<ActionProcessingHandler> dest)
 	{
-		if ((dest != null) && !dest.isEmpty() && (action.getStatus() == Status.CLOSED))
+		if ((dest != null) && !dest.isEmpty())
 		{
 			for (final ActionProcessingHandler handler : dest)
 			{
@@ -152,8 +263,6 @@ public class EventProcessingEngine implements EEngine
 		{
 			handler.processEvent(event, this);
 		}
-		
-		
 	}
 
 
@@ -307,11 +416,15 @@ public class EventProcessingEngine implements EEngine
 	}
 	
 	@Override
-	public Event getEvent(String eventId) {
+	public Event getEvent(String eventId) 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public EventProcessingHandler[] getEventHandlers() 
 	{
@@ -323,7 +436,64 @@ public class EventProcessingEngine implements EEngine
 		return set.toArray(new EventProcessingHandler[0]);
 	}
 	
-	
+	/**
+	 * 
+	 */
+	public void addAction(final String actionId, final String[] openEventIds, final String[] closeEventIds, final OpenActionHandler openActionHandler, final CloseActionHandler closeActionHandler)
+	{
+		if (openEventIds != null)
+		{
+			for (final String openEventId : openEventIds)
+			{
+				List<String> actionIds = openEventActionMap.get(openEventId);
+				if (actionIds == null)
+				{
+					actionIds = new LinkedList<String>();
+					openEventActionMap.put(openEventId, actionIds);
+				}
+				if (!actionIds.contains(actionId))
+				{
+					actionIds.add(actionId);
+				}
+			}
+		}
+		
+		if (closeEventIds != null)
+		{
+			for (final String closeEventId : closeEventIds)
+			{
+				List<String> actionIds = closeEventActionMap.get(closeEventId);
+				if (actionIds == null)
+				{
+					actionIds = new LinkedList<String>();
+					closeEventActionMap.put(closeEventId, actionIds);
+				}
+				if (!actionIds.contains(actionId))
+				{
+					actionIds.add(actionId);
+				}
+			}
+		}
+		
+		if (openActionHandler != null)
+		{
+			openActionHandlerMap.put(actionId, openActionHandler);
+		}
+		
+		if (closeActionHandler != null)
+		{
+			closeActionHandlerMap.put(actionId, closeActionHandler);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	

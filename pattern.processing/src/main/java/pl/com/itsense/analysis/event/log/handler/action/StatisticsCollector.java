@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log.handlers;
+package pl.com.itsense.analysis.event.log.handler.action;
 
 import java.util.HashMap;
 
@@ -44,7 +44,7 @@ public class StatisticsCollector extends PropertyHolderImpl implements ActionPro
                 	stat = new Statistics();
                     eventRow.put(e.getId(), stat);
                 }
-                stat.add(action.getClose() - action.getOpen());
+                stat.add(action.getEvent(Action.Status.CLOSE).getTimestamp() - action.getEvent(Action.Status.OPEN).getTimestamp());
             }
         }
     }
