@@ -87,6 +87,7 @@ public class EventProcessingEngine implements EEngine
 		{
 		    report.create(this);
 		}
+		System.out.println(actions.get(Status.TERMINATE));
 	}
 	/**
 	 * 
@@ -94,6 +95,7 @@ public class EventProcessingEngine implements EEngine
 	 */
 	private void openActions(final Event event)
 	{
+		//System.out.println("openActions: " + event);
 		final List<String> actionIds = openEventActionMap.get(event.getId());
 		if (actionIds != null)
 		{
@@ -124,6 +126,7 @@ public class EventProcessingEngine implements EEngine
 	 */
 	private void addActionToQueue(final Action action)
 	{
+		//System.out.println("addActionToQueue: " + action);
 		LinkedList<Action> queue = actions.get(action.getStatus());
 		if (queue == null)
 		{
@@ -142,11 +145,6 @@ public class EventProcessingEngine implements EEngine
 	 */
 	private void removeActionFromQueue(final Action action)
 	{
-		LinkedList<Action> queue = actions.get(action.getStatus());
-		if (queue != null)
-		{
-			queue.remove(action);
-		}
 	}
 	
 	/**
@@ -166,27 +164,26 @@ public class EventProcessingEngine implements EEngine
 					final CloseActionHandler closeActionHandler = closeActionHandlerMap.get(actionId);
 					for (final Action action : queue)
 					{
-						final Status status;
-						if (closeActionHandler != null)
+						if (action.getId().equals(actionId))
 						{
-							status = closeActionHandler.processCloseActionEvent(action, event, this);
-						
-						}
-						else
-						{
-							status = Status.CLOSE;
-						}
-						if (Status.CLOSE.equals(status) || Status.TERMINATE.equals(status))
-						{
-							actionsToRemove.add(action);
-							((ActionImpl)action).setStatus(status, event);
-							addActionToQueue(action);
+							final Status status;
+							if (closeActionHandler != null)
+							{
+								status = closeActionHandler.processCloseActionEvent(action, event, this);
+							}
+							else
+							{
+								status = Status.CLOSE;
+							}
+							if (Status.CLOSE.equals(status) || Status.TERMINATE.equals(status))
+							{
+								actionsToRemove.add(action);
+								((ActionImpl)action).setStatus(status, event);
+								addActionToQueue(action);
+							}
 						}
 					}
-
-					for (final Action action : actionsToRemove) removeActionFromQueue(action);
-					
-					
+					for (final Action action : actionsToRemove) queue.remove(action);
 				}
 			}
 		}

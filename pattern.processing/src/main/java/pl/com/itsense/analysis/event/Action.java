@@ -1,6 +1,6 @@
 package pl.com.itsense.analysis.event;
 
-public interface Action 
+public interface Action extends PropertyHolder
 {
 	enum Status
 	{

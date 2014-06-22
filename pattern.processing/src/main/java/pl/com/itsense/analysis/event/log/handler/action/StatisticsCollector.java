@@ -24,13 +24,13 @@ public class StatisticsCollector extends PropertyHolderImpl implements ActionPro
      */
     public void processAction(final Action action, final EEngine engine) 
     {
-        Statistics actionStatistics = statistics.get(action.getId());
+    	final String id = action.getProperty("id") != null ? action.getProperty("id") : action.getId();
+        Statistics actionStatistics = statistics.get(id);
         if (actionStatistics == null)
         {
         	actionStatistics = new Statistics();
-            statistics.put(action.getId(), actionStatistics);
+            statistics.put(id, actionStatistics);
         }
-        System.out.println(action);
         actionStatistics.add(action.getEvent(Action.Status.CLOSE).getTimestamp() - action.getEvent(Action.Status.OPEN).getTimestamp());
     }
     

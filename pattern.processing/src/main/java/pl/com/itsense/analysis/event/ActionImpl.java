@@ -2,7 +2,7 @@ package pl.com.itsense.analysis.event;
 
 import java.util.HashMap;
 
-public class ActionImpl implements Action 
+public class ActionImpl extends PropertyHolderImpl implements Action 
 {
 	/** */
 	private final HashMap<Action.Status,Event> events = new HashMap<Action.Status,Event>();

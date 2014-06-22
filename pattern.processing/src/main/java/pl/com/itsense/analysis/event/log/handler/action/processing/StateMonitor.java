@@ -13,16 +13,17 @@ import pl.com.itsense.analysis.event.PropertyHolderImpl;
  * @author ppretki
  *
  */
-public class ConnectionMonitor extends PropertyHolderImpl implements OpenActionHandler, CloseActionHandler 
+public class StateMonitor extends PropertyHolderImpl implements OpenActionHandler, CloseActionHandler 
 {
 
 	@Override
 	public Status processCloseActionEvent(final Action action, final Event event, final EEngine engine) 
 	{
 		final Event openEvent = action.getEvent(Status.OPEN);
-		if (openEvent.getProperty("sendPing$1").equals(event.getProperty("receivedPing$1")))
+		if (openEvent.getProperty("pathChange$2").equals(event.getProperty("activate$1")))
 		{
-			if (event.getTimestamp() -  openEvent.getTimestamp()  < 10000)
+			action.setProperty("id", event.getProperty("activate$1"));
+			if (event.getTimestamp() -  openEvent.getTimestamp()  < 60000)
 			{
 				return Status.CLOSE;	
 			}
@@ -37,7 +38,7 @@ public class ConnectionMonitor extends PropertyHolderImpl implements OpenActionH
 	@Override
 	public Status processOpenActionEvent(final Event event, final EEngine engine) 
 	{
-		if (event.getProperty("sendPing$1") != null)
+		if (event.getProperty("pathChange$2") != null)
 		{
 			return Status.OPEN;
 		}
