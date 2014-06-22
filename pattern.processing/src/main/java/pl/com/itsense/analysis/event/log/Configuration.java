@@ -56,7 +56,7 @@ public class Configuration
 		digester.addSetNext( "config/handler/property", "addProperty", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		digester.addSetNext( "config/report/property", "addProperty", "pl.com.itsense.analysis.event.log.PropertyConf" );
 		digester.addSetNext( "config/action/openactionhandler", "setOpenActionHandlerConf", "pl.com.itsense.analysis.event.log.OpenActionHandlerConf");
-		digester.addSetNext( "config/action/closectionhandler", "setCloseActionHandlerConf", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf");
+		digester.addSetNext( "config/action/closeactionhandler", "setCloseActionHandlerConf", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf");
 		
 		
 		digester.addCallMethod( "config/event/pattern", "setValue", 0);

@@ -25,4 +25,12 @@ public class CloseActionHandlerConf
 	{
 		this.type = type;
 	}
+	
+	
+	@Override
+	public String toString() 
+	{
+		return "CloseActionHandlerConf: type = " + type;
+	}
+
 }

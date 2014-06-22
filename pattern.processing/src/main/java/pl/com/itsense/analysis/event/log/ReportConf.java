@@ -11,8 +11,8 @@ public class ReportConf
 {
 	/** */
 	private String type;
-       /** */
-        private ArrayList<PropertyConf> properties = new ArrayList<PropertyConf>();
+    /** */
+    private ArrayList<PropertyConf> properties = new ArrayList<PropertyConf>();
 	
 	/**
 	 * 

@@ -208,7 +208,7 @@ public class TextFileEventProvider implements EventProvider
 										final PatternConf patternConf = patternDefs.get(pattern);
 										for (int i = 1 ; i < (matcher.groupCount()+1); i++)
 										{
-											textLineEvent.setProperty(patternConf.getId() + "$" + i, matcher.group(i));
+											textLineEvent.setProperty("$" + i, matcher.group(i));
 										}
 									}
 									return textLineEvent; 	
@@ -294,6 +294,14 @@ public class TextFileEventProvider implements EventProvider
 			{
 				return super.getProperty(name);
 			}
+			
+			@Override
+			public String toString() 
+			{
+				return "TextLineEvent: id = " + eventId + ", timestamp = " + timestamp + "\n " + super.toString();
+			}
+			
+			
 		}
 		
 	}

@@ -162,6 +162,7 @@ public class EventProcessingEngine implements EEngine
 				final LinkedList<Action> queue = actions.get(Status.OPEN);
 				if (queue != null)
 				{
+					final ArrayList<Action> actionsToRemove = new ArrayList<Action>();
 					final CloseActionHandler closeActionHandler = closeActionHandlerMap.get(actionId);
 					for (final Action action : queue)
 					{
@@ -177,11 +178,15 @@ public class EventProcessingEngine implements EEngine
 						}
 						if (Status.CLOSE.equals(status) || Status.TERMINATE.equals(status))
 						{
-							removeActionFromQueue(action);
+							actionsToRemove.add(action);
 							((ActionImpl)action).setStatus(status, event);
 							addActionToQueue(action);
 						}
 					}
+
+					for (final Action action : actionsToRemove) removeActionFromQueue(action);
+					
+					
 				}
 			}
 		}
@@ -259,9 +264,12 @@ public class EventProcessingEngine implements EEngine
 			}
 		}
 
-		for (final EventProcessingHandler handler : eventHandlers.get(ALL))
+		if (eventHandlers.get(ALL) != null)
 		{
-			handler.processEvent(event, this);
+			for (final EventProcessingHandler handler : eventHandlers.get(ALL))
+			{
+				handler.processEvent(event, this);
+			}
 		}
 	}
 

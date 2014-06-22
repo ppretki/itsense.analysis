@@ -34,5 +34,16 @@ public class PropertyHolderImpl implements PropertyHolder
 		return properties.keySet();
 	}	
 	
+	@Override
+	public String toString() 
+	{
+		final StringBuffer sb = new StringBuffer();
+		for (final String name : properties.keySet())
+		{
+			sb.append(name + " = " + properties.get(name)).append("\n");
+		}
+		return "Properties: " + sb.toString();
+	}
+	
 	
 }

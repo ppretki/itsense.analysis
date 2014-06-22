@@ -5,7 +5,6 @@ import java.util.HashMap;
 import pl.com.itsense.analysis.event.Action;
 import pl.com.itsense.analysis.event.ActionProcessingHandler;
 import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.Statistics;
 
@@ -18,42 +17,28 @@ public class StatisticsCollector extends PropertyHolderImpl implements ActionPro
 {
 	
     /** */
-    private final HashMap<String,HashMap<String,Statistics>> statistics = new HashMap<String,HashMap<String,Statistics>>();
+    private final HashMap<String,Statistics> statistics = new HashMap<String,Statistics>();
     
     /**
      * 
      */
     public void processAction(final Action action, final EEngine engine) 
     {
-        HashMap<String,Statistics> eventRow = statistics.get(action.getId());
-        if (eventRow == null)
+        Statistics actionStatistics = statistics.get(action.getId());
+        if (actionStatistics == null)
         {
-            eventRow = new HashMap<String,Statistics>();
-            statistics.put(action.getId(), eventRow);
+        	actionStatistics = new Statistics();
+            statistics.put(action.getId(), actionStatistics);
         }
-        
-        final Event e = engine.getEvent();
-        if (e != null)
-        {
-        	final long t = e.getTimestamp();
-            if (t > -1)
-            {
-            	Statistics stat = eventRow.get(e.getId());
-                if (stat == null)
-                {
-                	stat = new Statistics();
-                    eventRow.put(e.getId(), stat);
-                }
-                stat.add(action.getEvent(Action.Status.CLOSE).getTimestamp() - action.getEvent(Action.Status.OPEN).getTimestamp());
-            }
-        }
+        System.out.println(action);
+        actionStatistics.add(action.getEvent(Action.Status.CLOSE).getTimestamp() - action.getEvent(Action.Status.OPEN).getTimestamp());
     }
     
     /**
      * 
      * @return
      */
-    public HashMap<String, HashMap<String, Statistics>> getStatistics() 
+    public HashMap<String, Statistics> getStatistics() 
     {
         return statistics;
     }
@@ -66,11 +51,8 @@ public class StatisticsCollector extends PropertyHolderImpl implements ActionPro
         final StringBuffer sb = new StringBuffer();
         for (final String p0 : statistics.keySet())
         {
-            final HashMap<String,Statistics> stats = statistics.get(p0);
-            for (final String p1 : stats.keySet())
-            {
-                sb.append(p0 + " -> " + p1 + ": " + stats.get(p1).toString()).append("\n");
-            }
+            final Statistics stats = statistics.get(p0);
+            sb.append("action: " + p0 +", statistics: \n"  + stats.toString()).append("\n");
         }
         return sb.toString();
     }
