@@ -7,13 +7,37 @@
 	  <pattern id="sendPing">HnSecEventManager.sendNotification\(\) MultiroomNotification\(MRCon,(\w+)\)</pattern>
   	</event>
 
+  	
+  	<event id="PATH_CHANGE" fileid="apollo">
+	  <pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
+  	</event>
+
+	<event id="STATE_ACTIVATE" fileid="apollo">
+	  <pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
+  	</event>
+
+  	
+	<action id="STATE_ACTIVATION" open="PATH_CHANGE" close="STATE_ACTIVATE">
+	  <openactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.StateMonitor"/> 
+	  <closeactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.StateMonitor"/>
+	</action>
+
+	  	
 	<action id="CONNECTION_HEART_BEAT" open="SEND" close="RECEIVED">
 	  <openactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.ConnectionMonitor"/> 
 	  <closeactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.ConnectionMonitor"/>
 	</action>
-  	
-	<handler type="pl.com.itsense.analysis.event.db.EventDBHandler"/>
 
+	
+	<handler type="pl.com.itsense.analysis.event.log.handler.action.StatisticsCollector">
+	  <property name="actions" value="CONNECTION_HEART_BEAT,STATE_ACTIVATION"/>
+	</handler> 
+	
+	<report type="pl.com.itsense.analysis.event.log.reports.HTMLReport">
+	  <property name="file" value="/home/ppretki/MyProjects/logs/report.html"/>
+	  <property name="formatter" value="#.##"/>
+	</report>
+	
 	<file id="apollo" path="/home/ppretki/MyProjects/logs/logfileAppolo.log"/>
    	
 </config>

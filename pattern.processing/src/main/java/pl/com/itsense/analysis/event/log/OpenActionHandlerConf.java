@@ -9,6 +9,26 @@ public class OpenActionHandlerConf
 {
 	/** */
 	private String type;
+	/** */
+	private String value;
+	/**
+	 * 
+	 * @param value
+	 */
+	public void setValue(final String value) 
+	{
+		this.value = value;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getValue() 
+	{
+		return value;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -26,10 +46,11 @@ public class OpenActionHandlerConf
 		this.type = type;
 	}
 	
+	
 	@Override
 	public String toString() 
 	{
-		return "OpenActionHandlerConf: type = " + type;
+		return "OpenActionHandlerConf: type = " + type + ", value = " + value;
 	}
 	
 }

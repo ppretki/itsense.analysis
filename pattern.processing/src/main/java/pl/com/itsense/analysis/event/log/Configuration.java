@@ -59,7 +59,9 @@ public class Configuration
 		digester.addSetNext( "config/action/closeactionhandler", "setCloseActionHandlerConf", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf");
 		
 		
-		digester.addCallMethod( "config/event/pattern", "setValue", 0);
+		digester.addCallMethod( "config/action/openactionhandler", "setValue", 0);
+		digester.addCallMethod( "config/action/openactionhandler", "setValue", 0);
+		
 		digester.addSetProperties( "config" );
 		digester.addSetProperties( "config/action" );
 		digester.addSetProperties( "config/handler" );

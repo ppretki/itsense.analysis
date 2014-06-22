@@ -19,6 +19,9 @@ import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
  */
 public class LogAnalysis 
 {
+	/** */
+	private static String TEMP_DIRECTORY = System.getProperty("user.home"); 
+	/** */
 	public static void main(final String[] args) 
 	{
 		final Configuration configuration = Configuration.parse(new File(args[0]));
@@ -119,12 +122,19 @@ public class LogAnalysis
 			
 			try 
 			{
-				if ((openActionHandlerConf != null) && (openActionHandlerConf.getType() != null))
+				if (openActionHandlerConf != null) 
 				{
-					final Class<?> type = Class.forName(openActionHandlerConf.getType());
-					if (OpenActionHandler.class.isAssignableFrom(type))
+					if (openActionHandlerConf.getType() != null)
 					{
-						openActionHandler = (OpenActionHandler)type.newInstance();
+						final Class<?> type = Class.forName(openActionHandlerConf.getType());
+						if (OpenActionHandler.class.isAssignableFrom(type))
+						{
+							openActionHandler = (OpenActionHandler)type.newInstance();
+						}
+					}
+					else if (openActionHandlerConf.getValue() != null)
+					{
+						openActionHandler = generateOpenActionHandlerClass(TEMP_DIRECTORY, openActionHandlerConf.getValue());
 					}
 				}
 			} 
@@ -136,13 +146,21 @@ public class LogAnalysis
 			
 			try 
 			{
-				if ((closeActionHandlerConf != null) && (closeActionHandlerConf.getType() != null))
+				if (closeActionHandlerConf != null) 
 				{
-					final Class<?> type = Class.forName(closeActionHandlerConf.getType());
-					if (CloseActionHandler.class.isAssignableFrom(type))
+					if (closeActionHandlerConf.getType() != null)
 					{
-						closeActionHandler = (CloseActionHandler)type.newInstance();
+						final Class<?> type = Class.forName(closeActionHandlerConf.getType());
+						if (CloseActionHandler.class.isAssignableFrom(type))
+						{
+							closeActionHandler = (CloseActionHandler)type.newInstance();
+						}
+					} 
+					else if (closeActionHandlerConf.getValue() != null)
+					{
+						closeActionHandler = generateCloseActionHandlerClass(TEMP_DIRECTORY, closeActionHandlerConf.getValue());
 					}
+					
 				}
 			} 
 			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
@@ -154,4 +172,37 @@ public class LogAnalysis
 		engine.process(eventProviders);
 	}
 
+	/**
+	 * 
+	 */
+	private static OpenActionHandler generateOpenActionHandlerClass(final String tempDirectory , final String method)
+	{
+		OpenActionHandler handler = null;
+		final StringBuffer sb = new StringBuffer();
+		sb.append("package pl.com.itsense.analysis.event.log.handler.action.processing;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.Action;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.Action.Status;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.CloseActionHandler;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.EEngine;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.Event;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.OpenActionHandler;").append("\n");
+		sb.append("import pl.com.itsense.analysis.event.PropertyHolderImpl;").append("\n");
+		sb.append("public class StateMonitor extends PropertyHolderImpl implements OpenActionHandler").append("\n"); 
+		sb.append("{").append("\n");
+		sb.append("@Override").append("\n");
+		sb.append("public Status processCloseActionEvent(final Action action, final Event event, final EEngine engine)").append("\n"); 
+		sb.append("{").append("\n");
+		sb.append(method).append("\n");
+		sb.append("}").append("\n");
+		return handler;
+	}
+	/**
+	 * 
+	 */
+	private static CloseActionHandler generateCloseActionHandlerClass(final String tempDirectory , final String method)
+	{
+		CloseActionHandler handler = null;
+		return handler;
+	}
+	
 }

@@ -9,6 +9,27 @@ public class CloseActionHandlerConf
 {
 	/** */
 	private String type;
+	
+	/** */
+	private String value;
+	/**
+	 * 
+	 * @param value
+	 */
+	public void setValue(final String value) 
+	{
+		this.value = value;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getValue() 
+	{
+		return value;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -30,7 +51,7 @@ public class CloseActionHandlerConf
 	@Override
 	public String toString() 
 	{
-		return "CloseActionHandlerConf: type = " + type;
+		return "CloseActionHandlerConf: type = " + type + ", value = " + value;
 	}
 
 }
