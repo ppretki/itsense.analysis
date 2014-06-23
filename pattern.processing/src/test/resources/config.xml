@@ -18,8 +18,33 @@
 
   	
 	<action id="STATE_ACTIVATION" open="PATH_CHANGE" close="STATE_ACTIVATE">
-	  <openactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.StateMonitor"/> 
-	  <closeactionhandler type="pl.com.itsense.analysis.event.log.handler.action.processing.StateMonitor"/>
+	  <openactionhandler>
+	    <![CDATA[
+   		if (event.getProperty("pathChange$2") != null)
+		{
+			return Status.OPEN;
+		}
+		return null;
+	    ]]>
+	  </openactionhandler>
+	  <closeactionhandler>
+	    <![CDATA[
+    		final Event openEvent = action.getEvent(Status.OPEN);
+		if (openEvent.getProperty("pathChange$2").equals(event.getProperty("activate$1")))
+		{
+			action.setProperty("id", event.getProperty("activate$1"));
+			if (event.getTimestamp() -  openEvent.getTimestamp()  < 60000)
+			{
+				return Status.CLOSE;	
+			}
+			else
+			{
+				return Status.TERMINATE;
+			}
+		}
+		return null;
+	    ]]>
+	  </closeactionhandler>
 	</action>
 
 	  	

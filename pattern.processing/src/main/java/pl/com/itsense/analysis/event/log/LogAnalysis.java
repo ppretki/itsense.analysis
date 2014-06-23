@@ -1,6 +1,9 @@
 package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import pl.com.itsense.analysis.event.ActionProcessingHandler;
@@ -177,9 +180,10 @@ public class LogAnalysis
 	 */
 	private static OpenActionHandler generateOpenActionHandlerClass(final String tempDirectory , final String method)
 	{
+		final String className = "OpenActionHandler" + Integer.toHexString(method.hashCode());
 		OpenActionHandler handler = null;
 		final StringBuffer sb = new StringBuffer();
-		sb.append("package pl.com.itsense.analysis.event.log.handler.action.processing;").append("\n");
+		sb.append("package pl.com.itsense.analysis.event.log.handler.action.processing.generator;").append("\n");
 		sb.append("import pl.com.itsense.analysis.event.Action;").append("\n");
 		sb.append("import pl.com.itsense.analysis.event.Action.Status;").append("\n");
 		sb.append("import pl.com.itsense.analysis.event.CloseActionHandler;").append("\n");
@@ -187,13 +191,29 @@ public class LogAnalysis
 		sb.append("import pl.com.itsense.analysis.event.Event;").append("\n");
 		sb.append("import pl.com.itsense.analysis.event.OpenActionHandler;").append("\n");
 		sb.append("import pl.com.itsense.analysis.event.PropertyHolderImpl;").append("\n");
-		sb.append("public class StateMonitor extends PropertyHolderImpl implements OpenActionHandler").append("\n"); 
+		sb.append("public class " + className + " extends PropertyHolderImpl implements OpenActionHandler").append("\n"); 
 		sb.append("{").append("\n");
 		sb.append("@Override").append("\n");
 		sb.append("public Status processCloseActionEvent(final Action action, final Event event, final EEngine engine)").append("\n"); 
 		sb.append("{").append("\n");
 		sb.append(method).append("\n");
 		sb.append("}").append("\n");
+		
+        try 
+        {
+            final File output = new File(className + ".java");
+            if (output.exists())
+            {
+                    Files.delete(output.toPath());
+            }
+            Files.write((new File(className + ".java")).toPath(), sb.toString().getBytes(), StandardOpenOption.CREATE);
+        } 
+        catch (IOException e) 
+        {
+                e.printStackTrace();
+        }
+
+		
 		return handler;
 	}
 	/**
