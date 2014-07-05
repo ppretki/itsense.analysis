@@ -6,8 +6,4 @@ package pl.com.itsense.analysis.event;
  */
 public interface EventProcessor extends PropertyHolder
 {
-	/**
-	 * 
-	 */
-	void process(Event event, EEngine engine);
 }

@@ -7,12 +7,10 @@ import java.util.ArrayList;
  * @author ppretki
  *
  */
-public class ReportConf 
+public class ReportConf extends PropertiesConf
 {
 	/** */
 	private String type;
-    /** */
-    private ArrayList<PropertyConf> properties = new ArrayList<PropertyConf>();
 	
 	/**
 	 * 
@@ -33,40 +31,15 @@ public class ReportConf
 	}
 
     
-        public ArrayList<PropertyConf> getProperties() 
+	@Override
+    public String toString() 
+    {
+		final StringBuffer sb = new StringBuffer();
+        sb.append("Report: type = " + type).append("\n");
+        for (final PropertyConf property : getProperties())
         {
-                return properties;
+        	sb.append(property).append("\n");
         }
-        
-        /**
-         * 
-         * @param params
-         */
-        public void setParams(final ArrayList<PropertyConf> properties) 
-        {
-                this.properties = properties;
-        }
-        
-        
-        /**
-         * 
-         * @param param
-         */
-        public void addProperty(final PropertyConf property)
-        {
-                properties.add(property);
-        }
-        
-        
-        @Override
-        public String toString() 
-        {
-            final StringBuffer sb = new StringBuffer();
-            sb.append("Report: type = " + type).append("\n");
-            for (final PropertyConf property : properties)
-            {
-                sb.append(property).append("\n");
-            }
-            return sb.toString();
-        }
+        return sb.toString();
+    }
 }

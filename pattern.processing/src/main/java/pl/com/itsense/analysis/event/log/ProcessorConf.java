@@ -5,7 +5,7 @@ package pl.com.itsense.analysis.event.log;
  * @author ppretki
  *
  */
-public class ProcessorConf 
+public class ProcessorConf extends PropertiesConf
 {
 	/**	 */
 	private String id;

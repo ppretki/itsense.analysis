@@ -15,6 +15,7 @@ import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProcessingListener;
 import pl.com.itsense.analysis.event.EventProcessor;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
+import pl.com.itsense.analysis.event.StatelessEventProcessor;
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
 
@@ -23,7 +24,7 @@ import pl.com.itsense.analysis.event.db.PatternDB;
  * @author ppretki
  *
  */
-public class EventDBHandler extends PropertyHolderImpl implements EventProcessingListener, EventProcessor
+public class EventDBHandler extends PropertyHolderImpl implements EventProcessingListener, StatelessEventProcessor
 {
 	// CREATE TABLE events AS (SELECT e.timestamp, e.id, p.group1 FROM event as e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND ep.patterns_patternid=p.patternid);
 	/** */

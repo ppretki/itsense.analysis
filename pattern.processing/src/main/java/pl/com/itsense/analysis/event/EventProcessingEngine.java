@@ -18,9 +18,9 @@ public class EventProcessingEngine implements EEngine
 	/** */
 	private Event lastEvent;
 	/** */
-	private HashMap<String,ArrayList<EventProcessor>> eventProcessorsMap = new HashMap<String,ArrayList<EventProcessor>>();
+	private HashMap<String,ArrayList<StatelessEventProcessor>> statelessProcessors = new HashMap<String,ArrayList<StatelessEventProcessor>>();
 	/** */
-	private HashMap<String,ArrayList<StatefulEventProcessor>> eventStatefulProcessorsMap = new HashMap<String,ArrayList<StatefulEventProcessor>>();
+	private HashMap<String,ArrayList<StatefulEventProcessor>> statefullProcessors = new HashMap<String,ArrayList<StatefulEventProcessor>>();
 	/** */
 	private ArrayList<Report> reports = new ArrayList<Report>();
 	/** */
@@ -96,19 +96,19 @@ public class EventProcessingEngine implements EEngine
 	 */
 	private void dispatchEvent(final Event event)
 	{
-		if (eventProcessorsMap.get(event.getId()) != null)
+		if (statelessProcessors.get(event.getId()) != null)
 		{
-			for (final EventProcessor processor : eventProcessorsMap.get(event.getId()))
+			for (final StatelessEventProcessor processor : statelessProcessors.get(event.getId()))
 			{
 				processor.process(event, this);
 			}
 		}
 		
-		if (eventStatefulProcessorsMap.get(event.getId()) != null)
+		if (statefullProcessors.get(event.getId()) != null)
 		{
-			for (final StatefulEventProcessor processor : eventStatefulProcessorsMap.get(event.getId()))
+			for (final StatefulEventProcessor processor : statefullProcessors.get(event.getId()))
 			{
-				processor.process(event, this);
+				processor.process(event, "", this);
 			}
 		}
 
@@ -154,28 +154,28 @@ public class EventProcessingEngine implements EEngine
 				final String trimmedEventId = eventId.trim();
 				if (processor instanceof StatefulEventProcessor)
 				{
-					ArrayList<StatefulEventProcessor> list = eventStatefulProcessorsMap.get(trimmedEventId);
+					ArrayList<StatefulEventProcessor> list = statefullProcessors.get(trimmedEventId);
 					if (list == null)
 					{
 						list = new ArrayList<StatefulEventProcessor>();
-						eventStatefulProcessorsMap.put(trimmedEventId, list);
+						statefullProcessors.put(trimmedEventId, list);
 					}
 					if (!list.contains(processor))
 					{
 						list.add((StatefulEventProcessor) processor);
 					}	
 				}
-				else
+				else if (processor instanceof StatelessEventProcessor)
 				{
-					ArrayList<EventProcessor> list = eventProcessorsMap.get(trimmedEventId);
+					ArrayList<StatelessEventProcessor> list = statelessProcessors.get(trimmedEventId);
 					if (list == null)
 					{
-						list = new ArrayList<EventProcessor>();
-						eventProcessorsMap.put(trimmedEventId, list);
+						list = new ArrayList<StatelessEventProcessor>();
+						statelessProcessors.put(trimmedEventId, list);
 					}
 					if (!list.contains(processor))
 					{
-						list.add(processor);
+						list.add((StatelessEventProcessor) processor);
 					}	
 				}
 				

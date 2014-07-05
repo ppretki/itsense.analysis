@@ -6,5 +6,6 @@ package pl.com.itsense.analysis.event;
  */
 public interface StatefulEventProcessor extends EventProcessor
 {
-	State getState();
+	String process(Event event, String state, EEngine engine);
+
 }
