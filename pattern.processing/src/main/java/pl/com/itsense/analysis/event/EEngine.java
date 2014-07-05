@@ -39,14 +39,6 @@ public interface EEngine
 	 * 
 	 */
 	List<String> getLogs(LogLevel level);
-	/**
-	 * 
-	 */
-	ActionProcessingHandler[] getActionHandlers();
-	/**
-	 * 
-	 */
-	EventProcessingHandler[] getEventHandlers();
 
 	/**
 	 * 

@@ -23,7 +23,7 @@ public class Configuration
 	/** */
 	private final ArrayList<ReportConf> reports = new ArrayList<ReportConf>();
 	/** */
-	private final ArrayList<ActionConf> actions = new ArrayList<ActionConf>();
+	private final ArrayList<ProcessorConf> processors = new ArrayList<ProcessorConf>();
 	
 	/**
 	 * 
@@ -36,17 +36,13 @@ public class Configuration
 		final Digester digester = new Digester();
 		digester.setValidating( false );
 		digester.addObjectCreate( "config", "pl.com.itsense.analysis.event.log.Configuration" );
-		digester.addObjectCreate( "config/action", "pl.com.itsense.analysis.event.log.ActionConf" );
-		digester.addObjectCreate( "config/handler", "pl.com.itsense.analysis.event.log.HandlerConf" );
-		digester.addObjectCreate( "config/report", "pl.com.itsense.analysis.event.log.ReportConf" );
 		digester.addObjectCreate( "config/event", "pl.com.itsense.analysis.event.log.EventConf" );
 		digester.addObjectCreate( "config/file", "pl.com.itsense.analysis.event.log.FileConf" );
-		digester.addObjectCreate( "config/action/openactionhandler", "pl.com.itsense.analysis.event.log.OpenActionHandlerConf" );
-		digester.addObjectCreate( "config/action/closeactionhandler", "pl.com.itsense.analysis.event.log.CloseActionHandlerConf" );
+		digester.addObjectCreate( "config/processor", "pl.com.itsense.analysis.event.log.ProcessorConf" );
 		digester.addObjectCreate( "config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf" );
-		digester.addObjectCreate( "config/handler/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
-		digester.addObjectCreate( "config/report/property", "pl.com.itsense.analysis.event.log.PropertyConf" );
 
+		
+		
 		digester.addSetNext( "config/action", "addAction", "pl.com.itsense.analysis.event.log.ActionConf" );
 		digester.addSetNext( "config/handler", "addHandler", "pl.com.itsense.analysis.event.log.HandlerConf" );
 		digester.addSetNext( "config/event", "addEvent", "pl.com.itsense.analysis.event.log.EventConf" );
@@ -126,31 +122,15 @@ public class Configuration
 		files.add(file);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public ArrayList<HandlerConf> getHandlers() 
-	{
-		return handlers;
-	}
 	
-	/**
-	 * 
-	 * @param file
-	 */
-	public void addHandler(final HandlerConf handler)
-	{
-		handlers.add(handler);
-	}
 
 	/**
 	 * 
 	 * @param file
 	 */
-	public void addAction(final ActionConf action)
+	public void addProcessor(final ProcessorConf action)
 	{
-		actions.add(action);
+		processors.add(action);
 	}
 	
 
@@ -176,9 +156,9 @@ public class Configuration
 	 * 
 	 * @return
 	 */
-	public ArrayList<ActionConf> getActions() 
+	public ArrayList<ProcessorConf> getProcessors() 
 	{
-		return actions;
+		return processors;
 	}
 	
 	
@@ -203,7 +183,7 @@ public class Configuration
         {
         	sb.append(report).append("\n");
         }
-        for (final ActionConf action : actions)
+        for (final ProcessorConf action : processors)
         {
         	sb.append(action).append("\n");
         }

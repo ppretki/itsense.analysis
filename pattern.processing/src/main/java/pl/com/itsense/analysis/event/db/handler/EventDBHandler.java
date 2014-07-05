@@ -12,8 +12,8 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProcessingListener;
+import pl.com.itsense.analysis.event.EventProcessor;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
@@ -23,7 +23,7 @@ import pl.com.itsense.analysis.event.db.PatternDB;
  * @author ppretki
  *
  */
-public class EventDBHandler extends PropertyHolderImpl implements EventProcessingListener, EventProcessingHandler
+public class EventDBHandler extends PropertyHolderImpl implements EventProcessingListener, EventProcessor
 {
 	// CREATE TABLE events AS (SELECT e.timestamp, e.id, p.group1 FROM event as e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND ep.patterns_patternid=p.patternid);
 	/** */
@@ -93,7 +93,7 @@ public class EventDBHandler extends PropertyHolderImpl implements EventProcessin
      * 
      */
 	@Override
-	public void processEvent(final Event event, final EEngine engine) 
+	public void process(final Event event, final EEngine engine) 
 	{
 		if (transaction != null)
 		{

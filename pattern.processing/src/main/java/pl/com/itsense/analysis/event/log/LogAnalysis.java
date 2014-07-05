@@ -6,12 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
-import pl.com.itsense.analysis.event.ActionProcessingHandler;
-import pl.com.itsense.analysis.event.CloseActionHandler;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
-import pl.com.itsense.analysis.event.EventProcessingHandler;
 import pl.com.itsense.analysis.event.EventProvider;
-import pl.com.itsense.analysis.event.OpenActionHandler;
 import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
@@ -48,7 +44,7 @@ public class LogAnalysis
 		}
 
 		// ACTION AND EVENT HANDLERS
-		for (final HandlerConf handler : configuration.getHandlers())
+		for (final ProcessorConf processorConf : configuration.getProcessors())
 		{
 			try 
 			{
