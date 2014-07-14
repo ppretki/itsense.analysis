@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * 
  * @author ppretki
- *
+ * 
  */
 public class PropertyHolderConf
 {
@@ -16,29 +16,38 @@ public class PropertyHolderConf
      * 
      * @return
      */
-    public ArrayList<PropertyConf> getProperties() 
+    public ArrayList<PropertyConf> getProperties()
     {
-		return properties;
-	}
-    
+        return properties;
+    }
+
     /**
      * 
      * @param properties
      */
-    public void setProperties(final ArrayList<PropertyConf> properties) 
+    public void setProperties(final ArrayList<PropertyConf> properties)
     {
-		this.properties = properties;
-	}
+        this.properties = properties;
+    }
+
     /**
      * 
      * @param property
      */
-    public void addProperty(final PropertyConf property)
+    public void add(final PropertyConf property)
     {
-    	if (!properties.contains(property))
-    	{
-    		properties.add(property);
-    	}
+        if (!properties.contains(property))
+        {
+            properties.add(property);
+        }
     }
-    
+
+    /**
+     * 
+     */
+    @Override
+    public String toString()
+    {
+        return properties.toString();
+    }
 }

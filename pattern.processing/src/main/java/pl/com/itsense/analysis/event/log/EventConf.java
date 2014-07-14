@@ -104,7 +104,7 @@ public class EventConf
 	 * 
 	 * @param pattern
 	 */
-	public void addPattern(final PatternConf pattern)
+	public void add(final PatternConf pattern)
 	{
 		patterns.add(pattern);
 	}

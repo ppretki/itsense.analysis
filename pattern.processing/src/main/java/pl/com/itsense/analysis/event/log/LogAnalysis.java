@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
-import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
 /**
@@ -42,19 +41,19 @@ public class LogAnalysis
 		}
 
 		// ACTION AND EVENT HANDLERS
-		for (final EventConsumer consumer : configuration.getEventConsumers())
+		for (final EventConsumerConf consumer : configuration.getEventConsumers())
 		{
 			try 
 			{
-				final Class<?> type = Class.forName(processor.getType());
-				if (EventProcessor.class.isAssignableFrom(type))
+				final Class<?> type = Class.forName(consumer.getType());
+				if (EventConsumer.class.isAssignableFrom(type))
 				{
-					final EventProcessor processorInstane = (EventProcessor)type.newInstance();
-					for (final PropertyConf property : processor.getProperties())
+					final EventConsumer consumerInstance = (EventConsumer)type.newInstance();
+					for (final PropertyConf property : consumer.getProperties())
 					{
-						processorInstane.setProperty(property.getName(), property.getValue());
+						consumerInstance.setProperty(property.getName(), property.getValue());
 					}
-					engine.addEventProcessor(processorInstane);
+					engine.add(consumerInstance);
 				}
 			} 
 			catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 

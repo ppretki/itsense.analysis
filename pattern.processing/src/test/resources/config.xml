@@ -1,23 +1,10 @@
 <config>
-   	<event id="RECEIVED" fileid="apollo">
-	  <pattern id="receivedPing">PING RECEIVED: (\w+)</pattern>
-  	</event>
-
-  	<event id="SEND" fileid="apollo">
-	  <pattern id="sendPing">HnSecEventManager.sendNotification\(\) MultiroomNotification\(MRCon,(\w+)\)</pattern>
-  	</event>
-
-  	
-  	<event id="PATH_CHANGE" fileid="apollo">
-	  <pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
-  	</event>
-
+	<event id="PATH_CHANGE" fileid="apollo">
+		<pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target:(\w+)</pattern>
+	</event>
 	<event id="STATE_ACTIVATE" fileid="apollo">
-	  <pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
-  	</event>
-  	
-  	<consumer type="" events="RECEIVED,SEND"/>
-	
-	<file id="apollo" path="/home/ppretki/MyProjects/logs/logfileAppolo.log"/>
-   	
+		<pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
+	</event>
+	<consumer type="pl.com.itsense.analysis.event.db.DBEventConsumer" events="PATH_CHANGE,STATE_ACTIVATE" />
+	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log" />
 </config>
