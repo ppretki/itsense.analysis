@@ -73,7 +73,7 @@ public class EventProcessingEngine implements EEngine
     {
     	for (final ProcessingLifecycleListener listener : lifecycleListeners)
     	{
-    		listener.enter(lifecycle);
+    		listener.enter(lifecycle, this);
     	}
     }
 
@@ -117,6 +117,11 @@ public class EventProcessingEngine implements EEngine
                 	consumerList.add(consumer);
                 }
             }
+        }
+        
+        if (consumer instanceof ProcessingLifecycleListener)
+        {
+            add((ProcessingLifecycleListener)consumer);
         }
     }
 

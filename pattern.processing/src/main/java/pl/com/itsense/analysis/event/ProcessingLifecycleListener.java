@@ -12,5 +12,5 @@ public interface ProcessingLifecycleListener
 	/**
 	 * 
 	 */
-	void enter(ProcessingLifecycle lifecycle);
+	void enter(ProcessingLifecycle lifecycle,EEngine eEngine);
 }

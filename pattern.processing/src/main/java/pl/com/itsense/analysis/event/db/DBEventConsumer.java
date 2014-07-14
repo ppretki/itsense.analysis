@@ -14,13 +14,15 @@ import pl.com.itsense.analysis.event.BaseEventConsumer;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProcessingListener;
+import pl.com.itsense.analysis.event.ProcessingLifecycleListener;
+import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 
 /**
  * 
  * @author ppretki
  * 
  */
-public class DBEventConsumer extends BaseEventConsumer implements EventProcessingListener
+public class DBEventConsumer extends BaseEventConsumer implements ProcessingLifecycleListener
 {
     // CREATE TABLE events AS (SELECT e.timestamp, e.id, p.group1 FROM event as
     // e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND
@@ -31,12 +33,28 @@ public class DBEventConsumer extends BaseEventConsumer implements EventProcessin
     private Session session;
     /** */
     private Transaction transaction;
-
     /**
      * 
      */
     @Override
-    public void beginProcessing(final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle,final EEngine engine)
+    {
+        switch (lifecycle)
+        {
+            case START:
+                beginProcessing(engine);
+                break;
+
+            case FINISH:
+                endProcessing(engine);
+                break;
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void beginProcessing(final EEngine engine)
     {
         final Configuration cfg = configureDB();
         sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(
@@ -56,8 +74,7 @@ public class DBEventConsumer extends BaseEventConsumer implements EventProcessin
     /**
      * 
      */
-    @Override
-    public void endProcessing(final EEngine engine)
+    private void endProcessing(final EEngine engine)
     {
         try
         {
@@ -84,6 +101,7 @@ public class DBEventConsumer extends BaseEventConsumer implements EventProcessin
         cfg.setProperty(AvailableSettings.HBM2DDL_AUTO, "create");
         cfg.addAnnotatedClass(EventDB.class);
         cfg.addAnnotatedClass(PatternDB.class);
+        cfg.addAnnotatedClass(GroupDB.class);
         return cfg;
     }
 
@@ -119,11 +137,11 @@ public class DBEventConsumer extends BaseEventConsumer implements EventProcessin
                     if (groupId > -1)
                     {
                         final PatternDB patternDB = new PatternDB();
-                        patternDB.setId(name.substring(0, index));
-                        if (groupId == 1)
-                            patternDB.setGroup1(event.getProperty(name));
-                        if (groupId == 2)
-                            patternDB.setGroup2(event.getProperty(name));
+                        patternDB.setPatternId(name.substring(0, index));
+                        final GroupDB groupDB = new GroupDB();
+                        groupDB.setGroupId(groupId);
+                        groupDB.setValue(event.getProperty(name));
+                        patternDB.getPatterns().add(groupDB);
                         eventDB.getPatterns().add(patternDB);
                     }
                 }

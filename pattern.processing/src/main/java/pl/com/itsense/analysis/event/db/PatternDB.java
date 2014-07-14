@@ -1,8 +1,13 @@
 package pl.com.itsense.analysis.event.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -10,72 +15,64 @@ import org.hibernate.annotations.Proxy;
 
 @Proxy(lazy=false)
 @Entity
-@Table(name="Pattern")
+@Table(name="PatternDB")
 public class PatternDB 
 {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	private long patternId;
+	private long id;
 	/** */
-	private String id;
-	/** */
-	private String group1;
-	/** */
-	private String group2;
-	
+	private String patternId;
+    /** */
+    @OneToMany(targetEntity=GroupDB.class, cascade={CascadeType.ALL})
+    private List<GroupDB> patterns = new ArrayList<GroupDB>(); 	
 	/**
 	 * 
 	 * @return
 	 */
-	public String getId() 
-	{
-		return id;
-	}
-
-	/**
-	 * 
-	 * @param id
-	 */
-	public void setId(String id) 
-	{
-		this.id = id;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getGroup1() 
-	{
-		return group1;
-	}
-	
-	/**
-	 * 
-	 * @param group1
-	 */
-	public void setGroup1(final String group1) 
-	{
-		this.group1 = group1;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getGroup2() 
-	{
-		return group2;
-	}
-	
-	/**
-	 * 
-	 * @param group2
-	 */
-	public void setGroup2(final String group2) 
-	{
-		this.group2 = group2;
-	}
-
+    public long getId()
+    {
+        return id;
+    }
+    /**
+     * 
+     * @param id
+     */
+    public void setId(final long id)
+    {
+        this.id = id;
+    }
+    /**
+     * 
+     * @return
+     */
+    public String getPatternId()
+    {
+        return patternId;
+    }
+    /**
+     * 
+     * @param patternId
+     */
+    public void setPatternId(final String patternId)
+    {
+        this.patternId = patternId;
+    }
+    /**
+     * 
+     * @return
+     */
+    public List<GroupDB> getPatterns()
+    {
+        return patterns;
+    }
+    /**
+     * 
+     * @param patterns
+     */
+    public void setPatterns(final List<GroupDB> patterns)
+    {
+        this.patterns = patterns;
+    }
 }

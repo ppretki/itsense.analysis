@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.Proxy;
 
 @Proxy(lazy=false)
 @Entity
-@Table(name="Event")
+@Table(name="EventDB")
 public class EventDB 
 {
 	@Id
@@ -28,6 +29,7 @@ public class EventDB
 	/** */
 	private String id;
 	/** */
+	@Column(length = 1000)
 	private String line;
 	
 	/** */

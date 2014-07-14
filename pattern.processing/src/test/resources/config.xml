@@ -1,6 +1,6 @@
 <config>
 	<event id="PATH_CHANGE" fileid="apollo">
-		<pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target:(\w+)</pattern>
+		<pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
 	</event>
 	<event id="STATE_ACTIVATE" fileid="apollo">
 		<pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
