@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event.db;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -24,15 +25,15 @@ import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
  */
 public class DBEventConsumer extends BaseEventConsumer implements ProcessingLifecycleListener
 {
-    // CREATE TABLE events AS (SELECT e.timestamp, e.id, p.group1 FROM event as
-    // e, event_pattern as ep, pattern as p WHERE e.eventid=ep.event_eventid AND
-    // ep.patterns_patternid=p.patternid);
+    /** */
+    private static int BATCH_SIZE = 1000;
+    /** */
+    private LinkedList<EventDB> cache = new LinkedList<EventDB>();
     /** */
     private SessionFactory sessionFactory;
     /** */
     private Session session;
-    /** */
-    private Transaction transaction;
+    
     /**
      * 
      */
@@ -63,10 +64,6 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
         if (sessionFactory != null)
         {
             session = sessionFactory.openSession();
-            if (session != null)
-            {
-                transaction = session.beginTransaction();
-            }
         }
 
     }
@@ -78,9 +75,9 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
     {
         try
         {
-            if (transaction != null)
+            if (session != null)
             {
-                transaction.commit();
+                pruneCache();
                 session.close();
             }
         }
@@ -111,8 +108,8 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
     @Override
     public void process(final Event event)
     {
-        System.out.println("process: event = " + event);
-        if (transaction != null)
+        //System.out.println("process: event = " + event);
+        if (session != null)
         {
             final String line = event.getProperty("line");
             final EventDB eventDB = new EventDB();
@@ -146,15 +143,44 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
                     }
                 }
             }
-            try
+            
+            cache.add(eventDB);
+            if (cache.size() == BATCH_SIZE)
             {
-                session.save(eventDB);
-                System.out.println("save = " + eventDB.getEventId());
-            }
-            catch (HibernateException e)
-            {
-                e.printStackTrace();
+                pruneCache();
             }
         }
+    }
+    /**
+     * 
+     */
+    private void pruneCache()
+    {
+        final long start = System.currentTimeMillis();
+        Transaction trx = null;
+        try
+        {
+            trx = session.beginTransaction();
+            if (trx != null)
+            {
+                for (final EventDB e : cache)
+                {
+                    session.save(e);
+                }
+                session.flush();
+                session.clear();
+                trx.commit();
+            }
+            System.out.println("save of " + cache.size() + " events took " + (System.currentTimeMillis() - start));
+        }
+        catch (HibernateException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            cache.clear();
+        }
+        
     }
 }
