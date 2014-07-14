@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 
@@ -17,17 +16,12 @@ public class EventProcessingEngine implements EEngine
     private final LinkedList<Event> events = new LinkedList<Event>();
     /** */
     private Event lastEvent;
-    /***/
-    private HashMap<StatefulEventProcessor,LinkedList<EventState>> states = new HashMap<StatefulEventProcessor,LinkedList<EventState>>();
     /** */
-    private HashMap<String, ArrayList<StatelessEventProcessor>> statelessProcessors = new HashMap<String, ArrayList<StatelessEventProcessor>>();
-    /** */
-    private HashMap<String, ArrayList<StatefulEventProcessor>> statefullProcessors = new HashMap<String, ArrayList<StatefulEventProcessor>>();
-    /** */
-    private ArrayList<Report> reports = new ArrayList<Report>();
+    private HashMap<String, LinkedList<EventConsumer>> consumers = new HashMap<String, LinkedList<EventConsumer>>();
     /** */
     private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
-
+    /***/
+    private LinkedList<ProcessingLifecycleListener> lifecycleListeners = new LinkedList<ProcessingLifecycleListener>();
     /** */
     public void process(final EventProvider[] providers)
     {
@@ -37,7 +31,7 @@ public class EventProcessingEngine implements EEngine
         {
             iterators[i] = providers[i].iterator();
         }
-        beginProcessing();
+        enterLifecycle(ProcessingLifecycle.START);
         while (true)
         {
             for (int i = 0; i < currentEvents.length; i++)
@@ -64,191 +58,70 @@ public class EventProcessingEngine implements EEngine
             }
             else
             {
-                processStatelessProcessors(event);
-                processStatefullProcessors(event);
+                process(event);
                 lastEvent = event;
                 events.add(lastEvent);
                 currentEvents[eventIndex] = null;
 
             }
         }
-        endProcessing();
-        for (final Report report : reports)
+        enterLifecycle(ProcessingLifecycle.FINISH);
+    }
+
+    /** */
+    private void enterLifecycle(final ProcessingLifecycle lifecycle)
+    {
+    	for (final ProcessingLifecycleListener listener : lifecycleListeners)
+    	{
+    		listener.enter(lifecycle);
+    	}
+    }
+
+    /**
+     * 
+     */
+    private void process(final Event event)
+    {
+        for (final EventConsumer consumer : consumers.get(event.getId()))
         {
-            report.create(this);
+        	consumer.process(event);
         }
     }
 
-    /**
-     * 
-     */
-    private void beginProcessing()
-    {
-
-    }
 
     /**
-     * 
+     * {@inheritDoc}
      */
-    private void endProcessing()
+    @Override
+    public void add(final EventConsumer consumer)
     {
+        final String events = consumer.getProperty("events");
 
-    }
-
-    /**
-     * 
-     */
-    private void processStatelessProcessors(final Event event)
-    {
-        if (statelessProcessors.get(event.getId()) != null)
+        if (events != null && events.length() > 0)
         {
-            for (final StatelessEventProcessor processor : statelessProcessors.get(event.getId()))
-            {
-                processor.process(event, this);
-            }
-        }
-        if (statefullProcessors.get(event.getId()) != null)
-        {
-            for (final StatefulEventProcessor processor : statefullProcessors.get(event.getId()))
-            {
-                final String stateId = processor.process(event, null, this);
-                if (stateId != null)
-                {
-                    LinkedList<EventState> stateList = states.get(processor);
-                    if (stateList == null)
-                    {
-                        stateList = new LinkedList<EventState>();
-                        states.put(processor, stateList);
-                    }
-                    stateList.add(new EventState(event, stateId));
-                }
-            }
-        }
-    }
-    /**
-     * 
-     */
-    private void processStatefullProcessors(final Event event)
-    {
-        for (final StatefulEventProcessor processor : statefullProcessors.get(event.getId()))
-        {
-            final LinkedList<EventState> stateList = states.get(processor);
-            if (stateList != null)
-            {
-                final HashMap<EventState,EventState> transitions = new HashMap<EventState,EventState>();
-                for (final EventState state : stateList)
-                {
-                    if (!state.event.equals(event))
-                    {
-                        final String stateId = processor.process(event, state.getId(), this);
-                        if (!state.getId().equals(stateId))
-                        {
-                            transitions.put(state, new EventState(event, stateId));
-                        }
-                        else if (stateId == null)
-                        {
-                            transitions.put(state, new EventState(event, State.ID_DEACTIVATE));
-                        }
-                    }
-                }
-                for (final State prevState : transitions.keySet())
-                {
-                    stateList.remove(prevState);
-                    final EventState nextState = transitions.get(prevState);
-                    if (!State.ID_DEACTIVATE.equals(nextState.getId()))
-                    {
-                        stateList.add(transitions.get(prevState));
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 
-     */
-    public String[] getEventIds()
-    {
-        return null;
-    }
-
-    /**
-     * 
-     */
-    public LinkedList<Event> getEvents(final String eventId)
-    {
-        return null;
-    }
-
-    /**
-     * 
-     * @param handler
-     */
-    public void addEventProcessor(final EventProcessor processor)
-    {
-        final String values;
-        if (processor.getProperty("events") != null)
-        {
-            values = processor.getProperty("events");
-        }
-        else
-        {
-            values = null;
-        }
-
-        if (values != null && values.length() > 0)
-        {
-            for (final String eventId : values.split(","))
+            for (final String eventId : events.split(","))
             {
                 final String trimmedEventId = eventId.trim();
-                if (processor instanceof StatefulEventProcessor)
+                LinkedList<EventConsumer> consumerList = consumers.get(trimmedEventId);
+                if (consumerList == null)
                 {
-                    ArrayList<StatefulEventProcessor> list = statefullProcessors
-                        .get(trimmedEventId);
-                    if (list == null)
-                    {
-                        list = new ArrayList<StatefulEventProcessor>();
-                        statefullProcessors.put(trimmedEventId, list);
-                    }
-                    if (!list.contains(processor))
-                    {
-                        list.add((StatefulEventProcessor) processor);
-                    }
+                	consumerList = new LinkedList<EventConsumer>();
+                	consumers.put(trimmedEventId, consumerList);
                 }
-                else if (processor instanceof StatelessEventProcessor)
+                if (!consumerList.contains(consumer))
                 {
-                    ArrayList<StatelessEventProcessor> list = statelessProcessors
-                        .get(trimmedEventId);
-                    if (list == null)
-                    {
-                        list = new ArrayList<StatelessEventProcessor>();
-                        statelessProcessors.put(trimmedEventId, list);
-                    }
-                    if (!list.contains(processor))
-                    {
-                        list.add((StatelessEventProcessor) processor);
-                    }
+                	consumerList.add(consumer);
                 }
-
             }
         }
     }
 
-    /**
-     * 
-     * @param handler
-     */
-    public void addReport(final Report report)
-    {
-        if (!reports.contains(report))
-        {
-            reports.add(report);
-        }
-    }
+    
 
     /**
-     * 
+     * {@inheritDoc}
      */
+    @Override
     public void log(final String msg, final LogLevel level)
     {
         ArrayList<String> log = logs.get(level);
@@ -261,103 +134,14 @@ public class EventProcessingEngine implements EEngine
     }
 
     /**
-     * 
+     * {@inheritDoc}
      */
-    @Override
-    public List<String> getLogs(LogLevel level)
-    {
-        return logs.get(level);
-    }
-
-    @Override
-    public Report[] getReports()
-    {
-        return reports.toArray(new Report[0]);
-    }
-
-    @Override
-    public Event getEvent()
-    {
-        return lastEvent;
-    }
-
-    @Override
-    public Event getEvent(String eventId)
-    {
-        return null;
-    }
-
-    /**
-     * 
-     * @author P.Pretki
-     *
-     */
-    private class EventState implements State
-    {
-        /** */
-        private EventState prevEvent;
-        /** */
-        private EventState nextEvent;
-        /** */
-        private final Event event;
-        /** */
-        private final String stateId;
-        /**
-         * 
-         */
-        public EventState(final Event event, final String stateId)
-        {
-            this.event = event;
-            this.stateId = stateId;
-        }
-        /**
-         * 
-         */
-        @Override
-        public long activationTimestamp()
-        {
-            return event.getTimestamp();
-        }
-        /**
-         * 
-         */
-        @Override
-        public String getId()
-        {
-            return stateId;
-        }
-        /**
-         * 
-         * @param nextEvent
-         */
-        public void setNext(final EventState nextEvent)
-        {
-            this.nextEvent = nextEvent;
-        }
-        /**
-         * 
-         * @return
-         */
-        public EventState getNext()
-        {
-            return nextEvent;
-        }
-        /**
-         * 
-         * @param nextEvent
-         */
-        public void setPrev(final EventState nextEvent)
-        {
-            this.prevEvent = nextEvent;
-        }
-        /**
-         * 
-         * @return
-         */
-        public EventState getPrev()
-        {
-            return prevEvent;
-        }
-
-    }
+	@Override
+	public void add(final ProcessingLifecycleListener listener) 
+	{
+		if (!lifecycleListeners.contains(listener))
+		{
+			lifecycleListeners.add(listener);
+		}
+	}
 }

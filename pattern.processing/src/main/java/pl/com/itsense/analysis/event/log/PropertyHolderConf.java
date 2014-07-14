@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author ppretki
  *
  */
-public class PropertiesConf 
+public class PropertyHolderConf
 {
     /** */
     private ArrayList<PropertyConf> properties = new ArrayList<PropertyConf>();

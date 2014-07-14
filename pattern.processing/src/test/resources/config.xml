@@ -15,10 +15,8 @@
 	<event id="STATE_ACTIVATE" fileid="apollo">
 	  <pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
   	</event>
-
-  	<processor id="CONNECTION_MONITOR" events="SEND,STATE_ACTIVATE" type="pl.com.itsense.analysis.event.log.processor.ConnectionMonitor"/>
-	
-	<processor id="STATE_ACTIVATION_MONITOR" events="PATH_CHANGE,STATE_ACTIVATE" type="pl.com.itsense.analysis.event.log.processor.StateActivationMonitor"/>
+  	
+  	<consumer type="" events="RECEIVED,SEND"/>
 	
 	<file id="apollo" path="/home/ppretki/MyProjects/logs/logfileAppolo.log"/>
    	

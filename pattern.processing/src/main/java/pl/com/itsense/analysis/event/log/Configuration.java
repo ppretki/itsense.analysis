@@ -23,7 +23,7 @@ public class Configuration
 	/** */
 	private final ArrayList<ReportConf> reports = new ArrayList<ReportConf>();
 	/** */
-	private final ArrayList<ProcessorConf> processors = new ArrayList<ProcessorConf>();
+	private final ArrayList<EventConsumerConf> processors = new ArrayList<EventConsumerConf>();
 	
 	/**
 	 * 

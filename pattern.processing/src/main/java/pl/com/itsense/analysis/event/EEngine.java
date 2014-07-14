@@ -1,10 +1,22 @@
 package pl.com.itsense.analysis.event;
 
-import java.util.Collection;
-import java.util.List;
-
+/**
+ * 
+ * @author ppretki
+ *
+ */
 public interface EEngine 
 {
+	enum ProcessingLifecycle
+	{
+		START,
+		FINISH
+	}
+	/**
+	 * 
+	 * @author ppretki
+	 *
+	 */
 	enum LogLevel
 	{
 		INFO,
@@ -13,36 +25,18 @@ public interface EEngine
 	}
 	/**
 	 * 
-	 * @param eventId
-	 * @return
-	 */
-	Event getEvent(String eventId);
-	/**
-	 * 
-	 * @return
-	 */
-	Event getEvent();
-	/**
-	 * 
-	 * @return
-	 */
-	String[] getEventIds();
-	/**
-	 * 
-	 */
-	Collection<Event> getEvents(String eventId);
-	/**
-	 * 
+	 * @param msg
+	 * @param level
 	 */
 	void log(String msg, LogLevel level);
 	/**
 	 * 
+	 * @param listener
 	 */
-	List<String> getLogs(LogLevel level);
-
+	void add(ProcessingLifecycleListener listener);
 	/**
 	 * 
-    */
-	Report[] getReports();
-
+	 * @param consumer
+	 */
+	void add(EventConsumer consumer);
 }

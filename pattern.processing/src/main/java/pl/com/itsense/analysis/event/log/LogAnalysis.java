@@ -3,8 +3,8 @@ package pl.com.itsense.analysis.event.log;
 import java.io.File;
 import java.util.ArrayList;
 
+import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
-import pl.com.itsense.analysis.event.EventProcessor;
 import pl.com.itsense.analysis.event.EventProvider;
 import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
@@ -42,7 +42,7 @@ public class LogAnalysis
 		}
 
 		// ACTION AND EVENT HANDLERS
-		for (final ProcessorConf processor : configuration.getProcessors())
+		for (final EventConsumer consumer : configuration.getEventConsumers())
 		{
 			try 
 			{
@@ -63,27 +63,6 @@ public class LogAnalysis
 			}
 		}
 
-		// REPORT
-		for (final ReportConf reportConf : configuration.getReports())
-        {
-			try 
-            {
-				final Class<?> type = Class.forName(reportConf.getType());
-				if (Report.class.isAssignableFrom(type))
-                {
-					final Report reportInstance = (Report)type.newInstance();
-                    for (final PropertyConf property : reportConf.getProperties())
-                    {
-                    	reportInstance.setProperty(property.getName(), property.getValue());
-                    }
-                    engine.addReport(reportInstance);
-                }
-            } 
-            catch (ClassNotFoundException | InstantiationException| IllegalAccessException e) 
-            {
-            	e.printStackTrace();
-            }
-        }
 		engine.process(eventProviders);
 	}
 	
