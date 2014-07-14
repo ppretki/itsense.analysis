@@ -82,9 +82,13 @@ public class EventProcessingEngine implements EEngine
      */
     private void process(final Event event)
     {
-        for (final EventConsumer consumer : consumers.get(event.getId()))
+        final LinkedList<EventConsumer> consumerLists = consumers.get(event.getId());
+        if (consumerLists != null)
         {
-        	consumer.process(event);
+            for (final EventConsumer consumer : consumers.get(event.getId()))
+            {
+                consumer.process(event);
+            }
         }
     }
 

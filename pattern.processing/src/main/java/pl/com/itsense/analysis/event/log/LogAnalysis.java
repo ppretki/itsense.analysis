@@ -16,8 +16,6 @@ import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 public class LogAnalysis 
 {
 	/** */
-	private static String TEMP_DIRECTORY = System.getProperty("user.home"); 
-	/** */
 	public static void main(final String[] args) 
 	{
 		final Configuration configuration = Configuration.parse(new File(args[0]));

@@ -1,7 +1,5 @@
 package pl.com.itsense.analysis.event;
 
-import java.util.Set;
-
 /**
  * 
  * @author ppretki

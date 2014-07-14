@@ -29,11 +29,12 @@ public class Configuration
 
         final Digester digester = new Digester();
         digester.setValidating(false);
-        digester.addObjectCreate("config",               "pl.com.itsense.analysis.event.log.Configuration");
-        digester.addObjectCreate("config/event",         "pl.com.itsense.analysis.event.log.EventConf");
-        digester.addObjectCreate("config/event/pattern", "pl.com.itsense.analysis.event.log.PatternConf");
-        digester.addObjectCreate("config/file",          "pl.com.itsense.analysis.event.log.FileConf");
-        digester.addObjectCreate("config/consumer",      "pl.com.itsense.analysis.event.log.EventConsumerConf");
+        digester.addObjectCreate("config",                  "pl.com.itsense.analysis.event.log.Configuration");
+        digester.addObjectCreate("config/event",            "pl.com.itsense.analysis.event.log.EventConf");
+        digester.addObjectCreate("config/event/pattern",    "pl.com.itsense.analysis.event.log.PatternConf");
+        digester.addObjectCreate("config/file",             "pl.com.itsense.analysis.event.log.FileConf");
+        digester.addObjectCreate("config/consumer",         "pl.com.itsense.analysis.event.log.EventConsumerConf");
+        digester.addObjectCreate("config/consumer/property","pl.com.itsense.analysis.event.log.PropertyConf");
 
         digester.addSetNext("config/event",              "add", "pl.com.itsense.analysis.event.log.EventConf");
         digester.addSetNext("config/event/pattern",      "add", "pl.com.itsense.analysis.event.log.PatternConf");
@@ -41,10 +42,13 @@ public class Configuration
         digester.addSetNext("config/consumer",           "add", "pl.com.itsense.analysis.event.log.EventConsumerConf");
         digester.addSetNext("config/consumer/property",  "add", "pl.com.itsense.analysis.event.log.PropertyConf");
 
+        digester.addCallMethod( "config/event/pattern", "setValue", 0);
+        
         digester.addSetProperties("config");
         digester.addSetProperties("config/event");
         digester.addSetProperties("config/file");
         digester.addSetProperties("config/consumer");
+        digester.addSetProperties("config/consumer/property");
         digester.addSetProperties("config/event/pattern");
 
         try

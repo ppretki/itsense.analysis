@@ -5,6 +5,9 @@
 	<event id="STATE_ACTIVATE" fileid="apollo">
 		<pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
 	</event>
-	<consumer type="pl.com.itsense.analysis.event.db.DBEventConsumer" events="PATH_CHANGE,STATE_ACTIVATE" />
+	<consumer type="pl.com.itsense.analysis.event.db.DBEventConsumer">
+	   <property name="events" value="PATH_CHANGE,STATE_ACTIVATE"/>
+	</consumer>
+	
 	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log" />
 </config>

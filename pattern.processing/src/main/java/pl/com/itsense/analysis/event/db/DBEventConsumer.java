@@ -93,6 +93,7 @@ public class DBEventConsumer extends BaseEventConsumer implements EventProcessin
     @Override
     public void process(final Event event)
     {
+        System.out.println("process: event = " + event);
         if (transaction != null)
         {
             final String line = event.getProperty("line");
