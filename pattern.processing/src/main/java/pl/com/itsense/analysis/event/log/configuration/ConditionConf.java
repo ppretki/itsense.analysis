@@ -24,4 +24,12 @@ public class ConditionConf
     {
         this.mvel = mvel;
     }
+    /**
+     * 
+     */
+    @Override
+    public String toString()
+    {
+        return "Condition: mvel = " + mvel;
+    }
 }

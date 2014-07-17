@@ -11,6 +11,7 @@ import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
 import pl.com.itsense.analysis.event.log.configuration.FileConf;
 import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
+import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
 /**
@@ -27,7 +28,7 @@ public class LogAnalysis
         System.out.println(configuration);
         final EventProcessingEngine engine = new EventProcessingEngine();
 
-        // EVENTS PROVIDERS
+        // PROVIDERS
         final EventProvider[] eventProviders = new EventProvider[configuration.getFiles().size()];
         for (int i = 0; i < eventProviders.length; i++)
         {
@@ -44,7 +45,7 @@ public class LogAnalysis
                 file.getFrom());
         }
 
-        // ACTION AND EVENT HANDLERS
+        // CONSUMERS
         for (final EventConsumerConf consumer : configuration.getEventConsumers())
         {
             try
@@ -66,7 +67,12 @@ public class LogAnalysis
             }
         }
 
-        engine.process(eventProviders);
+        
+        // SEQUENCES
+        for (final SequenceConf sequence : configuration.getSequences())
+        {
+        }
+        //engine.process(eventProviders);
     }
 
 }

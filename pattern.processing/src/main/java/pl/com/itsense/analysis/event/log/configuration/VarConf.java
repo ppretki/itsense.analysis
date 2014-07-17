@@ -40,5 +40,13 @@ public class VarConf
     {
         this.value = value;
     }
-    
+    /**
+     * 
+     */
+    @Override
+    public String toString()
+    {
+        return  "Variable: name = " + name + ", value = " + value;
+    }
+
 }

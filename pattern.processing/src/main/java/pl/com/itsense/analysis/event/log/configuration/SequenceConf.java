@@ -56,4 +56,18 @@ public class SequenceConf
     {
         this.id = id;
     }
+    /**
+     * 
+     */
+    @Override
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Sequence: id = " + id + ", terms:").append("\n");
+        for (final TermConf term : terms)
+        {
+            sb.append(term).append("\n");
+        }
+        return  sb.toString();
+    }
 }

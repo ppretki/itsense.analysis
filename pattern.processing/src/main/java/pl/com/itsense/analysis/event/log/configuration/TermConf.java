@@ -108,4 +108,17 @@ public class TermConf
     {
         return condition;
     }
+    
+    @Override
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Term: event = " + event + ", index = " + index + ", condition = " + condition + "variables: ").append("\n");
+        for (final VarConf var : variables)
+        {
+            sb.append(var).append("\n");
+        }
+        return  sb.toString();
+    }
+
 }

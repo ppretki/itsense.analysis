@@ -30,26 +30,27 @@ public class Configuration
 
         final Digester digester = new Digester();
         digester.setValidating(false);
-        digester.addObjectCreate("config",                          "pl.com.itsense.analysis.event.log.Configuration");
-        digester.addObjectCreate("config/event",                    "pl.com.itsense.analysis.event.log.EventConf");
-        digester.addObjectCreate("config/event/pattern",            "pl.com.itsense.analysis.event.log.PatternConf");
-        digester.addObjectCreate("config/file",                     "pl.com.itsense.analysis.event.log.FileConf");
-        digester.addObjectCreate("config/consumer",                 "pl.com.itsense.analysis.event.log.EventConsumerConf");
-        digester.addObjectCreate("config/consumer/property",        "pl.com.itsense.analysis.event.log.PropertyConf");
-        digester.addObjectCreate("config/sequence",                 "pl.com.itsense.analysis.event.log.SequenceConf");
-        digester.addObjectCreate("config/sequence/term",            "pl.com.itsense.analysis.event.log.TermConf");
-        digester.addObjectCreate("config/sequence/term/var",        "pl.com.itsense.analysis.event.log.VarConf");
-        digester.addObjectCreate("config/sequence/term/condition",  "pl.com.itsense.analysis.event.log.ConditionConf");
+        digester.addObjectCreate("config",                          "pl.com.itsense.analysis.event.log.configuration.Configuration");
+        digester.addObjectCreate("config/event",                    "pl.com.itsense.analysis.event.log.configuration.EventConf");
+        digester.addObjectCreate("config/event/pattern",            "pl.com.itsense.analysis.event.log.configuration.PatternConf");
+        digester.addObjectCreate("config/file",                     "pl.com.itsense.analysis.event.log.configuration.FileConf");
+        digester.addObjectCreate("config/consumer",                 "pl.com.itsense.analysis.event.log.configuration.EventConsumerConf");
+        digester.addObjectCreate("config/consumer/property",        "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
+        digester.addObjectCreate("config/sequence",                 "pl.com.itsense.analysis.event.log.configuration.SequenceConf");
+        digester.addObjectCreate("config/sequence/term",            "pl.com.itsense.analysis.event.log.configuration.TermConf");
+        digester.addObjectCreate("config/sequence/term/var",        "pl.com.itsense.analysis.event.log.configuration.VarConf");
+        digester.addObjectCreate("config/sequence/term/condition",  "pl.com.itsense.analysis.event.log.configuration.ConditionConf");
         
 
-        digester.addSetNext("config/event",                     "add", "pl.com.itsense.analysis.event.log.EventConf");
-        digester.addSetNext("config/event/pattern",             "add", "pl.com.itsense.analysis.event.log.PatternConf");
-        digester.addSetNext("config/file",                      "add", "pl.com.itsense.analysis.event.log.FileConf");
-        digester.addSetNext("config/consumer",                  "add", "pl.com.itsense.analysis.event.log.EventConsumerConf");
-        digester.addSetNext("config/consumer/property",         "add", "pl.com.itsense.analysis.event.log.PropertyConf");
-        digester.addSetNext("config/sequence/term",             "add", "pl.com.itsense.analysis.event.log.TermConf");
-        digester.addSetNext("config/sequence/term/var",         "add", "pl.com.itsense.analysis.event.log.VarConf");
-        digester.addSetNext("config/sequence/term/condition",   "add", "pl.com.itsense.analysis.event.log.VarConf");
+        digester.addSetNext("config/event",                     "add",          "pl.com.itsense.analysis.event.configuration.log.EventConf");
+        digester.addSetNext("config/event/pattern",             "add",          "pl.com.itsense.analysis.event.configuration.log.PatternConf");
+        digester.addSetNext("config/file",                      "add",          "pl.com.itsense.analysis.event.configuration.log.FileConf");
+        digester.addSetNext("config/consumer",                  "add",          "pl.com.itsense.analysis.event.configuration.log.EventConsumerConf");
+        digester.addSetNext("config/consumer/property",         "add",          "pl.com.itsense.analysis.event.configuration.log.PropertyConf");
+        digester.addSetNext("config/sequence",                  "add",          "pl.com.itsense.analysis.event.configuration.log.SequenceConf");
+        digester.addSetNext("config/sequence/term",             "add",          "pl.com.itsense.analysis.event.configuration.log.TermConf");
+        digester.addSetNext("config/sequence/term/var",         "add",          "pl.com.itsense.analysis.event.configuration.log.VarConf");
+        digester.addSetNext("config/sequence/term/condition",   "setCondition", "pl.com.itsense.analysis.event.configuration.log.ConditionConf");
         
         digester.addSetProperties("config");
         digester.addSetProperties("config/event");
@@ -178,11 +179,17 @@ public class Configuration
         {
             sb.append(file).append("\n");
         }
-        sb.append("-------- Configuration: EventConsumers --------").append("\n");
+        sb.append("-------- Configuration: Consumers --------").append("\n");
         for (final EventConsumerConf consumer : consumers)
         {
             sb.append(consumer).append("\n");
         }
+        sb.append("-------- Configuration: Sequences --------").append("\n");
+        for (final SequenceConf sequence : sequences)
+        {
+            sb.append(sequences).append("\n");
+        }
+
         return sb.toString();
     }
 
