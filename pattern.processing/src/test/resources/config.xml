@@ -17,5 +17,8 @@
 	   </term>
 	</sequence>
 	
+	
+	<sequenceconsumer type="pl.com.itsense.analysis.event.analytics.DescriptiveStatistics" sequences="STATE_ACTIVATION"/>
+	
 	<file id="apollo" path="/home/ppretki/adb/logfileAppolo.log" />
 </config>

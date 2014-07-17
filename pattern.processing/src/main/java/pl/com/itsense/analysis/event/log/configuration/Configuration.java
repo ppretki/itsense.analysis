@@ -17,9 +17,11 @@ public class Configuration
     /** */
     private final ArrayList<FileConf> files = new ArrayList<FileConf>();
     /** */
-    private final ArrayList<EventConsumerConf> consumers = new ArrayList<EventConsumerConf>();
+    private final ArrayList<EventConsumerConf> eventConsumers = new ArrayList<EventConsumerConf>();
     /** */
     private final ArrayList<SequenceConf> sequences = new ArrayList<SequenceConf>();
+    /** */
+    private final ArrayList<SequenceConsumerConf> sequenceConsumers = new ArrayList<SequenceConsumerConf>();
     /**
      * 
      * @param xmlConfigFile
@@ -40,7 +42,8 @@ public class Configuration
         digester.addObjectCreate("config/sequence/term",            "pl.com.itsense.analysis.event.log.configuration.TermConf");
         digester.addObjectCreate("config/sequence/term/var",        "pl.com.itsense.analysis.event.log.configuration.VarConf");
         digester.addObjectCreate("config/sequence/term/condition",  "pl.com.itsense.analysis.event.log.configuration.ConditionConf");
-        
+        digester.addObjectCreate("config/sequenceconsumer",         "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
+        digester.addObjectCreate("config/sequenceconsumer/property","pl.com.itsense.analysis.event.log.configuration.PropertyConf");
 
         digester.addSetNext("config/event",                     "add",          "pl.com.itsense.analysis.event.configuration.log.EventConf");
         digester.addSetNext("config/event/pattern",             "add",          "pl.com.itsense.analysis.event.configuration.log.PatternConf");
@@ -51,6 +54,8 @@ public class Configuration
         digester.addSetNext("config/sequence/term",             "add",          "pl.com.itsense.analysis.event.configuration.log.TermConf");
         digester.addSetNext("config/sequence/term/var",         "add",          "pl.com.itsense.analysis.event.configuration.log.VarConf");
         digester.addSetNext("config/sequence/term/condition",   "setCondition", "pl.com.itsense.analysis.event.configuration.log.ConditionConf");
+        digester.addSetNext("config/sequenceconsumer",          "add",          "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
+        digester.addSetNext("config/sequenceconsumer/property", "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
         
         digester.addSetProperties("config");
         digester.addSetProperties("config/event");
@@ -62,7 +67,9 @@ public class Configuration
         digester.addSetProperties("config/sequence/term");
         digester.addSetProperties("config/sequence/term/var");
         digester.addSetProperties("config/sequence/term/condition");
-
+        digester.addSetProperties("config/sequenceconsumer");
+        digester.addSetProperties("config/sequenceconsumer/property");
+        
         digester.addCallMethod( "config/event/pattern", "setValue", 0);
         
 
@@ -122,19 +129,15 @@ public class Configuration
         }
     }
 
-    public ArrayList<EventConsumerConf> getEventConsumers()
-    {
-        return consumers;
-    }
 
     /**
      *
      */
     public void add(final EventConsumerConf consumer)
     {
-        if (!consumers.contains(consumer) && (consumer != null))
+        if (!eventConsumers.contains(consumer) && (consumer != null))
         {
-            consumers.add(consumer);
+            eventConsumers.add(consumer);
         }
     }
     /**
@@ -147,6 +150,16 @@ public class Configuration
            sequences.add(sequence);
        }
    }
+   /**
+   *
+   */
+  public void add(final SequenceConsumerConf consumer)
+  {
+      if (!sequenceConsumers.contains(consumer) && (consumer != null))
+      {
+          sequenceConsumers.add(consumer);
+      }
+  }
 
     /**
      * 
@@ -160,10 +173,21 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<EventConsumerConf> getConsumers()
+    public ArrayList<EventConsumerConf> getEventConsumers()
     {
-        return consumers;
+        return eventConsumers;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    public ArrayList<SequenceConsumerConf> getSequenceConsumers()
+    {
+        return sequenceConsumers;
+    }
+    
+    
     
     @Override
     public String toString()
@@ -179,15 +203,20 @@ public class Configuration
         {
             sb.append(file).append("\n");
         }
-        sb.append("-------- Configuration: Consumers --------").append("\n");
-        for (final EventConsumerConf consumer : consumers)
+        sb.append("-------- Configuration: EventConsumers --------").append("\n");
+        for (final EventConsumerConf consumer : eventConsumers)
         {
             sb.append(consumer).append("\n");
         }
         sb.append("-------- Configuration: Sequences --------").append("\n");
         for (final SequenceConf sequence : sequences)
         {
-            sb.append(sequences).append("\n");
+            sb.append(sequence).append("\n");
+        }
+        sb.append("-------- Configuration: SequenceConsumers --------").append("\n");
+        for (final SequenceConsumerConf consumer: sequenceConsumers)
+        {
+            sb.append(consumer).append("\n");
         }
 
         return sb.toString();

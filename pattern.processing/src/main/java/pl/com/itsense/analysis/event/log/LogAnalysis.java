@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.SequenceFactory;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
 import pl.com.itsense.analysis.event.log.configuration.FileConf;
 import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
-import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
+import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
 /**
@@ -46,7 +47,7 @@ public class LogAnalysis
                 file.getFrom());
         }
 
-        // CONSUMERS
+        // EVENT CONSUMERS
         for (final EventConsumerConf consumer : configuration.getEventConsumers())
         {
             try
@@ -68,6 +69,30 @@ public class LogAnalysis
             }
         }
 
+        // SEQUANCE CONSUMERS
+        for (final SequenceConsumerConf consumer : configuration.getSequenceConsumers())
+        {
+            try
+            {
+                final Class<?> type = Class.forName(consumer.getType());
+                if (SequenceConsumer.class.isAssignableFrom(type))
+                {
+                    final SequenceConsumer consumerInstance = (SequenceConsumer) type.newInstance();
+                    for (final PropertyConf property : consumer.getProperties())
+                    {
+                        consumerInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    consumerInstance.configure(consumer);
+                    engine.add(consumerInstance);
+                }
+            }
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        // SEQUENCE FACTORY
         final SequenceFactory sequenceFactory = new SequenceFactory();
         sequenceFactory.setSequances(configuration.getSequences());
         engine.setSequenceFactory(sequenceFactory);

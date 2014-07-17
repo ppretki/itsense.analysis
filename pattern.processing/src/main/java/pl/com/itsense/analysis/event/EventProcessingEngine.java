@@ -26,6 +26,8 @@ public class EventProcessingEngine implements EEngine
     /** */
     private LinkedList<ProcessingLifecycleListener> lifecycleListeners = new LinkedList<ProcessingLifecycleListener>();
     /** */
+    private HashMap<String,LinkedList<SequenceConsumer>> sequenceConsumers = new HashMap<String,LinkedList<SequenceConsumer>>();
+    /** */
     private SequenceFactory sequenceFactory;
     /** */
     public void process(final EventProvider[] providers)
@@ -101,11 +103,21 @@ public class EventProcessingEngine implements EEngine
                         if (seq.acceptedEventId() == null)
                         {
                             finished.add(seq);
-                            System.out.println("EventProcessingEngine.process: seq[FINISHED] = " + seq);
                         }
                     }
                 }
                 queue.removeAll(finished);
+                for (final Sequence sequence : finished)
+                {
+                    final LinkedList<SequenceConsumer> consumers = sequenceConsumers.get(sequence.getId());
+                    if (consumers != null)
+                    {
+                        for (final SequenceConsumer consumer : consumers)
+                        {
+                            consumer.consume(sequence);
+                        }
+                    }
+                }
             }
             final List<Sequence> list = sequenceFactory.getSequance(event);
             if (list != null)
@@ -168,6 +180,8 @@ public class EventProcessingEngine implements EEngine
     }
 
     
+    
+    
 
     /**
      * {@inheritDoc}
@@ -202,5 +216,29 @@ public class EventProcessingEngine implements EEngine
 	public void setSequenceFactory(final SequenceFactory sequenceFactory)
     {
         this.sequenceFactory = sequenceFactory;
+    }
+	/**
+	 * 
+	 */
+    @Override
+    public void add(final SequenceConsumer consumer)
+    {
+        for (final String sequenceId : consumer.getSequenceIds())
+        {
+            LinkedList<SequenceConsumer> consumerList = sequenceConsumers.get(sequenceId);
+            if (consumerList == null)
+            {
+                consumerList = new LinkedList<SequenceConsumer>();
+                sequenceConsumers.put(sequenceId, consumerList);
+            }
+            if (!consumerList.contains(consumer))
+            {
+                consumerList.add(consumer);
+            }
+        }
+        if (consumer instanceof ProcessingLifecycleListener)
+        {
+            add((ProcessingLifecycleListener)consumer);
+        }
     }
 }
