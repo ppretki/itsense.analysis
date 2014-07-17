@@ -23,11 +23,11 @@ public class EventDB
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	private long eventId;
+	private long id;
 	/** */
 	private Date timestamp;
 	/** */
-	private String id;
+	private String eventId;
 	/** */
 	@Column(length = 1000)
 	private String line;
@@ -57,18 +57,18 @@ public class EventDB
 	 * 
 	 * @return
 	 */
-	public String getId() 
+	public String getEventId() 
 	{
-		return id;
+		return eventId;
 	}
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public void setId(String id) 
+	public void setEventId(String eventId) 
 	{
-		this.id = id;
+		this.eventId = eventId;
 	}
 	
 	
@@ -76,18 +76,18 @@ public class EventDB
 	 * 
 	 * @return
 	 */
-	public long getEventId() 
+	public long getId() 
 	{
-		return eventId;
+		return id;
 	}
 	
 	/**
 	 * 
 	 * @param eventId
 	 */
-	public void setEventId(final long eventId) 
+	public void setId(final long id) 
 	{
-		this.eventId = eventId;
+		this.id = id;
 	}
 	
 	/**

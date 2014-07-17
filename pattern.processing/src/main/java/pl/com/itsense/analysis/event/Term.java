@@ -64,7 +64,7 @@ public class Term
         boolean accept = false;
         if ((eventId != null) && (eventId.equals(event.getId())))
         {
-            accept = mvel == null ? true : (Boolean)MVEL.eval(mvel,resolver);
+            accept = mvel == null ? true : (Boolean)MVEL.eval(mvel, resolver);
         }
         return accept;
     }

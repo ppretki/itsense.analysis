@@ -16,16 +16,16 @@ import pl.com.itsense.analysis.event.log.configuration.TermConf;
 public class SequenceFactory
 {
     /** */
-    private static ArrayList<SequenceConf> sequances;
+    private ArrayList<SequenceConf> sequances;
     /** */
-    private static HashMap<String,ArrayList<Sequence>> prototypes = new HashMap<String,ArrayList<Sequence>>(); 
+    private HashMap<String,ArrayList<Sequence>> prototypes = new HashMap<String,ArrayList<Sequence>>(); 
     /**
      * 
      * @param sequances
      */
-    public static void setSequances(final ArrayList<SequenceConf> sequances)
+    public void setSequances(final ArrayList<SequenceConf> sequances)
     {
-        SequenceFactory.sequances = sequances;
+        this.sequances = sequances;
         prepare();
     }
     /**
@@ -33,7 +33,7 @@ public class SequenceFactory
      * @param event
      * @return
      */
-    public static List<Sequence> getSequance(final Event event)
+    public List<Sequence> getSequance(final Event event)
     {
         List<Sequence> sequence = null;
         if (prototypes != null)
@@ -53,18 +53,23 @@ public class SequenceFactory
                     }
                 }
             }
-            for (final Sequence seq : sequence)
+            if (sequence != null)
             {
-                list.remove(seq);
-                list.add(new Sequence(seq.getTerms()));
+                for (final Sequence seq : sequence)
+                {
+                    list.remove(seq);
+                    list.add(new Sequence(seq.getTerms()));
+                }
             }
+
         }
+        
         return sequence;
     }
     /**
      * 
      */
-    private static void prepare()
+    private void prepare()
     {
         if (sequances != null)
         {

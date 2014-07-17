@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.SequenceFactory;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
@@ -67,12 +68,11 @@ public class LogAnalysis
             }
         }
 
+        final SequenceFactory sequenceFactory = new SequenceFactory();
+        sequenceFactory.setSequances(configuration.getSequences());
+        engine.setSequenceFactory(sequenceFactory);
         
-        // SEQUENCES
-        for (final SequenceConf sequence : configuration.getSequences())
-        {
-        }
-        //engine.process(eventProviders);
+        engine.process(eventProviders);
     }
 
 }

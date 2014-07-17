@@ -43,14 +43,14 @@ public class Sequence
     public boolean accept(final Event event)
     {
         boolean finished = false;
+        for (final String varName : terms[index].getVariables().keySet())
+        {
+            context.put(varName, event.getProperty(terms[index].getVariables().get(varName)));
+        }
         if (terms[index].accept(event,resolver))
         {
             index++;
-            for (final String varName : terms[index].getVariables().keySet())
-            {
-                context.put(varName, event.getProperty(terms[index].getVariables().get(varName)));
-            }
-            
+            finished = true;
         }
         return finished;
     }

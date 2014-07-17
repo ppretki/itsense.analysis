@@ -91,7 +91,7 @@ public class EventProcessingEngine implements EEngine
         {
 
             LinkedList<Sequence> queue = sequances.get(event.getId());
-            if (queue == null)
+            if (queue != null)
             {
                 final ArrayList<Sequence> finished = new ArrayList<Sequence>(); 
                 for (final Sequence seq : queue)
@@ -101,6 +101,7 @@ public class EventProcessingEngine implements EEngine
                         if (seq.acceptedEventId() == null)
                         {
                             finished.add(seq);
+                            System.out.println("EventProcessingEngine.process: seq[FINISHED] = " + seq);
                         }
                     }
                 }
@@ -118,6 +119,7 @@ public class EventProcessingEngine implements EEngine
                         sequances.put(sequence.acceptedEventId(), queue);
                     }
                     queue.add(sequence);
+                    System.out.println("EventProcessingEngine.process: seq[NEW] = " + sequence);
                 }
             }
             
