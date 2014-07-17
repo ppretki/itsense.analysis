@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
@@ -19,9 +20,13 @@ public class EventProcessingEngine implements EEngine
     /** */
     private HashMap<String, LinkedList<EventConsumer>> consumers = new HashMap<String, LinkedList<EventConsumer>>();
     /** */
+    private HashMap<String, LinkedList<Sequence>> sequances = new HashMap<String, LinkedList<Sequence>>();
+    /** */
     private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
-    /***/
+    /** */
     private LinkedList<ProcessingLifecycleListener> lifecycleListeners = new LinkedList<ProcessingLifecycleListener>();
+    /** */
+    private SequenceFactory sequenceFactory;
     /** */
     public void process(final EventProvider[] providers)
     {
@@ -82,6 +87,42 @@ public class EventProcessingEngine implements EEngine
      */
     private void process(final Event event)
     {
+        if (sequenceFactory != null)
+        {
+
+            LinkedList<Sequence> queue = sequances.get(event.getId());
+            if (queue == null)
+            {
+                final ArrayList<Sequence> finished = new ArrayList<Sequence>(); 
+                for (final Sequence seq : queue)
+                {
+                    if (seq.accept(event))
+                    {
+                        if (seq.acceptedEventId() == null)
+                        {
+                            finished.add(seq);
+                        }
+                    }
+                }
+                queue.removeAll(finished);
+            }
+            final List<Sequence> list = sequenceFactory.getSequance(event);
+            if (list != null)
+            {
+                for (final Sequence sequence : list)
+                {
+                    queue = sequances.get(sequence.acceptedEventId());
+                    if (queue == null)
+                    {
+                        queue = new LinkedList<Sequence>();
+                        sequances.put(sequence.acceptedEventId(), queue);
+                    }
+                    queue.add(sequence);
+                }
+            }
+            
+        }
+        
         final LinkedList<EventConsumer> consumerLists = consumers.get(event.getId());
         if (consumerLists != null)
         {
@@ -153,4 +194,12 @@ public class EventProcessingEngine implements EEngine
 			lifecycleListeners.add(listener);
 		}
 	}
+	/**
+	 * 
+	 * @param sequenceFactory
+	 */
+	public void setSequenceFactory(final SequenceFactory sequenceFactory)
+    {
+        this.sequenceFactory = sequenceFactory;
+    }
 }

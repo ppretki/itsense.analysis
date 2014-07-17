@@ -46,6 +46,11 @@ public class Sequence
         if (terms[index].accept(event,resolver))
         {
             index++;
+            for (final String varName : terms[index].getVariables().keySet())
+            {
+                context.put(varName, event.getProperty(terms[index].getVariables().get(varName)));
+            }
+            
         }
         return finished;
     }
@@ -53,8 +58,9 @@ public class Sequence
      * 
      * @return
      */
-    public boolean canAcceptMoreEvents()
+    public String acceptedEventId()
     {
-       return index < terms.length;
+       return index < terms.length  ? terms[index].getEventId() : null;
     }
+    
 }
