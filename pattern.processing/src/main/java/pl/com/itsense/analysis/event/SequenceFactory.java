@@ -58,7 +58,7 @@ public class SequenceFactory
                 for (final Sequence seq : sequence)
                 {
                     list.remove(seq);
-                    list.add(new Sequence(seq.getTerms()));
+                    list.add(new Sequence(seq.getTerms(), seq.getName() , seq.getId()));
                 }
             }
 
@@ -104,7 +104,7 @@ public class SequenceFactory
                             final TermConf term = map.get(indexes.get(i));
                             termTable[i] = new Term(term);
                         }
-                        final Sequence sequence = new Sequence(termTable);
+                        final Sequence sequence = new Sequence(termTable, sequenceConf.getName(), sequenceConf.getId());
                         final String eventId = termTable[0].getEventId();
                         if (eventId != null)
                         {

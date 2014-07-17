@@ -12,6 +12,8 @@ public class SequenceConf
     /** */
     private String id;
     /** */
+    private String name;
+    /** */
     private List<TermConf> terms = new ArrayList<TermConf>();
     /**
      * 
@@ -55,6 +57,22 @@ public class SequenceConf
     public void setId(final String id)
     {
         this.id = id;
+    }
+    /**
+     * 
+     * @return
+     */
+    public String getName()
+    {
+        return name;
+    }
+    /**
+     * 
+     * @param name
+     */
+    public void setName(final String name)
+    {
+        this.name = name;
     }
     /**
      * 
