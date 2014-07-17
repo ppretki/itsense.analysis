@@ -119,7 +119,6 @@ public class EventProcessingEngine implements EEngine
                         sequances.put(sequence.acceptedEventId(), queue);
                     }
                     queue.add(sequence);
-                    System.out.println("EventProcessingEngine.process: seq[NEW] = " + sequence);
                 }
             }
             

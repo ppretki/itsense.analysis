@@ -104,7 +104,7 @@ public class Sequence
         String resolvedName = name;
         for (final String varName : context.keySet())
         {
-            name = name.replace("$("+varName+")", context.get(varName).toString());
+            resolvedName = resolvedName.replace("$("+varName+")", context.get(varName).toString());
         }
         return resolvedName;
     }
@@ -114,7 +114,20 @@ public class Sequence
     @Override
     public String toString()
     {
-        return "Sequence: id = " + id + ", name = " + name + ", resolvcedName = " + getResolvedName();
+        return "Sequence: id = " + id + ", name = " + name + ", symbolicName = " + getResolvedName() + ", duration = " + getDuration();
+    }
+    /**
+     * 
+     * @return
+     */
+    public long getDuration()
+    {
+        long duration = -1; 
+        if (events[0] != null)
+        {
+            duration = events[index - 1] == null ? 0 : (events[index - 1].getTimestamp() - events[0].getTimestamp());
+        }
+        return duration;
     }
     
 }

@@ -5,18 +5,17 @@
 	<event id="STATE_ACTIVATE" fileid="apollo">
 		<pattern id="pattern">\[STATE_ACTIVATE\] (\w+)</pattern>
 	</event>
-	<sequence id="state activation">
+		
+	<sequence id="STATE_ACTIVATION" name="$(from)->$(var1)">
 	   <term index="1" event="PATH_CHANGE">
 	       <var name="var1" value="pattern$2"/>
+	       <var name="from" value="pattern$1"/>
 	   </term>
 	   <term index="2" event="STATE_ACTIVATE">
 	       <var name="var2" value="pattern$1"/>
 	       <condition mvel="var1==var2"/>
 	   </term>
 	</sequence>
-	<consumer type="pl.com.itsense.analysis.event.db.DBEventConsumer">
-	   <property name="events" value="PATH_CHANGE,STATE_ACTIVATE"/>
-	</consumer>
 	
-	<file id="apollo" path="/home/P.Pretki/stb/logfileAppolo.log" />
+	<file id="apollo" path="/home/ppretki/adb/logfileAppolo.log" />
 </config>
