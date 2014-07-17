@@ -10,9 +10,9 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import pl.com.itsense.analysis.event.log.Configuration;
-import pl.com.itsense.analysis.event.log.EventConf;
-import pl.com.itsense.analysis.event.log.FileConf;
+import pl.com.itsense.analysis.event.log.configuration.Configuration;
+import pl.com.itsense.analysis.event.log.configuration.EventConf;
+import pl.com.itsense.analysis.event.log.configuration.FileConf;
 
 public class ConfigurationTest 
 {

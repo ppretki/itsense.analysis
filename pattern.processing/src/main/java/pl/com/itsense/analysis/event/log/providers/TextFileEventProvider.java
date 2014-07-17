@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProvider;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
-import pl.com.itsense.analysis.event.log.EventConf;
-import pl.com.itsense.analysis.event.log.PatternConf;
+import pl.com.itsense.analysis.event.log.configuration.EventConf;
+import pl.com.itsense.analysis.event.log.configuration.PatternConf;
 
 /**
  * 

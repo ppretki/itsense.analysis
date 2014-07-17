@@ -1,10 +1,19 @@
 <config>
 	<event id="PATH_CHANGE" fileid="apollo">
-		<pattern id="pathChange">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
+		<pattern id="pattern">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
 	</event>
 	<event id="STATE_ACTIVATE" fileid="apollo">
-		<pattern id="activate">\[STATE_ACTIVATE\] (\w+)</pattern>
+		<pattern id="pattern">\[STATE_ACTIVATE\] (\w+)</pattern>
 	</event>
+	<sequence id="state activation">
+	   <term index="1" event="PATH_CHANGE">
+	       <var name="var1" value="pattern$2"/>
+	   </term>
+	   <term index="2" event="STATE_ACTIVATE">
+	       <var name="var2" value="pattern$1"/>
+	       <condition mvel="var1==var2"/>
+	   </term>
+	</sequence>
 	<consumer type="pl.com.itsense.analysis.event.db.DBEventConsumer">
 	   <property name="events" value="PATH_CHANGE,STATE_ACTIVATE"/>
 	</consumer>

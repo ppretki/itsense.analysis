@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log;
+package pl.com.itsense.analysis.event.log.configuration;
 
 /**
  * 
