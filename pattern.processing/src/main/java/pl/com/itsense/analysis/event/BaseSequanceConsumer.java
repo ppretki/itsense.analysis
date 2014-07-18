@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.SequenceConsumer;
+import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 
 /**
@@ -12,7 +13,7 @@ import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
  * @author ppretki
  *
  */
-public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements SequenceConsumer, EventProcessingListener
+public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements SequenceConsumer,  ProcessingLifecycleListener
 {
     /** */
     private String[] acceptedSeqIds;
@@ -46,19 +47,8 @@ public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements
      * 
      */
     @Override
-    public void beginProcessing(final EEngine engine)
+    public void enter(ProcessingLifecycle lifecycle, EEngine eEngine)
     {
-        // TODO Auto-generated method stub
         
     }
-    /**
-     * 
-     */
-    @Override
-    public void endProcessing(final EEngine engine)
-    {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

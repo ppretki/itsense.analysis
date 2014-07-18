@@ -3,9 +3,16 @@ package pl.com.itsense.analysis.event.analytics;
 
 import java.util.HashMap;
 
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.Skewness;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math3.stat.descriptive.rank.Max;
+import org.apache.commons.math3.stat.descriptive.rank.Min;
+
 import pl.com.itsense.analysis.event.BaseSequanceConsumer;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Sequence;
+import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 
 /**
  * 
@@ -54,10 +61,25 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         return statistics;
     }
     
+    
     /**
      * 
      */
     @Override
+    public void enter(final ProcessingLifecycle lifecycle,final EEngine engine)
+    {
+        switch (lifecycle)
+        {
+            case FINISH:
+                endProcessing(engine);
+                break;
+            default:
+        }
+    }
+    
+    /**
+     * 
+     */
     public void endProcessing(final EEngine engine)
     {
         for (final String seqName : statistics.keySet())
@@ -74,12 +96,28 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
     {
         /** */
         private int count;
+        /** */
+        private Mean mean = new Mean();
+        /** */
+        private StandardDeviation std = new StandardDeviation();
+        /** */
+        private Min min = new Min();
+        /** */
+        private Max max = new Max();
+        /** */
+        private Skewness skewness = new Skewness();
+
         /**
          * 
          * @param value
          */
         private void add(final double value)
         {
+            mean.increment(value);
+            std.increment(value);
+            min.increment(value);
+            max.increment(value);
+            skewness.increment(value);
             count++;
         }
         
@@ -88,6 +126,12 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         {
             final StringBuffer sb = new StringBuffer();
             sb.append("count = " + count).append("\n");
+            sb.append("mean = " + mean.getResult()).append("\n");
+            sb.append("std = " + std.getResult()).append("\n");
+            sb.append("min = " + min.getResult()).append("\n");
+            sb.append("max = " + max.getResult()).append("\n");
+            sb.append("skewness = " + skewness.getResult()).append("\n");
+
             return sb.toString();
         }
     }
