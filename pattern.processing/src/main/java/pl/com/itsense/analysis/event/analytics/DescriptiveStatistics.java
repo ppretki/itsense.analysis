@@ -134,5 +134,55 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
 
             return sb.toString();
         }
+        /**
+         * 
+         * @return
+         */
+        public int getCount()
+        {
+            return count;
+        }
+        
+        /**
+         * 
+         * @return
+         */
+        public double getMean()
+        {
+            return mean.getResult();
+        }
+        /**
+         * 
+         * @return
+         */
+        public double getStd()
+        {
+            return std.getResult();
+        }
+        /**
+         * 
+         * @return
+         */
+        public double getSkewness()
+        {
+            return skewness.getResult();
+        }
+        /**
+         * 
+         * @return
+         */
+        public double getMax()
+        {
+            return max.getResult();
+        }
+        /**
+         * 
+         * @return
+         */
+        public double getMin()
+        {
+            return min.getResult();
+        }
+
     }
 }

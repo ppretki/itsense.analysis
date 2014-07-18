@@ -10,7 +10,7 @@ import java.util.HashMap;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
-import pl.com.itsense.analysis.event.log.Statistics;
+import pl.com.itsense.analysis.event.analytics.DescriptiveStatistics;
 
 /**
  * 
@@ -38,7 +38,7 @@ public class HTMLReport extends PropertyHolderImpl implements Report
      * 
      * @param data
      */
-    public void createReport(final String fileName, final HashMap<String, Statistics> data,
+    public void createReport(final String fileName, final HashMap<String, DescriptiveStatistics.Statistics> data,
             final DecimalFormat formatter) {
         final StringBuffer sb = new StringBuffer();
         sb.append("<html>\n");
@@ -58,14 +58,15 @@ public class HTMLReport extends PropertyHolderImpl implements Report
         sb.append("<th> STD </th>\n");
         sb.append("</tr>\n");
 
-        for (final String actionId : data.keySet()) {
-            final Statistics stats = data.get(actionId);
+        for (final String id : data.keySet()) 
+        {
+            final DescriptiveStatistics.Statistics stats = data.get(id);
             sb.append("<tr>").append("\n");
-            sb.append("<td><b>" + actionId + "</b></td>\n");
+            sb.append("<td><b>" + id + "</b></td>\n");
             sb.append("<td> " + stats.getCount() + " </td>\n");
-            sb.append("<td> " + (formatter == null ? stats.getMin() : formatter.format(stats.getMin())) + " </td>\n");
+            sb.append("<td> " + (formatter == null ? stats.getCount() : formatter.format(stats.getMin())) + " </td>\n");
             sb.append("<td> " + (formatter == null ? stats.getMax() : formatter.format(stats.getMax())) + " </td>\n");
-            sb.append("<td> " + (formatter == null ? stats.getAvg() : formatter.format(stats.getAvg())) + " </td>\n");
+            sb.append("<td> " + (formatter == null ? stats.getMean() : formatter.format(stats.getMean())) + " </td>\n");
             sb.append("<td> " + (formatter == null ? stats.getStd() : formatter.format(stats.getStd())) + " </td>\n");
             sb.append("</tr>").append("\n");
         }
