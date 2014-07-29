@@ -202,7 +202,7 @@ public class TextFileEventProvider implements EventProvider
 								if (timestamp > -1)
 								{
 									final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
-									textLineEvent.setProperty("line", line);
+									//textLineEvent.setProperty("line", line);
 									if (matcher.groupCount() > 0)
 									{
 										final PatternConf patternConf = patternDefs.get(pattern);

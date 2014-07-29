@@ -41,7 +41,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
             }
             stats.add(sequence.getDuration());
         }
-        //System.out.println("Stat: " + sequence);
+        System.out.println("Stat: " + sequence);
     }
     /**
      * 

@@ -33,8 +33,8 @@ public class Sequence
     public Sequence(final Term[] terms, final String name, final String id)
     {
         this.terms = terms;
-        this.name = name;
         this.id = id;
+        this.name = name == null ? id : name;
         this.events = new Event[terms.length];
     }
     /**
@@ -51,10 +51,15 @@ public class Sequence
      */
     public boolean accept(final Event event)
     {
+        
         boolean accepted = false;
         for (final String varName : terms[index].getVariables().keySet())
         {
-            context.put(varName, event.getProperty(terms[index].getVariables().get(varName)));
+            final Object varValue = event.getProperty(terms[index].getVariables().get(varName));
+            if (varValue != null)
+            {
+                context.put(varName, varValue);
+            }
         }
         if (terms[index].accept(event,resolver))
         {
@@ -62,6 +67,8 @@ public class Sequence
             index++;
             accepted = true;
         }
+        //System.out.println("ebent = " + event.getId() + " accepted = " + acceptedEventId());
+        //System.out.println("seq = " + this + ", event =  " + event + ", accepted = " + accepted);
         return accepted;
     }
     /***
@@ -114,7 +121,21 @@ public class Sequence
     @Override
     public String toString()
     {
-        return "Sequence: id = " + id + ", name = " + name + ", symbolicName = " + getResolvedName() + ", duration = " + getDuration();
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Sequence: id = " + id + ", name = " + name + ", symbolicName = " + getResolvedName() + ", duration = " + getDuration() + "\n");
+        for (int i = 0; i < events.length; i++)
+        {
+            if (events[i] != null)
+            {
+                sb.append(events[i]).append("\n");
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+        return sb.toString();
     }
     /**
      * 

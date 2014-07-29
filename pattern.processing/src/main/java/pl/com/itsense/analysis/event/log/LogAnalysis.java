@@ -96,7 +96,6 @@ public class LogAnalysis
         final SequenceFactory sequenceFactory = new SequenceFactory();
         sequenceFactory.setSequances(configuration.getSequences());
         engine.setSequenceFactory(sequenceFactory);
-        
         engine.process(eventProviders);
     }
 

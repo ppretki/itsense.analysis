@@ -63,7 +63,6 @@ public class SequenceFactory
             }
 
         }
-        
         return sequence;
     }
     /**

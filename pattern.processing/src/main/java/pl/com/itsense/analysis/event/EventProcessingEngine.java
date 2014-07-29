@@ -91,7 +91,7 @@ public class EventProcessingEngine implements EEngine
     {
         if (sequenceFactory != null)
         {
-
+            System.out.println("Processing event = " + event.getId());
             LinkedList<Sequence> queue = sequances.get(event.getId());
             if (queue != null)
             {
@@ -100,9 +100,20 @@ public class EventProcessingEngine implements EEngine
                 {
                     if (seq.accept(event))
                     {
-                        if (seq.acceptedEventId() == null)
+                        final String acceptedEventId = seq.acceptedEventId();
+                        if (acceptedEventId == null)
                         {
                             finished.add(seq);
+                        }
+                        else
+                        {
+                            LinkedList<Sequence> q = sequances.get(acceptedEventId);
+                            if (q == null)
+                            {
+                                q = new LinkedList<Sequence>();
+                                sequances.put(acceptedEventId , q);
+                            }
+                            q.add(seq);
                         }
                     }
                 }
