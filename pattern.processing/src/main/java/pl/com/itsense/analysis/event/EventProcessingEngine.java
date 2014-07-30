@@ -92,18 +92,18 @@ public class EventProcessingEngine implements EEngine
         if (sequenceFactory != null)
         {
             System.out.println("Processing event = " + event.getId());
-            LinkedList<Sequence> queue = sequances.get(event.getId());
-            if (queue != null)
+            final LinkedList<Sequence> openedSequenceQueue = sequances.get(event.getId());
+            if (openedSequenceQueue != null)
             {
-                final ArrayList<Sequence> finished = new ArrayList<Sequence>(); 
-                for (final Sequence seq : queue)
+                final ArrayList<Sequence> closed = new ArrayList<Sequence>(); 
+                for (final Sequence seqence : openedSequenceQueue)
                 {
-                    if (seq.accept(event))
+                    if (seqence.accept(event))
                     {
-                        final String acceptedEventId = seq.acceptedEventId();
+                        final String acceptedEventId = seqence.acceptedEventId();
                         if (acceptedEventId == null)
                         {
-                            finished.add(seq);
+                            closed.add(seqence);
                         }
                         else
                         {
@@ -113,22 +113,12 @@ public class EventProcessingEngine implements EEngine
                                 q = new LinkedList<Sequence>();
                                 sequances.put(acceptedEventId , q);
                             }
-                            q.add(seq);
+                            q.add(seqence);
                         }
                     }
                 }
-                queue.removeAll(finished);
-                for (final Sequence sequence : finished)
-                {
-                    final LinkedList<SequenceConsumer> consumers = sequenceConsumers.get(sequence.getId());
-                    if (consumers != null)
-                    {
-                        for (final SequenceConsumer consumer : consumers)
-                        {
-                            consumer.consume(sequence);
-                        }
-                    }
-                }
+                openedSequenceQueue.removeAll(closed);
+                notifySequenceConsumers(closed);
             }
             final List<Sequence> list = sequenceFactory.getSequance(event);
             if (list != null)
@@ -146,7 +136,26 @@ public class EventProcessingEngine implements EEngine
             }
             
         }
-        
+        notifyEventConsumers(event);
+    }
+    /** */
+    private void notifySequenceConsumers(final ArrayList<Sequence> closed)
+    {
+        for (final Sequence sequence : closed)
+        {
+            final LinkedList<SequenceConsumer> consumers = sequenceConsumers.get(sequence.getId());
+            if (consumers != null)
+            {
+                for (final SequenceConsumer consumer : consumers)
+                {
+                    consumer.consume(sequence);
+                }
+            }
+        }
+    }
+    /** */
+    private void notifyEventConsumers(final Event event)
+    {
         final LinkedList<EventConsumer> consumerLists = consumers.get(event.getId());
         if (consumerLists != null)
         {
@@ -156,8 +165,6 @@ public class EventProcessingEngine implements EEngine
             }
         }
     }
-
-
     /**
      * {@inheritDoc}
      */

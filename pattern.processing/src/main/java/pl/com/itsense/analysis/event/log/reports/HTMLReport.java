@@ -38,8 +38,8 @@ public class HTMLReport extends PropertyHolderImpl implements Report
      * 
      * @param data
      */
-    public void createReport(final String fileName, final HashMap<String, DescriptiveStatistics.Statistics> data,
-            final DecimalFormat formatter) {
+    public void createReport(final String fileName, final HashMap<String, DescriptiveStatistics.Statistics> data, final DecimalFormat formatter) 
+    {
         final StringBuffer sb = new StringBuffer();
         sb.append("<html>\n");
         sb.append("<head>\n");
@@ -73,13 +73,17 @@ public class HTMLReport extends PropertyHolderImpl implements Report
         sb.append("</table>\n");
         sb.append("</body>\n");
         sb.append("</html>\n");
-        try {
+        try 
+        {
             final File output = new File(fileName);
-            if (output.exists()) {
+            if (output.exists()) 
+            {
                 Files.delete(output.toPath());
             }
             Files.write((new File(fileName)).toPath(), sb.toString().getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             e.printStackTrace();
         }
     }
