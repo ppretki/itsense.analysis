@@ -53,22 +53,23 @@ public class Sequence
     {
         
         boolean accepted = false;
-        for (final String varName : terms[index].getVariables().keySet())
+        if (index < terms.length)
         {
-            final Object varValue = event.getProperty(terms[index].getVariables().get(varName));
-            if (varValue != null)
+            for (final String varName : terms[index].getVariables().keySet())
             {
-                context.put(varName, varValue);
+                final Object varValue = event.getProperty(terms[index].getVariables().get(varName));
+                if (varValue != null)
+                {
+                    context.put(varName, varValue);
+                }
+            }
+            if (terms[index].accept(event,resolver))
+            {
+                events[index] = event;
+                index++;
+                accepted = true;
             }
         }
-        if (terms[index].accept(event,resolver))
-        {
-            events[index] = event;
-            index++;
-            accepted = true;
-        }
-        //System.out.println("ebent = " + event.getId() + " accepted = " + acceptedEventId());
-        //System.out.println("seq = " + this + ", event =  " + event + ", accepted = " + accepted);
         return accepted;
     }
     /***

@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event.analytics;
 
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
@@ -13,6 +14,7 @@ import pl.com.itsense.analysis.event.BaseSequanceConsumer;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
+import pl.com.itsense.analysis.event.log.reports.PlainTextReport;
 
 /**
  * 
@@ -21,6 +23,15 @@ import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
  */
 public class DescriptiveStatistics extends BaseSequanceConsumer
 {
+    
+    public static Comparator<Statistics> COMPARATOR_COUNT_ASC = new Comparator<DescriptiveStatistics.Statistics>()
+    {
+        @Override
+        public int compare(final Statistics s1, final Statistics s2)
+        {
+            return s2.getCount() - s1.getCount();
+        }
+    }; 
     /** */
     private HashMap<String,Statistics> statistics = new HashMap<String,Statistics>();
     
@@ -41,7 +52,6 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
             }
             stats.add(sequence.getDuration());
         }
-        System.out.println("Stat: " + sequence);
     }
     /**
      * 
@@ -82,10 +92,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
      */
     public void endProcessing(final EEngine engine)
     {
-        for (final String seqName : statistics.keySet())
-        {
-            System.out.println(seqName + " : " + statistics.get(seqName));
-        }
+        new PlainTextReport().create(engine);
     }
     /**
      * 

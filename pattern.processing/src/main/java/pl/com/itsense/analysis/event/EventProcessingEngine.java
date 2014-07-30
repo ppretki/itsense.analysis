@@ -2,6 +2,7 @@ package pl.com.itsense.analysis.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,7 +92,6 @@ public class EventProcessingEngine implements EEngine
     {
         if (sequenceFactory != null)
         {
-            System.out.println("Processing event = " + event.getId());
             final LinkedList<Sequence> openedSequenceQueue = sequances.get(event.getId());
             if (openedSequenceQueue != null)
             {
@@ -107,13 +107,7 @@ public class EventProcessingEngine implements EEngine
                         }
                         else
                         {
-                            LinkedList<Sequence> q = sequances.get(acceptedEventId);
-                            if (q == null)
-                            {
-                                q = new LinkedList<Sequence>();
-                                sequances.put(acceptedEventId , q);
-                            }
-                            q.add(seqence);
+                            addToQueue(seqence);
                         }
                     }
                 }
@@ -125,13 +119,7 @@ public class EventProcessingEngine implements EEngine
             {
                 for (final Sequence sequence : list)
                 {
-                    queue = sequances.get(sequence.acceptedEventId());
-                    if (queue == null)
-                    {
-                        queue = new LinkedList<Sequence>();
-                        sequances.put(sequence.acceptedEventId(), queue);
-                    }
-                    queue.add(sequence);
+                    addToQueue(sequence);
                 }
             }
             
@@ -152,6 +140,19 @@ public class EventProcessingEngine implements EEngine
                 }
             }
         }
+    }
+    
+    /** */
+    private void addToQueue(final Sequence sequence)
+    {
+        final String queueName = sequence.acceptedEventId();
+        LinkedList<Sequence> queue = sequances.get(queueName);
+        if (queue == null)
+        {
+            queue = new LinkedList<Sequence>();
+            sequances.put(queueName , queue);
+        }
+        queue.add(sequence);
     }
     /** */
     private void notifyEventConsumers(final Event event)
@@ -258,5 +259,20 @@ public class EventProcessingEngine implements EEngine
         {
             add((ProcessingLifecycleListener)consumer);
         }
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public SequenceConsumer[] getSequenceConsumers()
+    {
+        final HashSet<SequenceConsumer> seqConsumers = new HashSet<SequenceConsumer>();
+        
+        for (final List<SequenceConsumer> consumers :  sequenceConsumers.values())
+        {
+            seqConsumers.addAll(consumers);
+        }
+        return seqConsumers.toArray(new SequenceConsumer[0]);
     }
 }

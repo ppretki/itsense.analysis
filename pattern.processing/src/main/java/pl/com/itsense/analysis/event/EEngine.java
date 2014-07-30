@@ -44,4 +44,8 @@ public interface EEngine
 	 * @param consumer
 	 */
 	void add(SequenceConsumer consumer);
+	/**
+	 * 
+	 */
+	SequenceConsumer[] getSequenceConsumers();
 }

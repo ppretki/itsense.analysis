@@ -1,24 +1,54 @@
 <config>
-	<event id="PATH_CHANGE" fileid="apollo">
-		<pattern id="pattern">\[STATES_PATH_CHANGE\] source: (\w+), target: (\w+)</pattern>
-	</event>
-	<event id="STATE_ACTIVATE" fileid="apollo">
-		<pattern id="pattern">\[STATE_ACTIVATE\] (\w+)</pattern>
-	</event>
-		
-	<sequence id="STATE_ACTIVATION" name="$(from)->$(var1)">
-	   <term index="1" event="PATH_CHANGE">
-	       <var name="var1" value="pattern$2"/>
-	       <var name="from" value="pattern$1"/>
-	   </term>
-	   <term index="2" event="STATE_ACTIVATE">
-	       <var name="var2" value="pattern$1"/>
-	       <condition mvel="var1==var2"/>
-	   </term>
-	</sequence>
-	
-	
-	<sequenceconsumer type="pl.com.itsense.analysis.event.analytics.DescriptiveStatistics" sequences="STATE_ACTIVATION"/>
-	
-	<file id="apollo" path="/home/ppretki/adb/logfileAppolo.log" />
+    <event id="PNG_START" fileid="argus">
+        <pattern>\[PNG Decoder\] starting decoding</pattern>
+    </event>
+    
+    <event id="PNG_WIDTH" fileid="argus">
+        <pattern id="width">\[PNG Decoder\]\s+width\s+=\s+(\d+)</pattern>
+    </event>
+    
+    <event id="PNG_HEIGHT" fileid="argus">
+        <pattern id="height">\[PNG Decoder\]\s+height\s+=\s+(\d+)</pattern>
+    </event>
+
+    <event id="PNG_STOP" fileid="argus">
+        <pattern id="time">\[PNG Decoder\]\s+decoder\s+took\s+(\d+)</pattern>
+    </event>
+    
+    <event id="STATES_PATH_CHANGE" fileid="argus">
+      <pattern id="states">\[STATES_PATH_CHANGE\]\s+source:\s+(\w+),\s+target:\s+(\w+),</pattern>
+    </event>  
+
+    <event id="STATE_ACTIVATE" fileid="argus">
+      <pattern id="state">\[STATE_ACTIVATE\]\s+(\w+)</pattern>
+    </event>  
+    
+    <sequence id="PNG_DECODING" name="PNG_DECODING_$(width)x$(height)">
+       <term index="1" event="PNG_START"/>
+       
+       <term index="2" event="PNG_WIDTH">
+           <var name="width" value="width$1"/>
+       </term>
+       <term index="3" event="PNG_HEIGHT">
+           <var name="height" value="height$1"/>
+       </term>
+       <term index="4" event="PNG_STOP">
+           <var name="time" value="time$1"/>
+       </term>
+    </sequence>
+    
+    <sequence id="STATE_ACTIVATION" name="STATE_ACTIVATION: FROM: $(from) TO: $(to)">
+      <term index="1" event="STATES_PATH_CHANGE">
+        <var name="from" value="states$1"/>
+        <var name="to" value="states$2"/>
+      </term>
+      <term index="2" event="STATE_ACTIVATE">
+        <var name="state" value="state$1"/>
+        <condition mvel="state==to"/>
+      </term>
+    </sequence>
+    
+    <sequenceconsumer type="pl.com.itsense.analysis.event.analytics.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION"/>
+    
+    <file id="argus" path="/home/P.Pretki/stb/logfileArgus.log" />
 </config>
