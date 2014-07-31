@@ -48,7 +48,15 @@
       </term>
     </sequence>
     
-    <sequenceconsumer type="pl.com.itsense.analysis.event.analytics.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION"/>
+    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION"/>
+    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DBRecorder" sequences="PNG_DECODING,STATE_ACTIVATION">
+    	<property name="hibernate.connection.url" value ="jdbc:postgresql://localhost/adb"/>
+    	<property name="hibernate.dialect" value ="org.hibernate.dialect.PostgreSQLDialect"/>
+    	<property name="hibernate.connection.driver_class" value ="org.postgresql.Driver"/>
+    	<property name="hibernate.connection.username" value ="adb"/>
+    	<property name="hibernate.connection.password" value ="adb"/>
+    	<property name="hibernate.hbm2ddl.auto" value ="create"/>
+    </sequenceconsumer>
     
-    <file id="argus" path="/home/P.Pretki/stb/logfileArgus.log" />
+    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" />
 </config>

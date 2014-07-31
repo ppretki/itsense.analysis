@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.analytics;
+package pl.com.itsense.analysis.sequence.consumer;
 
 
 import java.util.Comparator;

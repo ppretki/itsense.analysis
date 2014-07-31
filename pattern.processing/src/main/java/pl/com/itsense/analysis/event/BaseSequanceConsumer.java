@@ -47,8 +47,29 @@ public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements
      * 
      */
     @Override
-    public void enter(ProcessingLifecycle lifecycle, EEngine eEngine)
+    public void enter(ProcessingLifecycle lifecycle, EEngine engine)
+    {
+        switch (lifecycle)
+        {
+            case START:
+                processingStart(engine);
+                break;
+            case FINISH:
+                processingFinish(engine);
+                break;
+            
+        }
+    }
+    /** */
+    protected void processingStart(final EEngine engine)
     {
         
     }
+    
+    /** */
+    protected void processingFinish(final EEngine engine)
+    {
+        
+    }
+
 }

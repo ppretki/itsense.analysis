@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
+import pl.com.itsense.analysis.event.Event;
+
 @Proxy(lazy=false)
 @Entity
 @Table(name="EventDB")
@@ -31,10 +33,57 @@ public class EventDB
 	/** */
 	@Column(length = 1000)
 	private String line;
+    /** */
+    @OneToMany(targetEntity=PatternDB.class, cascade={CascadeType.ALL})
+    private List<PatternDB> patterns = new ArrayList<PatternDB>(); 
+
+	/**
+	 * 
+	 */
+	public EventDB()
+    {
+    }
+
+	/**
+	 * 
+	 * @param event
+	 */
+    public EventDB(final Event event)
+    {
+        eventId = event.getId();
+        timestamp = new Date(event.getTimestamp());
+        line = event.getProperty(Event.PROPERTY_LINE);
+        for (final String name : event.getProperties())
+        {
+            final int index = name.indexOf('$');
+            if (index > -1)
+            {
+                int groupId = -1;
+                try
+                {
+                    groupId = Integer.parseInt(name.substring(index + 1));
+                }
+                catch (NumberFormatException e)
+                {
+                    groupId = -1;
+                    e.printStackTrace();
+                }
+                if (groupId > -1)
+                {
+                    final PatternDB patternDB = new PatternDB();
+                    patternDB.setPatternId(name.substring(0, index));
+                    final GroupDB groupDB = new GroupDB();
+                    groupDB.setGroupId(groupId);
+                    groupDB.setValue(event.getProperty(name));
+                    patternDB.getPatterns().add(groupDB);
+                    patterns.add(patternDB);
+                }
+            }
+        }
+    }
 	
-	/** */
-	@OneToMany(targetEntity=PatternDB.class, cascade={CascadeType.ALL})
-	private List<PatternDB> patterns = new ArrayList<PatternDB>(); 
+	
+	
 	/**
 	 * 
 	 * @return

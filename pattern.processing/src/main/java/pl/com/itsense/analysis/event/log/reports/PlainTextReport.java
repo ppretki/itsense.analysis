@@ -9,8 +9,8 @@ import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.SequenceConsumer;
-import pl.com.itsense.analysis.event.analytics.DescriptiveStatistics;
-import pl.com.itsense.analysis.event.analytics.DescriptiveStatistics.Statistics;
+import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
+import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
 
 /**
  * 

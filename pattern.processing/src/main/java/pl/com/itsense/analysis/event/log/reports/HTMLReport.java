@@ -10,7 +10,7 @@ import java.util.HashMap;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
-import pl.com.itsense.analysis.event.analytics.DescriptiveStatistics;
+import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 
 /**
  * 
