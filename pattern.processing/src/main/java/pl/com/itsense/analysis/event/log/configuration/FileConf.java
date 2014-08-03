@@ -13,7 +13,8 @@ public class FileConf
 	private String path;
 	/** */
 	private String from;
-	
+	/** */
+	private String top;
 	/**
 	 * 
 	 * @return
@@ -64,8 +65,17 @@ public class FileConf
 	public String getFrom() 
 	{
             return from;
-        }
+    }
 	
+	public String getTop()
+    {
+        return top;
+    }
+	
+	public void setTop(final String top)
+    {
+        this.top = top;
+    }
 	/**
 	 * 
 	 */

@@ -40,16 +40,21 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 	/** */
 	private String from;
 	/** */
+	private final int top;
+	/** */
+	private int lineCounter;
+	/** */
 	private HashMap<EventConf,Pattern[]> patterns = new HashMap<EventConf,Pattern[]>();   
 	/** */
 	private HashMap<Pattern, PatternConf> patternDefs = new HashMap<Pattern,PatternConf>();
 	
 	/** */
-	public TextFileEventProvider(final File file, final EventConf[] events, final String from)
+	public TextFileEventProvider(final File file, final EventConf[] events, final String from, final int top)
 	{
 		this.file = file;
 		this.events = events;
 		this.from = from;
+		this.top = top;
 		init();
 	}
 	
@@ -185,8 +190,15 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 			{
 				while ((line = reader.readLine()) != null)
 				{
-				    filePos += line.length() * 2;
+				    lineCounter++;
+				    filePos += line.getBytes().length;
 				    progressChanged((double)filePos/(double)file.length());
+				    
+                    if (lineCounter >= top)
+                    {
+                        break;
+                    }
+				    
 					if (from != null)
 				    {
 						if (line.contains(from))

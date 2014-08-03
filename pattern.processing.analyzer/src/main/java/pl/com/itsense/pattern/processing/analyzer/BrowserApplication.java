@@ -35,6 +35,9 @@ public class BrowserApplication extends UI
 	/** */
 	public static final String VIEW_WORKSPACE = "Workspace";
 	/** */
+	public static final String VIEW_SEQUENCE_BROWSE = "Sequence Browser";
+
+	/** */
 	public static final String CTX_ATTRIBUTE_HIBERNATE_SESSION_FACTORY = "HibernateSessionfactory";
 	/** */
 	private Navigator navigator;
@@ -45,7 +48,7 @@ public class BrowserApplication extends UI
 	protected void init(final VaadinRequest request) 
 	{
 		navigator = new Navigator(this, this);
-		navigator.addView(VIEW_WORKSPACE, new WorkspaceView(navigator));
+		navigator.addView(VIEW_WORKSPACE, new WorkspaceView(navigator, sessionFactory));
 		navigator.navigateTo(VIEW_WORKSPACE);
 	}
 	

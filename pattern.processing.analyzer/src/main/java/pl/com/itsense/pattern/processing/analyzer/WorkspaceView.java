@@ -1,10 +1,15 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
+import org.hibernate.SessionFactory;
+
+import pl.com.itsense.pattern.processing.analyzer.query.QueryUtil;
+
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -20,16 +25,21 @@ public class WorkspaceView extends CustomComponent implements View
 	/** */
 	private MenuBar menuBar;
 	/** */
+	private TabSheet workspace;
+	/** */
 	private MenuItem browseMenuItem;
 	/** */
 	private final Navigator navigator;
+	/** */
+	private final SessionFactory sessionFactory;
 	
 	/**
 	 * 
 	 */
-	public WorkspaceView(final Navigator navigator) 
+	public WorkspaceView(final Navigator navigator, final SessionFactory sessionFactory) 
 	{
 		this.navigator = navigator;
+		this.sessionFactory = sessionFactory;
 	}
 	/**
 	 * 
@@ -49,8 +59,19 @@ public class WorkspaceView extends CustomComponent implements View
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 		mainLayout.addComponent(buildMenuBar());
+		mainLayout.addComponent(buildWorkspace());
 		return mainLayout;
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	private TabSheet buildWorkspace()
+	{
+		workspace = new TabSheet();
+		return workspace;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -58,20 +79,18 @@ public class WorkspaceView extends CustomComponent implements View
 	private MenuBar buildMenuBar()
 	{
 		menuBar = new MenuBar();
-		browseMenuItem = menuBar.addItem("Browse Results", new Command() 
+		browseMenuItem = menuBar.addItem("Browse", null);
+		for(final String sequence : QueryUtil.getSequenceIds(sessionFactory))
 		{
-			/** */
-			private static final long serialVersionUID = 1L;
-			/**
-			 * 
-			 */
-			public void menuSelected(final MenuItem selectedItem) 
+			System.out.println("Create menuu = " + sequence);
+			browseMenuItem.addItem(sequence, new Command() 
 			{
-				navigator
-				
-			}
-		});
-		
+				public void menuSelected(final MenuItem selectedItem) 
+				{
+					workspace.addTab( new SequanceTab(sequence, sessionFactory)).setClosable(true);
+				}
+			});
+		}
 		return menuBar; 
 	}
 

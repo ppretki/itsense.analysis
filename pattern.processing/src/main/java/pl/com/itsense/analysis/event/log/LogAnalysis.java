@@ -68,8 +68,21 @@ public class LogAnalysis
                     events.add(event);
                 }
             }
-            eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]),
-                file.getFrom());
+            int lineCounter = Integer.MAX_VALUE;
+            try
+            {
+                final String top = file.getTop();
+                if (top != null)
+                {
+                    lineCounter = Integer.parseInt(top.trim());
+                }
+            }
+            catch(NumberFormatException e)
+            {
+                lineCounter = Integer.MAX_VALUE;
+            }
+            
+            eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]), file.getFrom(), lineCounter);
         }
 
         // EVENT CONSUMERS
