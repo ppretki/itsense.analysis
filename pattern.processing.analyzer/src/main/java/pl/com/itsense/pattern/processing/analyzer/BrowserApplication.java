@@ -15,31 +15,26 @@
  */
 package pl.com.itsense.pattern.processing.analyzer;
 
-import com.vaadin.Application;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.UI;
 
 /**
  * The Application's "main" class
  */
 @SuppressWarnings("serial")
-public class MyVaadinApplication extends Application
+public class BrowserApplication extends UI
 {
+	public static final String VIEW_WORKSPACE = "Workspace";
 	/** */
-    private Window window;
-    
-    @Override
-    public void init()
-    {
-    	
-        window = new Window("Event Processing System");
-   
-        
+	private Navigator navigator;
 
-        
-    }
+	@Override
+	protected void init(final VaadinRequest request) 
+	{
+		navigator = new Navigator(this, this);
+		navigator.addView(VIEW_WORKSPACE, new WorkspaceView());
+		navigator.navigateTo(VIEW_WORKSPACE);
+	}
     
 }
