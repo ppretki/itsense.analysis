@@ -25,7 +25,10 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class BrowserApplication extends UI
 {
+	/** */
 	public static final String VIEW_WORKSPACE = "Workspace";
+	/** */
+	public static final String CTX_ATTRIBUTE_HIBERNATE_SESSION_FACTORY = "HibernateSessionfactory";
 	/** */
 	private Navigator navigator;
 

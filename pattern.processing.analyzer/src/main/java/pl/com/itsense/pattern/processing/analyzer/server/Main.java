@@ -14,6 +14,7 @@ public class Main
 		final Server server = new Server(8080);
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
+        context.setAttribute(BrowserApplication.CTX_ATTRIBUTE_HIBERNATE_SESSION_FACTORY, null);
         context.setInitParameter(VaadinSession.UI_PARAMETER, BrowserApplication.class.getName());
         final ServletHolder holder = new ServletHolder(new VaadinServlet());
         //holder.setInitParameter("application", "pl.com.itsense.pattern.processing.analyzer.BrowserApplication");

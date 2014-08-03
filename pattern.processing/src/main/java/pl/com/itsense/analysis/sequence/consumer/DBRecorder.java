@@ -126,7 +126,8 @@ public class DBRecorder extends BaseSequanceConsumer
         {
             cache.clear();
         }
-        
     }
+    
+    
 
 }

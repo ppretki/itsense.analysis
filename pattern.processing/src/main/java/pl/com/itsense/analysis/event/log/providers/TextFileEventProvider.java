@@ -186,7 +186,7 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 				while ((line = reader.readLine()) != null)
 				{
 				    filePos += line.length() * 2;
-				    progressChanged(filePos/file.length());
+				    progressChanged((double)filePos/(double)file.length());
 					if (from != null)
 				    {
 						if (line.contains(from))

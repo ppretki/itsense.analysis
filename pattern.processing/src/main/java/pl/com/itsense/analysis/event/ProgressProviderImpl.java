@@ -26,6 +26,7 @@ public abstract class ProgressProviderImpl implements ProgressProvider
         if (list == null)
         {
             list = new LinkedList<ProgressListener>();
+            listeners.put(granularity, list);
         }
         if (!list.contains(listener))
         {
@@ -54,16 +55,21 @@ public abstract class ProgressProviderImpl implements ProgressProvider
     {
         for (final Granularity granularity : Granularity.values())
         {
-            final Double lastprogress = lastProgresses.get(granularity);
-            final double actualProgress = Math.floor(progress / granularity.getValue());
-            if ((lastprogress != actualProgress) && (listeners.get(granularity) != null))
+            final LinkedList<ProgressListener> list = listeners.get(granularity);
+            if ((list != null) && !list.isEmpty())
             {
-                final ProgressEvent event = new ProgressEventImpl(progress); 
-                for (final ProgressListener listener : listeners.get(granularity))
+                final Double lastprogress = lastProgresses.get(granularity);
+                final double actualProgress = Math.floor(progress / granularity.getValue());
+//                /System.out.println("granularity = " + granularity + ", progress = " + progress + ", actual = " + actualProgress);
+                if (lastprogress != actualProgress)
                 {
-                    listener.change(event);
+                    final ProgressEvent event = new ProgressEventImpl(progress); 
+                    for (final ProgressListener listener : list)
+                    {
+                        listener.change(event);
+                    }
+                    lastProgresses.put(granularity, actualProgress);
                 }
-                lastProgresses.put(granularity, actualProgress);
             }
             
         }
