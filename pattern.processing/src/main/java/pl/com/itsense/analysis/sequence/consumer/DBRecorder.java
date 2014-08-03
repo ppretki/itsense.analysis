@@ -128,6 +128,14 @@ public class DBRecorder extends BaseSequanceConsumer
         }
     }
     
+    /**
+     * 
+     * @return
+     */
+    public SessionFactory getSessionFactory()
+    {
+        return sessionFactory;
+    }
     
 
 }

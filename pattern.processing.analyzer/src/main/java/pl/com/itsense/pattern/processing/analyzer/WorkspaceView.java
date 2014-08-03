@@ -1,5 +1,6 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
@@ -20,6 +21,16 @@ public class WorkspaceView extends CustomComponent implements View
 	private MenuBar menuBar;
 	/** */
 	private MenuItem browseMenuItem;
+	/** */
+	private final Navigator navigator;
+	
+	/**
+	 * 
+	 */
+	public WorkspaceView(final Navigator navigator) 
+	{
+		this.navigator = navigator;
+	}
 	/**
 	 * 
 	 */
@@ -56,6 +67,7 @@ public class WorkspaceView extends CustomComponent implements View
 			 */
 			public void menuSelected(final MenuItem selectedItem) 
 			{
+				navigator
 				
 			}
 		});

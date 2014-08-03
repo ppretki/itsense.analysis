@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -143,6 +144,16 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
                     consumer.consume(sequence);
                 }
             }
+            
+            final LinkedList<SequenceConsumer> allEventsConsumers = sequenceConsumers.get(SequenceConsumer.ALL_EVENTS_CONSUMER);
+            if (allEventsConsumers != null)
+            {
+                for (final SequenceConsumer consumer : allEventsConsumers)
+                {
+                    consumer.consume(sequence);
+                }
+            }
+            
         }
     }
     
@@ -203,6 +214,19 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     }
 
     
+    private boolean isAllEventConsumer(final SequenceConsumer consumer)
+    {
+        boolean result = false;
+        for (final String sequenceId : consumer.getSequenceIds())
+        {
+            if (SequenceConsumer.ALL_EVENTS_CONSUMER.equals(sequenceId))
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
     
     
 
@@ -246,17 +270,33 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     @Override
     public void add(final SequenceConsumer consumer)
     {
-        for (final String sequenceId : consumer.getSequenceIds())
+        if (isAllEventConsumer(consumer))
         {
-            LinkedList<SequenceConsumer> consumerList = sequenceConsumers.get(sequenceId);
+            LinkedList<SequenceConsumer> consumerList = sequenceConsumers.get(SequenceConsumer.ALL_EVENTS_CONSUMER);
             if (consumerList == null)
             {
                 consumerList = new LinkedList<SequenceConsumer>();
-                sequenceConsumers.put(sequenceId, consumerList);
+                sequenceConsumers.put(SequenceConsumer.ALL_EVENTS_CONSUMER, consumerList);
             }
             if (!consumerList.contains(consumer))
             {
                 consumerList.add(consumer);
+            }
+        }
+        else
+        {
+            for (final String sequenceId : consumer.getSequenceIds())
+            {
+                LinkedList<SequenceConsumer> consumerList = sequenceConsumers.get(sequenceId);
+                if (consumerList == null)
+                {
+                    consumerList = new LinkedList<SequenceConsumer>();
+                    sequenceConsumers.put(sequenceId, consumerList);
+                }
+                if (!consumerList.contains(consumer))
+                {
+                    consumerList.add(consumer);
+                }
             }
         }
         if (consumer instanceof ProcessingLifecycleListener)

@@ -9,6 +9,7 @@ import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
  */
 public interface SequenceConsumer extends PropertyHolder
 {
+    String ALL_EVENTS_CONSUMER = "*";
     /***
      * 
      * @return
