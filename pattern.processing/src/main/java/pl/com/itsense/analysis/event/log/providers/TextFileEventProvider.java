@@ -221,6 +221,7 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 								if (timestamp > -1)
 								{
 									final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
+									textLineEvent.setProperty(Event.PROPERTY_LINE, line);
 									if (matcher.groupCount() > 0)
 									{
 										final PatternConf patternConf = patternDefs.get(pattern);

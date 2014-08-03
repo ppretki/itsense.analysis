@@ -32,6 +32,8 @@ public class SequenceDB
 	/** */
 	private String name;
 	/** */
+	private long duration;
+	/** */
 	@OneToMany(targetEntity=EventDB.class, cascade={CascadeType.ALL})
 	private List<EventDB> events = new ArrayList<EventDB>(); 
 	
@@ -48,6 +50,7 @@ public class SequenceDB
     {
         sequenceId = sequence.getId();
         name = sequence.getResolvedName();
+        duration = sequence.getDuration();
         for (final Event event : sequence.getEvents())
         {
             events.add(new EventDB(event));
@@ -116,5 +119,22 @@ public class SequenceDB
     public void setSequenceId(final String sequenceId)
     {
         this.sequenceId = sequenceId;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public long getDuration()
+    {
+        return duration;
+    }
+    /**
+     * 
+     * @param duration
+     */
+    public void setDuration(final long duration)
+    {
+        this.duration = duration;
     }
 }
