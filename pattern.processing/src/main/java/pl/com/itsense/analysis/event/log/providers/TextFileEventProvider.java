@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import pl.com.itsense.analysis.event.Event;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.ProgressProviderImpl;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.PatternConf;
@@ -25,7 +26,7 @@ import pl.com.itsense.analysis.event.log.configuration.PatternConf;
  * @author ppretki
  *
  */
-public class TextFileEventProvider implements EventProvider 
+public class TextFileEventProvider extends ProgressProviderImpl implements EventProvider 
 {
 	/** */
 	private final File file;
@@ -109,12 +110,15 @@ public class TextFileEventProvider implements EventProvider
 		private BufferedReader reader;
 		/** */
 		private TextLine nextEvent;
+		/** */
+		private long filePos;
 
 		/** */
 		private TextLineIterator(final File file)
 		{
 			try 
 			{
+			    filePos = 0;
 				calendar.setTimeInMillis(file.lastModified());
 				reader = new BufferedReader(new FileReader(file));
 				
@@ -181,6 +185,8 @@ public class TextFileEventProvider implements EventProvider
 			{
 				while ((line = reader.readLine()) != null)
 				{
+				    filePos += line.length() * 2;
+				    progressChanged(filePos/file.length());
 					if (from != null)
 				    {
 						if (line.contains(from))

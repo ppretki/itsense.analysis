@@ -12,7 +12,7 @@ import java.util.List;
  * @author ppretki
  * 
  */
-public class EventProcessingEngine implements EEngine
+public class EventProcessingEngine extends ProgressProviderImpl implements EEngine, ProgressListener
 {
     /** */
     private final LinkedList<Event> events = new LinkedList<Event>();
@@ -38,6 +38,10 @@ public class EventProcessingEngine implements EEngine
         for (int i = 0; i < providers.length; i++)
         {
             iterators[i] = providers[i].iterator();
+            if (providers[i] instanceof ProgressProvider)
+            {
+                ((ProgressProvider)providers[i]).add(this, Granularity.PERCENT);
+            }
         }
         enterLifecycle(ProcessingLifecycle.START);
         while (true)
@@ -274,5 +278,13 @@ public class EventProcessingEngine implements EEngine
             seqConsumers.addAll(consumers);
         }
         return seqConsumers.toArray(new SequenceConsumer[0]);
+    }
+    /**
+     * 
+     */
+    @Override
+    public void change(final ProgressEvent event)
+    {
+        progressChanged(event.getProgress());
     }
 }

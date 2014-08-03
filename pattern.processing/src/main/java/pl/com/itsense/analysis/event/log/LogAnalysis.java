@@ -3,11 +3,17 @@ package pl.com.itsense.analysis.event.log;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.hibernate.internal.util.collections.BoundedConcurrentHashMap.Eviction;
+
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
+import pl.com.itsense.analysis.event.ProgressEvent;
+import pl.com.itsense.analysis.event.ProgressListener;
+import pl.com.itsense.analysis.event.ProgressProviderImpl;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.SequenceFactory;
+import pl.com.itsense.analysis.event.ProgressProvider.Granularity;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
@@ -24,14 +30,33 @@ import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 public class LogAnalysis
 {
     /** */
-    public static void main(final String[] args)
+    private final EventProcessingEngine engine = new EventProcessingEngine();
+    /** */
+    private final Configuration configuration;
+    /** */
+    private EventProvider[] eventProviders;
+    /**
+     * 
+     */
+    public LogAnalysis(final Configuration configuration)
     {
-        final Configuration configuration = Configuration.parse(new File(args[0]));
-        System.out.println(configuration);
-        final EventProcessingEngine engine = new EventProcessingEngine();
-
+        this.configuration = configuration;
+        init();
+    }
+    /**
+     * 
+     */
+    public void analyze()
+    {
+       engine.process(eventProviders); 
+    }
+    /**
+     * 
+     */
+    private void init()
+    {
         // PROVIDERS
-        final EventProvider[] eventProviders = new EventProvider[configuration.getFiles().size()];
+        eventProviders = new EventProvider[configuration.getFiles().size()];
         for (int i = 0; i < eventProviders.length; i++)
         {
             final FileConf file = configuration.getFiles().get(i);
@@ -96,7 +121,31 @@ public class LogAnalysis
         final SequenceFactory sequenceFactory = new SequenceFactory();
         sequenceFactory.setSequances(configuration.getSequences());
         engine.setSequenceFactory(sequenceFactory);
-        engine.process(eventProviders);
+        
     }
-
+    /** */
+    public static void main(final String[] args)
+    {
+        
+        final LogAnalysis logAnalysis = new LogAnalysis(Configuration.parse(new File(args[0])));
+        logAnalysis.getEngine().add(new ProgressListener()
+        {
+            
+            @Override
+            public void change(ProgressEvent event)
+            {
+                System.out.println(event.getProgress());
+            }
+        }, Granularity.PERCENT);
+        logAnalysis.analyze();
+        
+    }
+    /**
+     * 
+     * @return
+     */
+    public EventProcessingEngine getEngine()
+    {
+        return engine;
+    }
 }
