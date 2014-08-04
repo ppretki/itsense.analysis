@@ -68,10 +68,9 @@ public class AggregatedSequanceTab extends VerticalLayout
 	 */
 	private void buildUI() 
 	{
-		aggregateTable = new Table("Aggragated Sequances");
+		aggregateTable = new Table("Aggragations");
 		aggregateTable.setHeight(50, Unit.PERCENTAGE);
 		aggregateTable.setWidth(100, Unit.PERCENTAGE);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_ID, String.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_COUNT, Long.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_TOTAL, Long.class, null);
@@ -93,12 +92,12 @@ public class AggregatedSequanceTab extends VerticalLayout
 		fillAggregateTable();
 		addComponent(aggregateTable);
 		
-		sequenceTable = new Table("Events");
+		sequenceTable = new Table("Sequances");
 		sequenceTable.setHeight(50, Unit.PERCENTAGE);
 		sequenceTable.setWidth(100, Unit.PERCENTAGE);
-		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, String.class, null);
+		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, Long.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
-		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, String.class, null);
+		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
 
 		fillSequanceTable();
 		addComponent(sequenceTable);
@@ -208,7 +207,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 	{
 		
 		final Object[] row = new Object[3];
-		row[0] = String.valueOf(sequenceDB.getId());
+		row[0] = sequenceDB.getId();
 		row[1] = sequenceDB.getName();
 		row[2] = sequenceDB.getDuration();
 		return row;
