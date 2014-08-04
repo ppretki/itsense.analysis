@@ -3,12 +3,15 @@ package pl.com.itsense.pattern.processing.analyzer;
 import java.util.Iterator;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.Type;
 
 import pl.com.itsense.analysis.event.db.SequenceDB;
 
@@ -77,6 +80,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_AVG, Double.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_MIN, Long.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_MAX, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_STD, Double.class, null);
 
 		aggregateTable.setSelectable(true);
 		aggregateTable.setImmediate(true);
@@ -126,7 +130,8 @@ public class AggregatedSequanceTab extends VerticalLayout
 							add(Projections.sum("duration")).
 							add(Projections.avg("duration")).
 							add(Projections.min("duration")).
-							add(Projections.max("duration"))
+							add(Projections.max("duration")).
+							add(Projections.sqlProjection("STDDEV(duration) as StdDev", new String[]{"StdDev"}, new Type[]{DoubleType.INSTANCE}))
 					);
 			
 			for (final Iterator<Object[]> iterator = c.list().iterator(); iterator.hasNext();)
