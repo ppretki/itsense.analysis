@@ -15,8 +15,14 @@ import org.hibernate.type.Type;
 
 import pl.com.itsense.analysis.event.db.SequenceDB;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.server.Resource;
+import com.vaadin.server.StreamResource;
+import com.vaadin.ui.BrowserFrame;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 /**
@@ -50,6 +56,10 @@ public class AggregatedSequanceTab extends VerticalLayout
 	private Table aggregateTable;
 	/** */
 	private Table sequenceTable;
+	/** */
+	private BrowserFrame histogramChartBrowseFrame;
+	/** */
+	private final HistogramChart histogramChart = new HistogramChart(new double[0]);
 	/** */
 	private String selectedSequenceName;
 	/** */
@@ -94,7 +104,6 @@ public class AggregatedSequanceTab extends VerticalLayout
 		    }
 		});
 		fillAggregateTable();
-		addComponent(aggregateTable);
 		
 		sequenceTable = new Table("Sequances");
 		sequenceTable.setHeight(50, Unit.PERCENTAGE);
@@ -102,10 +111,21 @@ public class AggregatedSequanceTab extends VerticalLayout
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, Long.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
-
 		fillSequanceTable();
 		addComponent(sequenceTable);
-
+		
+		
+		histogramChartBrowseFrame = new BrowserFrame();
+		histogramChartBrowseFrame.setWidth(50, Unit.PERCENTAGE);
+		histogramChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
+		histogramChartBrowseFrame.setSource(new StreamResource(histogramChart,"none"));
+		
+		final HorizontalLayout hLayout = new HorizontalLayout();
+		hLayout.setHeight(50, Unit.PERCENTAGE);
+		hLayout.setWidth(50, Unit.PERCENTAGE);
+		hLayout.addComponent(aggregateTable);
+		hLayout.addComponent(histogramChartBrowseFrame);
+		addComponent(hLayout);
 	}
 
 
