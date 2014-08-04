@@ -29,6 +29,10 @@ public class WorkspaceView extends CustomComponent implements View
 	/** */
 	private MenuItem browseMenuItem;
 	/** */
+	private MenuItem allSequancesMenuItem;
+	/** */
+	private MenuItem aggregatedSequancesMenuItem;
+	/** */
 	private final Navigator navigator;
 	/** */
 	private final SessionFactory sessionFactory;
@@ -80,16 +84,29 @@ public class WorkspaceView extends CustomComponent implements View
 	{
 		menuBar = new MenuBar();
 		browseMenuItem = menuBar.addItem("Browse", null);
+		allSequancesMenuItem = browseMenuItem.addItem("All", null);
+		aggregatedSequancesMenuItem = browseMenuItem.addItem("Aggreated", null);
+
 		for(final String sequence : QueryUtil.getSequenceIds(sessionFactory))
 		{
-			System.out.println("Create menuu = " + sequence);
-			browseMenuItem.addItem(sequence, new Command() 
+			allSequancesMenuItem.addItem(sequence, new Command() 
 			{
 				public void menuSelected(final MenuItem selectedItem) 
 				{
-					workspace.addTab( new SequanceTab(sequence, sessionFactory)).setClosable(true);
+					workspace.addTab( new SequanceTab(sequence, sessionFactory),"Detailed View").setClosable(true);
 				}
 			});
+			
+			aggregatedSequancesMenuItem.addItem(sequence, new Command() 
+			{
+				public void menuSelected(final MenuItem selectedItem) 
+				{
+					workspace.addTab( new AggregatedSequanceTab(sequence, sessionFactory), "Aggreagted View").setClosable(true);
+				}
+			});
+			
+			
+			
 		}
 		return menuBar; 
 	}
