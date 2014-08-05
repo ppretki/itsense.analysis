@@ -35,7 +35,25 @@ public class HistogramChart implements StreamSource
 		
 		sb.append("<head>").append("\n");
 		sb.append("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>").append("\n");
+		
 		sb.append("<script type=\"text/javascript\">").append("\n");
+		sb.append("		google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});").append("\n");
+		sb.append("		google.setOnLoadCallback(drawChart);").append("\n");
+		
+		sb.append("		function drawChart() {").append("\n");
+		
+		sb.append("		var data = google.visualization.arrayToDataTable([").append("\n");
+		sb.append("		['Dinosaur', 'Length'],").append("\n");
+		sb.append("		['Acrocanthosaurus (top-spined lizard)', 12.2],").append("\n");
+		sb.append("		['Albertosaurus (Alberta lizard)', 9.1]]);").append("\n");
+		
+		
+		sb.append("		var chart = new google.visualization.Histogram(document.getElementById('chart_div'));").append("\n");
+		sb.append("		chart.draw(data, options);").append("\n");
+		
+		sb.append("		}").append("\n");
+		
+		
 		sb.append("</script>").append("\n");
 		sb.append("</head>").append("\n");
 		
