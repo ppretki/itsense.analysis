@@ -18,6 +18,7 @@ import pl.com.itsense.analysis.event.db.SequenceDB;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.BrowserFrame;
@@ -112,19 +113,20 @@ public class AggregatedSequanceTab extends VerticalLayout
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
 		fillSequanceTable();
-		addComponent(sequenceTable);
+		
 		
 		
 		histogramChartBrowseFrame = new BrowserFrame();
 		histogramChartBrowseFrame.setWidth(50, Unit.PERCENTAGE);
 		histogramChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
-		histogramChartBrowseFrame.setSource(new StreamResource(histogramChart,"none"));
+		histogramChartBrowseFrame.setSource(new StreamResource(histogramChart,"chart.html"));
 		
 		final HorizontalLayout hLayout = new HorizontalLayout();
 		hLayout.setHeight(50, Unit.PERCENTAGE);
-		hLayout.setWidth(50, Unit.PERCENTAGE);
-		hLayout.addComponent(aggregateTable);
+		hLayout.setWidth(100, Unit.PERCENTAGE);
+		hLayout.addComponent(sequenceTable);
 		hLayout.addComponent(histogramChartBrowseFrame);
+		addComponent(aggregateTable);
 		addComponent(hLayout);
 	}
 
