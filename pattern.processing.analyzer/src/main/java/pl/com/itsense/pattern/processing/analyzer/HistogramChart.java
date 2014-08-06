@@ -2,6 +2,7 @@ package pl.com.itsense.pattern.processing.analyzer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import com.vaadin.server.StreamResource.StreamSource;
 
@@ -15,14 +16,16 @@ public class HistogramChart implements StreamSource
 	/** */
 	private static final long serialVersionUID = 1L;
 	/** */
-	private final double[] values;
-	
+	private final List<Double> values;
+	/** */
+	private final List<String> labels;
 	/**
 	 * 
 	 */
-	public HistogramChart(final double[] values) 
+	public HistogramChart(final List<String> labels, final List<Double> values) 
 	{
 		this.values = values;
+		this.labels = labels;
 	}
 
 	/**
@@ -43,10 +46,14 @@ public class HistogramChart implements StreamSource
 		sb.append("		function drawChart() {").append("\n");
 		
 		sb.append("		var data = google.visualization.arrayToDataTable([").append("\n");
-		sb.append("		['Dinosaur', 'Length'],").append("\n");
-		sb.append("		['Acrocanthosaurus (top-spined lizard)', 12.2],").append("\n");
-		sb.append("		['Albertosaurus (Alberta lizard)', 9.1]]);").append("\n");
+		sb.append("		['sequance', 'values'],").append("\n");
+		for (int i = 0 ; i < values.size(); i++)
+		{
+			sb.append("		['" + labels.get(i) + "', "+values.get(i)+"],").append("\n");
+		}
+		sb.append("		]);").append("\n");
 		
+		sb.append("		var options = {title: 'Sequance duration', legend: { position: 'none' }, };").append("\n");
 		
 		sb.append("		var chart = new google.visualization.Histogram(document.getElementById('chart_div'));").append("\n");
 		sb.append("		chart.draw(data, options);").append("\n");

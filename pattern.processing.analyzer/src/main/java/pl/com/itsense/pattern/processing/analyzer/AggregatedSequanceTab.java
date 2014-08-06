@@ -1,5 +1,6 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.hibernate.Criteria;
@@ -60,8 +61,6 @@ public class AggregatedSequanceTab extends VerticalLayout
 	/** */
 	private BrowserFrame histogramChartBrowseFrame;
 	/** */
-	private final HistogramChart histogramChart = new HistogramChart(new double[0]);
-	/** */
 	private String selectedSequenceName;
 	/** */
 	private final SessionFactory sessionFactory;
@@ -107,19 +106,18 @@ public class AggregatedSequanceTab extends VerticalLayout
 		fillAggregateTable();
 		
 		sequenceTable = new Table("Sequances");
-		sequenceTable.setHeight(50, Unit.PERCENTAGE);
+		sequenceTable.setHeight(100, Unit.PERCENTAGE);
 		sequenceTable.setWidth(100, Unit.PERCENTAGE);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, Long.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
-		fillSequanceTable();
+
 		
 		
 		
 		histogramChartBrowseFrame = new BrowserFrame();
-		histogramChartBrowseFrame.setWidth(50, Unit.PERCENTAGE);
+		histogramChartBrowseFrame.setWidth(100, Unit.PERCENTAGE);
 		histogramChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
-		histogramChartBrowseFrame.setSource(new StreamResource(histogramChart,"chart.html"));
 		
 		final HorizontalLayout hLayout = new HorizontalLayout();
 		hLayout.setHeight(50, Unit.PERCENTAGE);
@@ -196,15 +194,20 @@ public class AggregatedSequanceTab extends VerticalLayout
 				session = sessionFactory.openSession();
 				trx = session.beginTransaction();
 				final Criteria c = session.createCriteria(SequenceDB.class).add(Restrictions.eqOrIsNull("name", selectedSequenceName));
+				final ArrayList<String> labels = new ArrayList<String>();
+				final ArrayList<Double> values = new ArrayList<Double>();
 				if (c != null)
 				{
 					for (final Iterator<SequenceDB> iterator = c.list().iterator(); iterator.hasNext();)
 					{
 						final SequenceDB sequenceDB = iterator.next();
-						sequenceTable.addItem(getTableRow(sequenceDB), sequenceDB.getId());	
+						sequenceTable.addItem(getTableRow(sequenceDB), sequenceDB.getId());
+						labels.add(Long.toString(sequenceDB.getId()));
+						values.add(new Double(sequenceDB.getDuration()));
 					}
 				}
 				trx.commit();
+				histogramChartBrowseFrame.setSource(new StreamResource(new HistogramChart(labels, values), "chart.html"));
 			
 			}
 			catch(HibernateException e)
