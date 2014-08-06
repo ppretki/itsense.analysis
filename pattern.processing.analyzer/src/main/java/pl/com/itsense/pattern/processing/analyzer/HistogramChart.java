@@ -65,7 +65,7 @@ public class HistogramChart implements StreamSource
 		sb.append("</head>").append("\n");
 		
 		sb.append("<body>").append("\n");
-		sb.append("<div id=\"chart_div\" style=\"width: 900px; height: 500px;\"></div>").append("\n");
+		sb.append("<div id=\"chart_div\" style=\"width: 100%; height: 100%;\"></div>").append("\n");
 		sb.append("</body>").append("\n");		
 		sb.append("</html>").append("\n");
 		return new ByteArrayInputStream(sb.toString().getBytes());

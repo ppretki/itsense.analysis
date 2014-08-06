@@ -118,6 +118,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 		histogramChartBrowseFrame = new BrowserFrame();
 		histogramChartBrowseFrame.setWidth(100, Unit.PERCENTAGE);
 		histogramChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
+		histogramChartBrowseFrame.setImmediate(true);
 		
 		final HorizontalLayout hLayout = new HorizontalLayout();
 		hLayout.setHeight(50, Unit.PERCENTAGE);
@@ -208,6 +209,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 				}
 				trx.commit();
 				histogramChartBrowseFrame.setSource(new StreamResource(new HistogramChart(labels, values), "chart.html"));
+				histogramChartBrowseFrame.markAsDirty();
 			
 			}
 			catch(HibernateException e)
