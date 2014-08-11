@@ -208,7 +208,9 @@ public class AggregatedSequanceTab extends VerticalLayout
 					}
 				}
 				trx.commit();
-				histogramChartBrowseFrame.setSource(new StreamResource(new HistogramChart(labels, values), "chart.html"));
+				final StreamResource resource = new StreamResource(new HistogramChart(labels, values), selectedSequenceName + ".html");
+				resource.setCacheTime(0L);
+				histogramChartBrowseFrame.setSource(resource);
 				histogramChartBrowseFrame.markAsDirty();
 			
 			}

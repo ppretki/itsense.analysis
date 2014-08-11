@@ -16,11 +16,7 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-
 import org.hibernate.SessionFactory;
-
-
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
