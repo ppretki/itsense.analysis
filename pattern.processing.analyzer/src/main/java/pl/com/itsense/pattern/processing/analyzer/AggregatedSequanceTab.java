@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,14 +15,10 @@ import org.hibernate.type.Type;
 
 import pl.com.itsense.analysis.event.db.SequenceDB;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -60,6 +55,8 @@ public class AggregatedSequanceTab extends VerticalLayout
 	private Table sequenceTable;
 	/** */
 	private BrowserFrame histogramChartBrowseFrame;
+	/** */
+	private BrowserFrame lineChartBrowseFrame;
 	/** */
 	private String selectedSequenceName;
 	/** */
@@ -111,20 +108,31 @@ public class AggregatedSequanceTab extends VerticalLayout
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, Long.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
-
 		
-		
+		lineChartBrowseFrame = new BrowserFrame();
+		lineChartBrowseFrame.setWidth(100, Unit.PERCENTAGE);
+		lineChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
+		lineChartBrowseFrame.setImmediate(true);
 		
 		histogramChartBrowseFrame = new BrowserFrame();
 		histogramChartBrowseFrame.setWidth(100, Unit.PERCENTAGE);
 		histogramChartBrowseFrame.setHeight(100, Unit.PERCENTAGE);
 		histogramChartBrowseFrame.setImmediate(true);
+
 		
 		final HorizontalLayout hLayout = new HorizontalLayout();
-		hLayout.setHeight(50, Unit.PERCENTAGE);
+		hLayout.setHeight(100, Unit.PERCENTAGE);
 		hLayout.setWidth(100, Unit.PERCENTAGE);
+
+		final VerticalLayout vLayout = new VerticalLayout();
+		vLayout.setHeight(100, Unit.PERCENTAGE);
+		vLayout.setWidth(100, Unit.PERCENTAGE);
+		vLayout.addComponent(histogramChartBrowseFrame);
+		vLayout.addComponent(lineChartBrowseFrame);
+
 		hLayout.addComponent(sequenceTable);
-		hLayout.addComponent(histogramChartBrowseFrame);
+		hLayout.addComponent(vLayout);
+		
 		addComponent(aggregateTable);
 		addComponent(hLayout);
 	}
@@ -196,6 +204,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 				trx = session.beginTransaction();
 				final Criteria c = session.createCriteria(SequenceDB.class).add(Restrictions.eqOrIsNull("name", selectedSequenceName));
 				final ArrayList<String> labels = new ArrayList<String>();
+				final ArrayList<Long> timestamps = new ArrayList<Long>();
 				final ArrayList<Double> values = new ArrayList<Double>();
 				if (c != null)
 				{
@@ -205,13 +214,21 @@ public class AggregatedSequanceTab extends VerticalLayout
 						sequenceTable.addItem(getTableRow(sequenceDB), sequenceDB.getId());
 						labels.add(Long.toString(sequenceDB.getId()));
 						values.add(new Double(sequenceDB.getDuration()));
+						timestamps.add(new Long(sequenceDB.getEvents().get(0).getTimestamp().getTime()));
 					}
 				}
 				trx.commit();
-				final StreamResource resource = new StreamResource(new HistogramChart(labels, values), selectedSequenceName + ".html");
-				resource.setCacheTime(0L);
-				histogramChartBrowseFrame.setSource(resource);
+				final StreamResource histogramSource = new StreamResource(new HistogramChart(labels, values), selectedSequenceName + ".html");
+				histogramSource.setCacheTime(0L);
+				
+				final StreamResource lineChartResource = new StreamResource(new LineChart(timestamps, values), selectedSequenceName + ".html");
+				lineChartResource.setCacheTime(0L);
+
+				histogramChartBrowseFrame.setSource(histogramSource);
 				histogramChartBrowseFrame.markAsDirty();
+
+				lineChartBrowseFrame.setSource(lineChartResource);
+				lineChartBrowseFrame.markAsDirty();
 			
 			}
 			catch(HibernateException e)
