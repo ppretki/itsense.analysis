@@ -122,6 +122,7 @@ WHERE
         cfg.addAnnotatedClass(EventDB.class);
         cfg.addAnnotatedClass(PatternDB.class);
         cfg.addAnnotatedClass(GroupDB.class);
+        
         return cfg;
     }
 

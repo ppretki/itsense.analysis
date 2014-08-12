@@ -30,6 +30,15 @@ public class SequenceConf
             terms.add(term);
         }
     }
+
+    public void add(final MeasureConf measureConf)
+    {
+        if ((measureConf != null) && !measures.contains(measureConf))
+        {
+            measures.add(measureConf);
+        }
+    }
+    
     /**
      * 
      * @return

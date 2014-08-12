@@ -12,9 +12,11 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 import pl.com.itsense.analysis.event.BaseSequanceConsumer;
 import pl.com.itsense.analysis.event.EEngine;
+import pl.com.itsense.analysis.event.Measure;
 import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.GroupDB;
+import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
 /**
@@ -45,6 +47,7 @@ public class DBRecorder extends BaseSequanceConsumer
                 cfg.setProperty(property, getProperty(property));
             }
         }
+        cfg.addAnnotatedClass(MeasureDB.class);
         cfg.addAnnotatedClass(SequenceDB.class);
         cfg.addAnnotatedClass(EventDB.class);
         cfg.addAnnotatedClass(PatternDB.class);

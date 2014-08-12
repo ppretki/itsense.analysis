@@ -1,5 +1,6 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -13,6 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.pattern.processing.analyzer.query.QueryUtil;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -40,29 +42,34 @@ public class SequanceTab extends VerticalLayout
 	/** */
 	private final String sequenceId;
 	/** */
-	private final String measureName;
+	private final String[] measureNames;
 	/** */
 	private Table sequenceTable;
 	/** */
 	private Table termTable;
 	/** */
 	private long selectedSequenceId = -1;
-
 	/** */
 	private final SessionFactory sessionFactory;
-
 	
 	/**
 	 * 
 	 */
-	public SequanceTab(final String sequenceId, final String measureName, final SessionFactory sessionFactory) 
+	public SequanceTab(final String sequenceId, final SessionFactory sessionFactory) 
 	{
 		this.sequenceId = sequenceId;
 		this.sessionFactory = sessionFactory;
-		this.measureName = measureName;
+		this.measureNames = QueryUtil.getMeasureNames(sessionFactory, sequenceId);
 		buildUI();
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
+	private String getPropertyId(final String measureName)
+	{
+		return TABLE_COLUMN_SEQUANCE_MEASURE + ":" + measureName;
+	}
 	/**
 	 *
 	 */
@@ -73,7 +80,10 @@ public class SequanceTab extends VerticalLayout
 		sequenceTable.setWidth(100, Unit.PERCENTAGE);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
-		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MEASURE, Double.class, null);
+		for (final String measureName : measureNames)
+		{
+			sequenceTable.addContainerProperty(getPropertyId(measureName) , Double.class, null);
+		}
 		sequenceTable.setSelectable(true);
 		sequenceTable.setImmediate(true);
 		sequenceTable.addValueChangeListener(new Property.ValueChangeListener() 
@@ -190,19 +200,31 @@ public class SequanceTab extends VerticalLayout
 	 */
 	private Object[] getTableRow(final SequenceDB sequenceDB)
 	{
-		
-		final Object[] row = new Object[3];
+		final Double[] measureValues = getMeasureValues(sequenceDB);
+		final Object[] row = new Object[2 + measureValues.length];
 		row[0] = String.valueOf(sequenceDB.getId());
 		row[1] = sequenceDB.getName();
-		for (final MeasureDB measureDB : sequenceDB.getMeasures())
+		int index = 2;
+		for (final Double measureValue : measureValues)
 		{
-		    if (measureName.equals(measureDB.getName()))
-		    {
-		        row[2] = measureDB.getValue();        
-		        break;
-		    }
+		    row[index++] = measureValue;
 		}
 		return row;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	private Double[] getMeasureValues(final SequenceDB sequenceDB)
+	{
+		Double[] result = new Double[measureNames.length];
+		for (final MeasureDB measureDB : sequenceDB.getMeasures())
+		{
+			final String name  = measureDB.getName();
+			final int index = Arrays.binarySearch(measureNames, name);
+			result[index] = measureDB.getValue();
+		}
+		return result;
 	}
 	
 	/**

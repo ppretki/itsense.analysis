@@ -213,7 +213,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 						final SequenceDB sequenceDB = iterator.next();
 						sequenceTable.addItem(getTableRow(sequenceDB), sequenceDB.getId());
 						labels.add(Long.toString(sequenceDB.getId()));
-						values.add(new Double(sequenceDB.getDuration()));
+						//values.add(new Double(sequenceDB.getDuration()));
 						timestamps.add(new Long(sequenceDB.getEvents().get(0).getTimestamp().getTime()));
 					}
 				}
@@ -260,7 +260,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 		final Object[] row = new Object[3];
 		row[0] = sequenceDB.getId();
 		row[1] = sequenceDB.getName();
-		row[2] = sequenceDB.getDuration();
+		//row[2] = sequenceDB.getDuration();
 		return row;
 	}
 }

@@ -17,6 +17,8 @@ import pl.com.itsense.analysis.event.log.configuration.MeasureConf;
 public class Sequence
 {
     /** */
+    private static final String CTX_VAR_TIMESTAMP = "timestamp";
+    /** */
     private HashMap<String,Object> context = new HashMap<String,Object>();  
     /** */
     private MapVariableResolverFactory resolver = new MapVariableResolverFactory(context); 
@@ -32,6 +34,8 @@ public class Sequence
     private final String id;
     /** */
     private Event[] events;
+    /** */
+    private final long[] ctxVarTimestamp; 
     /**
      * 
      * @param terms
@@ -46,6 +50,8 @@ public class Sequence
         this.id = id;
         this.name = name == null ? id : name;
         this.events = new Event[terms.length];
+        this.ctxVarTimestamp = new long[terms.length];
+        context.put(CTX_VAR_TIMESTAMP, ctxVarTimestamp);
     }
     /**
      * 
@@ -75,8 +81,8 @@ public class Sequence
             }
             if (terms[index].accept(event,resolver))
             {
-                events[index] = event;
-                index++;
+                ctxVarTimestamp[index] = event.getTimestamp();
+                events[index++] = event;
                 accepted = true;
             }
         }
@@ -213,7 +219,7 @@ public class Sequence
         {
             if (expression != null)
             {
-                value = (Double)MVEL.eval(expression, resolver);
+                value = (Double)MVEL.eval(expression, resolver, Double.class);
             }
             return value;
         }
