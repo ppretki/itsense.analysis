@@ -21,7 +21,16 @@
 
     <event id="STATE_ACTIVATE" fileid="argus">
       <pattern id="state">\[STATE_ACTIVATE\]\s+(\w+)</pattern>
-    </event>  
+    </event> 
+    
+    <event id="GC_LOCK" fileid="argus">
+      <pattern id="state">GC lock</pattern>
+    </event> 
+    
+    <event id="GC_REPORT" fileid="argus">
+      <pattern id="report">GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms</pattern>
+    </event> 
+    
     
     <sequence id="PNG_DECODING" name="PNG_DECODING_$(width)x$(height)">
        <term index="1" event="PNG_START"/>
@@ -35,28 +44,37 @@
        <term index="4" event="PNG_STOP">
            <var name="time" value="time$1"/>
        </term>
+      <measure name="duration" value="time"/>
+      <measure name="size" value="width*height"/>
+       
     </sequence>
     
     <sequence id="STATE_ACTIVATION" name="STATE_ACTIVATION: FROM: $(from) TO: $(to)">
-      <term index="1" event="STATES_PATH_CHANGE">
+      <term index="0" event="STATES_PATH_CHANGE">
         <var name="from" value="states$1"/>
         <var name="to" value="states$2"/>
       </term>
-      <term index="2" event="STATE_ACTIVATE">
+      <term index="1" event="STATE_ACTIVATE">
         <var name="state" value="state$1"/>
         <condition mvel="state==to"/>
       </term>
+      <measure name="duration" value="timestamp[1] - timestamp[0]"/>
+      </sequence>
+    
+    <sequence id="GC_REPORT" name="GC: FROM: $(total)">
+      <term index="0" event="GC_LOCK"/>
+      <term index="1" event="GC_REPORT">
+        <var name="free" value="report$1"/>
+		<var name="total" value="report$2"/>
+		<var name="time" value="report$3"/>
+      </term>
+      <measure name="duration" value="time"/>
+      <measure name="free" value="free"/>
     </sequence>
     
-    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION"/>
-    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DBRecorder" sequences="PNG_DECODING,STATE_ACTIVATION">
-    	<property name="hibernate.connection.url" value ="jdbc:postgresql://localhost/adb"/>
-    	<property name="hibernate.dialect" value ="org.hibernate.dialect.PostgreSQLDialect"/>
-    	<property name="hibernate.connection.driver_class" value ="org.postgresql.Driver"/>
-    	<property name="hibernate.connection.username" value ="adb"/>
-    	<property name="hibernate.connection.password" value ="adb"/>
-    	<property name="hibernate.hbm2ddl.auto" value ="create"/>
+    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION,GC_REPORT">
+      <property name="estimate" value=""/>
     </sequenceconsumer>
     
-    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" />
+    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="10000"/>
 </config>
