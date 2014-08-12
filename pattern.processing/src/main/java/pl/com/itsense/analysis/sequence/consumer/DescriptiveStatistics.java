@@ -41,7 +41,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
     @Override
     public void consume(final Sequence sequence)
     {
-        final String id = sequence != null ? sequence.getResolvedName() : null;
+        final String id = sequence != null ? sequence.getId() : null;
         if (id != null)
         {
             final String[] keys  = sequence.getMeasureNames();

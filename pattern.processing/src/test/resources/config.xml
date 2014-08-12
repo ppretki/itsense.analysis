@@ -33,15 +33,15 @@
     
     
     <sequence id="PNG_DECODING" name="PNG_DECODING_$(width)x$(height)">
-       <term index="1" event="PNG_START"/>
+       <term index="0" event="PNG_START"/>
        
-       <term index="2" event="PNG_WIDTH">
+       <term index="1" event="PNG_WIDTH">
            <var name="width" value="width$1"/>
        </term>
-       <term index="3" event="PNG_HEIGHT">
+       <term index="2" event="PNG_HEIGHT">
            <var name="height" value="height$1"/>
        </term>
-       <term index="4" event="PNG_STOP">
+       <term index="3" event="PNG_STOP">
            <var name="time" value="time$1"/>
        </term>
       <measure name="duration" value="time"/>
@@ -64,17 +64,15 @@
     <sequence id="GC_REPORT" name="GC: FROM: $(total)">
       <term index="0" event="GC_LOCK"/>
       <term index="1" event="GC_REPORT">
-        <var name="free" value="report$1"/>
-		<var name="total" value="report$2"/>
-		<var name="time" value="report$3"/>
+        <var name="free"  value="report$1"/>
+	<var name="total" value="report$2"/>
+	<var name="time"  value="report$3"/>
       </term>
       <measure name="duration" value="time"/>
       <measure name="free" value="free"/>
     </sequence>
     
-    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION,GC_REPORT">
-      <property name="estimate" value=""/>
-    </sequenceconsumer>
+    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION,GC_REPORT"/>
     
     <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="10000"/>
 </config>
