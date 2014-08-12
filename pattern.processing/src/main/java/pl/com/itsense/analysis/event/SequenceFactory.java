@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import pl.com.itsense.analysis.event.log.configuration.MeasureConf;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
 import pl.com.itsense.analysis.event.log.configuration.TermConf;
 
@@ -58,7 +59,7 @@ public class SequenceFactory
                 for (final Sequence seq : sequence)
                 {
                     list.remove(seq);
-                    list.add(new Sequence(seq.getTerms(), seq.getName() , seq.getId()));
+                    list.add(new Sequence(seq.getTerms(), seq.getMeasures(), seq.getName() , seq.getId()));
                 }
             }
 
@@ -103,7 +104,8 @@ public class SequenceFactory
                             final TermConf term = map.get(indexes.get(i));
                             termTable[i] = new Term(term);
                         }
-                        final Sequence sequence = new Sequence(termTable, sequenceConf.getName(), sequenceConf.getId());
+                        
+                        final Sequence sequence = new Sequence(termTable, sequenceConf.getMeasures(), sequenceConf.getName(), sequenceConf.getId());
                         final String eventId = termTable[0].getEventId();
                         if (eventId != null)
                         {

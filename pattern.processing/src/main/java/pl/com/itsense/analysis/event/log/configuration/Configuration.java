@@ -40,6 +40,7 @@ public class Configuration
         digester.addObjectCreate("config/consumer/property",        "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
         digester.addObjectCreate("config/sequence",                 "pl.com.itsense.analysis.event.log.configuration.SequenceConf");
         digester.addObjectCreate("config/sequence/term",            "pl.com.itsense.analysis.event.log.configuration.TermConf");
+        digester.addObjectCreate("config/sequence/measure",         "pl.com.itsense.analysis.event.log.configuration.MeasureConf");
         digester.addObjectCreate("config/sequence/term/var",        "pl.com.itsense.analysis.event.log.configuration.VarConf");
         digester.addObjectCreate("config/sequence/term/condition",  "pl.com.itsense.analysis.event.log.configuration.ConditionConf");
         digester.addObjectCreate("config/sequenceconsumer",         "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
@@ -52,6 +53,7 @@ public class Configuration
         digester.addSetNext("config/consumer/property",         "add",          "pl.com.itsense.analysis.event.configuration.log.PropertyConf");
         digester.addSetNext("config/sequence",                  "add",          "pl.com.itsense.analysis.event.configuration.log.SequenceConf");
         digester.addSetNext("config/sequence/term",             "add",          "pl.com.itsense.analysis.event.configuration.log.TermConf");
+        digester.addSetNext("config/sequence/measure",          "add",          "pl.com.itsense.analysis.event.configuration.log.MeasureConf");
         digester.addSetNext("config/sequence/term/var",         "add",          "pl.com.itsense.analysis.event.configuration.log.VarConf");
         digester.addSetNext("config/sequence/term/condition",   "setCondition", "pl.com.itsense.analysis.event.configuration.log.ConditionConf");
         digester.addSetNext("config/sequenceconsumer",          "add",          "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
@@ -67,6 +69,7 @@ public class Configuration
         digester.addSetProperties("config/sequence/term");
         digester.addSetProperties("config/sequence/term/var");
         digester.addSetProperties("config/sequence/term/condition");
+        digester.addSetProperties("config/sequence/measure");
         digester.addSetProperties("config/sequenceconsumer");
         digester.addSetProperties("config/sequenceconsumer/property");
         

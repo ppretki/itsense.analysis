@@ -44,13 +44,25 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         final String id = sequence != null ? sequence.getResolvedName() : null;
         if (id != null)
         {
-            Statistics stats = statistics.get(id);
-            if (stats == null)
+            final String[] keys  = sequence.getMeasureNames();
+            if ((keys != null) && (keys.length > 0))
             {
-                stats = new Statistics();
-                statistics.put(id, stats);
+                for (final String key : keys)
+                {
+                    final String st = id + ":" + key;
+                    final Double value = sequence.getMeasure(key);
+                    if (value != null)
+                    {
+                        Statistics stats = statistics.get(st);
+                        if (stats == null)
+                        {
+                            stats = new Statistics();
+                            statistics.put(st, stats);
+                        }
+                        stats.add(sequence.getMeasure(key));
+                    }
+                }
             }
-            stats.add(sequence.getDuration());
         }
     }
     /**

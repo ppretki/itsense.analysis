@@ -1,8 +1,12 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.HashMap;
+import java.util.List;
 
+import org.mvel2.MVEL;
 import org.mvel2.integration.impl.MapVariableResolverFactory;
+
+import pl.com.itsense.analysis.event.log.configuration.MeasureConf;
 
 
 /**
@@ -17,7 +21,9 @@ public class Sequence
     /** */
     private MapVariableResolverFactory resolver = new MapVariableResolverFactory(context); 
     /** */
-    private Term[] terms;
+    private final Term[] terms;
+    /** */
+    private final HashMap<String, MeasureImpl> measures = new HashMap<String, MeasureImpl>();
     /** */
     private int index;
     /** */
@@ -30,9 +36,13 @@ public class Sequence
      * 
      * @param terms
      */
-    public Sequence(final Term[] terms, final String name, final String id)
+    public Sequence(final Term[] terms,final List<MeasureConf> measureConfs, final String name, final String id)
     {
         this.terms = terms;
+        for (final MeasureConf measureConf : measureConfs)
+        {
+             measures.put(measureConf.getName(), new MeasureImpl(measureConf));
+        }
         this.id = id;
         this.name = name == null ? id : name;
         this.events = new Event[terms.length];
@@ -123,7 +133,7 @@ public class Sequence
     public String toString()
     {
         final StringBuffer sb = new StringBuffer();
-        sb.append("Sequence: id = " + id + ", name = " + name + ", symbolicName = " + getResolvedName() + ", duration = " + getDuration() + "\n");
+        sb.append("Sequence: id = " + id + ", name = " + name + ", symbolicName = " + getResolvedName() + "\n");
         for (int i = 0; i < events.length; i++)
         {
             if (events[i] != null)
@@ -138,18 +148,76 @@ public class Sequence
         }
         return sb.toString();
     }
+    
     /**
      * 
      * @return
      */
-    public long getDuration()
+    public String[] getMeasureNames()
     {
-        long duration = -1; 
-        if (events[0] != null)
-        {
-            duration = events[index - 1] == null ? 0 : (events[index - 1].getTimestamp() - events[0].getTimestamp());
-        }
-        return duration;
+        return measures.keySet().toArray(new String[0]);
     }
+    /**
+     * 
+     * @return
+     */
+    public double getMeasure(final String name)
+    {
+        double result = 0;
+        final MeasureImpl measure = measures.get(name);
+        if (measure != null)
+        {
+            result = measure.getValue();
+        }
+        return result;
+    }
+    
+    
+    /**
+     * 
+     * @author P.Pretki
+     *
+     */
+    private class MeasureImpl implements Measure
+    {
+        /** */
+        private final String name;
+        /** */
+        private final String expression;
+        /** */
+        private Double value;  
+        /**
+         * 
+         * @param m
+         */
+        public MeasureImpl(final MeasureConf measureConf)
+        {
+            this.name = measureConf.getName();
+            this.expression  = measureConf.getValue();
+            this.value = null;
+        }
+        
+        /**
+         * 
+         * @return
+         */
+        public String getName()
+        {
+            return name;
+        }
+        /**
+         *
+         * @return
+         */
+        public Double getValue()
+        {
+            if (expression != null)
+            {
+                value = (Double)MVEL.eval(expression, resolver);
+            }
+            return value;
+        }
+    }
+
     
 }

@@ -2,6 +2,8 @@ package pl.com.itsense.analysis.event.log.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jboss.logging.annotations.Message;
 /**
  * 
  * @author P.Pretki
@@ -15,6 +17,8 @@ public class SequenceConf
     private String name;
     /** */
     private List<TermConf> terms = new ArrayList<TermConf>();
+    /** */
+    private List<MeasureConf> measures = new ArrayList<MeasureConf>();
     /**
      * 
      * @param term
@@ -42,6 +46,16 @@ public class SequenceConf
     {
         this.terms = terms;
     }
+
+    /**
+     * 
+     * @param measures
+     */
+    public void setMeasures(final List<MeasureConf> measures)
+    {
+        this.measures = measures;
+    }
+    
     /**
      * 
      * @return
@@ -49,6 +63,14 @@ public class SequenceConf
     public String getId()
     {
         return id;
+    }
+    /**
+     * 
+     * @return
+     */
+    public List<MeasureConf> getMeasures()
+    {
+        return measures;
     }
     /**
      * 
@@ -81,11 +103,18 @@ public class SequenceConf
     public String toString()
     {
         final StringBuffer sb = new StringBuffer();
-        sb.append("Sequence: id = " + id + ", terms:").append("\n");
+        sb.append("Sequence: id = " + id).append("\n");
+        sb.append("---- Terms: ").append("\n");
         for (final TermConf term : terms)
         {
             sb.append(term).append("\n");
         }
+        sb.append("---- Measures: ").append("\n");
+        for (final MeasureConf measure : measures)
+        {
+            sb.append(measure).append("\n");
+        }
+        
         return  sb.toString();
     }
 }

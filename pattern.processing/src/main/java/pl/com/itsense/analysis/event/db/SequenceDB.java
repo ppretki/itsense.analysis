@@ -1,11 +1,9 @@
 package pl.com.itsense.analysis.event.db;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
 import pl.com.itsense.analysis.event.Event;
+import pl.com.itsense.analysis.event.Measure;
 import pl.com.itsense.analysis.event.Sequence;
 
 @Proxy(lazy=false)
@@ -32,10 +31,11 @@ public class SequenceDB
 	/** */
 	private String name;
 	/** */
-	private long duration;
-	/** */
 	@OneToMany(targetEntity=EventDB.class, cascade={CascadeType.ALL})
 	private List<EventDB> events = new ArrayList<EventDB>(); 
+    /** */
+    @OneToMany(targetEntity=MeasureDB.class, cascade={CascadeType.ALL})
+    private List<MeasureDB> measures = new ArrayList<MeasureDB>(); 
 	
 	/**
 	 * 
@@ -50,10 +50,13 @@ public class SequenceDB
     {
         sequenceId = sequence.getId();
         name = sequence.getResolvedName();
-        duration = sequence.getDuration();
         for (final Event event : sequence.getEvents())
         {
             events.add(new EventDB(event));
+        }
+        for (final String measureName : sequence.getMeasureNames())
+        {
+            measures.add(new MeasureDB(measureName, sequence.getMeasure(measureName)));
         }
     }
     /**
@@ -125,16 +128,16 @@ public class SequenceDB
      * 
      * @return
      */
-    public long getDuration()
+    public List<MeasureDB> getMeasures()
     {
-        return duration;
+        return measures;
     }
     /**
      * 
-     * @param duration
+     * @param measures
      */
-    public void setDuration(final long duration)
+    public void setMeasures(final List<MeasureDB> measures)
     {
-        this.duration = duration;
+        this.measures = measures;
     }
 }
