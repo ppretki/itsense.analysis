@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import pl.com.itsense.analysis.event.db.EventDB;
+import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
 
 import com.vaadin.data.Property;
@@ -29,16 +30,17 @@ public class SequanceTab extends VerticalLayout
 	/** */
 	private final String TABLE_COLUMN_SEQUANCE_NAME = "Name";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION = "Duration";
+	private final String TABLE_COLUMN_SEQUANCE_MEASURE = "Measure";
 	/** */
 	private final String TABLE_COLUMN_TERM_ID = "Event ID";
 	/** */
 	private final String TABLE_COLUMN_TERM_LINE = "Line";
 	/** */
 	private final String TABLE_COLUMN_TERM_TIMESTAMP = "Timestamp";
-
 	/** */
 	private final String sequenceId;
+	/** */
+	private final String measureName;
 	/** */
 	private Table sequenceTable;
 	/** */
@@ -53,10 +55,11 @@ public class SequanceTab extends VerticalLayout
 	/**
 	 * 
 	 */
-	public SequanceTab(final String sequenceId, final SessionFactory sessionFactory) 
+	public SequanceTab(final String sequenceId, final String measureName, final SessionFactory sessionFactory) 
 	{
 		this.sequenceId = sequenceId;
 		this.sessionFactory = sessionFactory;
+		this.measureName = measureName;
 		buildUI();
 	}
 
@@ -70,7 +73,7 @@ public class SequanceTab extends VerticalLayout
 		sequenceTable.setWidth(100, Unit.PERCENTAGE);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, String.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
-		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
+		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MEASURE, Double.class, null);
 		sequenceTable.setSelectable(true);
 		sequenceTable.setImmediate(true);
 		sequenceTable.addValueChangeListener(new Property.ValueChangeListener() 
@@ -191,7 +194,14 @@ public class SequanceTab extends VerticalLayout
 		final Object[] row = new Object[3];
 		row[0] = String.valueOf(sequenceDB.getId());
 		row[1] = sequenceDB.getName();
-		row[2] = sequenceDB.getDuration();
+		for (final MeasureDB measureDB : sequenceDB.getMeasures())
+		{
+		    if (measureName.equals(measureDB.getName()))
+		    {
+		        row[2] = measureDB.getValue();        
+		        break;
+		    }
+		}
 		return row;
 	}
 	

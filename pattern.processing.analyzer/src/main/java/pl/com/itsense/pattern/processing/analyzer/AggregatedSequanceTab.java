@@ -36,17 +36,17 @@ public class AggregatedSequanceTab extends VerticalLayout
 	/** */
 	private final String TABLE_COLUMN_SEQUANCE_DURATION = "Duration";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION_TOTAL = "Duration total";
+	private final String TABLE_COLUMN_SEQUANCE_TOTAL = "TOTAL";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_COUNT = "Count";
+	private final String TABLE_COLUMN_SEQUANCE_COUNT = "COUNT";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION_AVG = "Duration AVG";
+	private final String TABLE_COLUMN_SEQUANCE_AVG = "AVG";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION_STD = "Duration STD";
+	private final String TABLE_COLUMN_SEQUANCE_STD = "STD";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION_MIN = "Duration MIN";
+	private final String TABLE_COLUMN_SEQUANCE_MIN = "MIN";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION_MAX = "Duration MAX";
+	private final String TABLE_COLUMN_SEQUANCE_MAX = "MAX";
 	/** */
 	private final String sequenceId;
 	/** */
@@ -83,11 +83,11 @@ public class AggregatedSequanceTab extends VerticalLayout
 		aggregateTable.setWidth(100, Unit.PERCENTAGE);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_COUNT, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_TOTAL, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_AVG, Double.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_MIN, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_MAX, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION_STD, Double.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_TOTAL, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_AVG, Double.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MIN, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MAX, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_STD, Double.class, null);
 
 		aggregateTable.setSelectable(true);
 		aggregateTable.setImmediate(true);

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import pl.com.itsense.analysis.event.log.configuration.MeasureConf;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
 import pl.com.itsense.analysis.event.log.configuration.TermConf;
 
@@ -17,16 +15,21 @@ import pl.com.itsense.analysis.event.log.configuration.TermConf;
 public class SequenceFactory
 {
     /** */
-    private ArrayList<SequenceConf> sequances;
+    private HashMap<String,SequenceConf> sequenceConfs = new HashMap<String,SequenceConf>();
     /** */
     private HashMap<String,ArrayList<Sequence>> prototypes = new HashMap<String,ArrayList<Sequence>>(); 
     /**
      * 
-     * @param sequances
+     * @param sequenceConfs
      */
-    public void setSequances(final ArrayList<SequenceConf> sequances)
+    public void setSequances(final ArrayList<SequenceConf> sequanceConfs)
     {
-        this.sequances = sequances;
+        this.sequenceConfs.clear();
+        for (final SequenceConf sequenceConf : sequanceConfs)
+        {
+            this.sequenceConfs.put(sequenceConf.getName(), sequenceConf);
+        }
+        
         prepare();
     }
     /**
@@ -59,7 +62,7 @@ public class SequenceFactory
                 for (final Sequence seq : sequence)
                 {
                     list.remove(seq);
-                    list.add(new Sequence(seq.getTerms(), seq.getMeasures(), seq.getName() , seq.getId()));
+                    list.add(new Sequence(seq.getTerms(), sequenceConfs.get(seq.getName()).getMeasures(), seq.getName() , seq.getId()));
                 }
             }
 
@@ -71,10 +74,10 @@ public class SequenceFactory
      */
     private void prepare()
     {
-        if (sequances != null)
+        if (sequenceConfs != null)
         {
             prototypes.clear();
-            for (final SequenceConf sequenceConf : sequances)
+            for (final SequenceConf sequenceConf : sequenceConfs.values())
             {
                 final List<TermConf> terms = sequenceConf.getTerms();
                 if (terms != null)
