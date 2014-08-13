@@ -161,4 +161,10 @@ public class LogAnalysis
     {
         return engine;
     }
+    
+    @Override
+    public String toString()
+    {
+        return configuration == null ? "" : configuration.toString();
+    }
 }

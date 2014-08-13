@@ -122,12 +122,21 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
             final List<Sequence> list = sequenceFactory.getSequance(event);
             if (list != null)
             {
+                final ArrayList<Sequence> closed = new ArrayList<Sequence>();
                 for (final Sequence sequence : list)
                 {
-                    addToQueue(sequence);
+                    final String acceptedEventId = sequence.acceptedEventId();
+                    if (acceptedEventId == null)
+                    {
+                        closed.add(sequence);
+                    }
+                    else
+                    {
+                        addToQueue(sequence);
+                    }
                 }
+                notifySequenceConsumers(closed);
             }
-            
         }
         notifyEventConsumers(event);
     }

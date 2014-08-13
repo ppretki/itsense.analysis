@@ -53,6 +53,7 @@ public class Main
         sequenceConsumerConf.setSequences(SequenceConsumer.ALL_EVENTS_CONSUMER);
         dbRecorder.configure(sequenceConsumerConf);
         engine.add((SequenceConsumer)dbRecorder);
+        System.out.println("Log Analysis = " + logAnalysis);
         logAnalysis.analyze();
 		final Server server = new Server(8080);
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.Type;
 
@@ -61,15 +62,16 @@ public class AggregatedSequanceTab extends VerticalLayout
 	private String selectedSequenceName;
 	/** */
 	private final SessionFactory sessionFactory;
-
-	
+	/** */
+	private final String measureName;
 	/**
 	 * 
 	 */
-	public AggregatedSequanceTab(final String sequenceId, final SessionFactory sessionFactory) 
+	public AggregatedSequanceTab(final String sequenceId, final String measureName, final SessionFactory sessionFactory) 
 	{
 		this.sequenceId = sequenceId;
 		this.sessionFactory = sessionFactory;
+		this.measureName = measureName;
 		buildUI();
 	}
 
@@ -152,15 +154,17 @@ public class AggregatedSequanceTab extends VerticalLayout
 			trx = session.beginTransaction();
 			final Criteria c = session.createCriteria(SequenceDB.class)
 					.add(Restrictions.eq("sequenceId", sequenceId))
+					.createAlias("measures", "m", JoinType.INNER_JOIN)
+					.add(Restrictions.eq("m.name", measureName))
 					.setProjection(
 							Projections.projectionList().
 							add(Projections.groupProperty("name")).
 							add(Projections.rowCount()).
-							add(Projections.sum("duration")).
-							add(Projections.avg("duration")).
-							add(Projections.min("duration")).
-							add(Projections.max("duration")).
-							add(Projections.sqlProjection("STDDEV(duration) as StdDev", new String[]{"StdDev"}, new Type[]{DoubleType.INSTANCE}))
+							add(Projections.sum("m.value")).
+							add(Projections.avg("m.value")).
+							add(Projections.min("m.value")).
+							add(Projections.max("m.value")).
+							add(Projections.sqlProjection("STDDEV(m.value) as StdDev", new String[]{"StdDev"}, new Type[]{DoubleType.INSTANCE}))
 					);
 			
 			for (final Iterator<Object[]> iterator = c.list().iterator(); iterator.hasNext();)

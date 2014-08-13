@@ -97,16 +97,21 @@ public class WorkspaceView extends CustomComponent implements View
 				}
 			});
 			
-			aggregatedSequancesMenuItem.addItem(sequence, new Command() 
+			final String[] measures = QueryUtil.getMeasureNames(sessionFactory, sequence);
+			if (measures.length > 0)
 			{
-				public void menuSelected(final MenuItem selectedItem) 
-				{
-					workspace.addTab( new AggregatedSequanceTab(sequence, sessionFactory), "Aggreagted View").setClosable(true);
-				}
-			});
-			
-			
-			
+		        final MenuItem aggregatedSequanceMenuItem = aggregatedSequancesMenuItem.addItem(sequence, null);
+			    for (final String measure : measures)
+			    {
+			        aggregatedSequanceMenuItem.addItem(measure, new Command() 
+			        {
+			            public void menuSelected(final MenuItem selectedItem) 
+			            {
+			                workspace.addTab( new AggregatedSequanceTab(sequence, measure, sessionFactory), "Aggreagted View").setClosable(true);
+			            }
+			        });
+			    }
+			}
 		}
 		return menuBar; 
 	}
