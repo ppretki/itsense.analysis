@@ -38,7 +38,8 @@ public class Main
         final Properties properties = new Properties();
         try 
         {
-			properties.load(Main.class.getResourceAsStream("inMemoryDBRecorder.properties"));
+			//properties.load(Main.class.getResourceAsStream("inMemoryDBRecorder.properties"));
+			properties.load(Main.class.getResourceAsStream("PostgresqlDBRecorder.properties"));
 		} 
         catch (IOException e1) 
         {

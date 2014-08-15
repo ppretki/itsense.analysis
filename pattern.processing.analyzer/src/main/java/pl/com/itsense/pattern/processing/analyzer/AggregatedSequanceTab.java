@@ -1,6 +1,7 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.hibernate.Criteria;
@@ -33,9 +34,9 @@ public class AggregatedSequanceTab extends VerticalLayout
 	/** */
 	private final String TABLE_COLUMN_ID = "Id";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_NAME = "Name";
+	private final String TABLE_COLUMN_SEQUANCE_NAME = "NAME";
 	/** */
-	private final String TABLE_COLUMN_SEQUANCE_DURATION = "Duration";
+	private final String TABLE_COLUMN_SEQUANCE_VALUE = "VALUE";
 	/** */
 	private final String TABLE_COLUMN_SEQUANCE_TOTAL = "TOTAL";
 	/** */
@@ -85,10 +86,10 @@ public class AggregatedSequanceTab extends VerticalLayout
 		aggregateTable.setWidth(100, Unit.PERCENTAGE);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_COUNT, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_TOTAL, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_TOTAL, Double.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_AVG, Double.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MIN, Long.class, null);
-		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MAX, Long.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MIN, Double.class, null);
+		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_MAX, Double.class, null);
 		aggregateTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_STD, Double.class, null);
 
 		aggregateTable.setSelectable(true);
@@ -109,7 +110,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 		sequenceTable.setWidth(100, Unit.PERCENTAGE);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_ID, Long.class, null);
 		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_NAME, String.class, null);
-		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_DURATION, Long.class, null);
+		sequenceTable.addContainerProperty(TABLE_COLUMN_SEQUANCE_VALUE, Double.class, null);
 		
 		lineChartBrowseFrame = new BrowserFrame();
 		lineChartBrowseFrame.setWidth(100, Unit.PERCENTAGE);
@@ -164,7 +165,7 @@ public class AggregatedSequanceTab extends VerticalLayout
 							add(Projections.avg("m.value")).
 							add(Projections.min("m.value")).
 							add(Projections.max("m.value")).
-							add(Projections.sqlProjection("STDDEV(m.value) as StdDev", new String[]{"StdDev"}, new Type[]{DoubleType.INSTANCE}))
+							add(Projections.sqlProjection("STDDEV(value) as StdDev", new String[]{"StdDev"}, new Type[]{DoubleType.INSTANCE}))
 					);
 			
 			for (final Iterator<Object[]> iterator = c.list().iterator(); iterator.hasNext();)
@@ -206,7 +207,10 @@ public class AggregatedSequanceTab extends VerticalLayout
 			{
 				session = sessionFactory.openSession();
 				trx = session.beginTransaction();
-				final Criteria c = session.createCriteria(SequenceDB.class).add(Restrictions.eqOrIsNull("name", selectedSequenceName));
+				final Criteria c = session.createCriteria(SequenceDB.class).
+						add(Restrictions.eqOrIsNull("name", selectedSequenceName)).
+						createAlias("measures", "m", JoinType.INNER_JOIN).
+						add(Restrictions.eq("m.name", measureName));
 				final ArrayList<String> labels = new ArrayList<String>();
 				final ArrayList<Long> timestamps = new ArrayList<Long>();
 				final ArrayList<Double> values = new ArrayList<Double>();

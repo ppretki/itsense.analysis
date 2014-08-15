@@ -1,6 +1,7 @@
 package pl.com.itsense.analysis.event.db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,7 +15,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
 import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.Measure;
 import pl.com.itsense.analysis.event.Sequence;
 
 @Proxy(lazy=false)
@@ -28,6 +28,10 @@ public class SequenceDB
 	private long id;
 	/** */
 	private String sequenceId;
+	/** */
+	private Date dateBegin;
+    /** */
+    private Date dateEnd;
 	/** */
 	private String name;
 	/** */
@@ -50,10 +54,17 @@ public class SequenceDB
     {
         sequenceId = sequence.getId();
         name = sequence.getResolvedName();
+        long begin = Long.MAX_VALUE;
+        long end = Long.MIN_VALUE;
         for (final Event event : sequence.getEvents())
         {
+            final long eventTime = event.getTimestamp();
+            if (eventTime > end) end = eventTime;
+            if (eventTime < begin) begin = eventTime;
             events.add(new EventDB(event));
         }
+        dateBegin = new Date(begin);
+        dateEnd = new Date(end);
         for (final String measureName : sequence.getMeasureNames())
         {
             measures.add(new MeasureDB(measureName, sequence.getMeasure(measureName)));
@@ -139,5 +150,25 @@ public class SequenceDB
     public void setMeasures(final List<MeasureDB> measures)
     {
         this.measures = measures;
+    }
+    
+    public Date getDateBegin()
+    {
+        return dateBegin;
+    }
+    
+    public Date getDateEnd()
+    {
+        return dateEnd;
+    }
+    
+    public void setDateBegin(final Date dateBegin)
+    {
+        this.dateBegin = dateBegin;
+    }
+    
+    public void setDateEnd(final Date dateEnd)
+    {
+        this.dateEnd = dateEnd;
     }
 }
