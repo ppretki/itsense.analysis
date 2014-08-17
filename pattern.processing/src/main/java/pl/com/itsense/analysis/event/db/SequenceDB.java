@@ -35,10 +35,10 @@ public class SequenceDB
 	/** */
 	private String name;
 	/** */
-	@OneToMany(targetEntity=EventDB.class, cascade={CascadeType.ALL})
+	@OneToMany(targetEntity=EventDB.class, cascade={CascadeType.ALL}, mappedBy="sequenceDB")
 	private List<EventDB> events = new ArrayList<EventDB>(); 
     /** */
-    @OneToMany(targetEntity=MeasureDB.class, cascade={CascadeType.ALL})
+    @OneToMany(targetEntity=MeasureDB.class, cascade={CascadeType.ALL}, mappedBy="sequenceDB")
     private List<MeasureDB> measures = new ArrayList<MeasureDB>(); 
 	
 	/**
@@ -61,13 +61,13 @@ public class SequenceDB
             final long eventTime = event.getTimestamp();
             if (eventTime > end) end = eventTime;
             if (eventTime < begin) begin = eventTime;
-            events.add(new EventDB(event));
+            events.add(new EventDB(event, this));
         }
         dateBegin = new Date(begin);
         dateEnd = new Date(end);
         for (final String measureName : sequence.getMeasureNames())
         {
-            measures.add(new MeasureDB(measureName, sequence.getMeasure(measureName)));
+            measures.add(new MeasureDB(measureName, sequence.getMeasure(measureName), this));
         }
     }
     /**

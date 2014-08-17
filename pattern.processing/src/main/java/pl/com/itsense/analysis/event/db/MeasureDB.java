@@ -1,10 +1,13 @@
 package pl.com.itsense.analysis.event.db;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
@@ -21,6 +24,10 @@ public class MeasureDB
 	private String name;
 	/** */
 	private Double value;
+    /** */
+    @ManyToOne(targetEntity=SequenceDB.class, cascade={CascadeType.ALL})
+    private SequenceDB sequenceDB;
+
 	/**
 	 * 
 	 */
@@ -31,10 +38,11 @@ public class MeasureDB
 	/**
      * 
      */
-    public MeasureDB(final String name, final Double value)
+    public MeasureDB(final String name, final Double value, final SequenceDB parent)
     {
         this.name = name;
         this.value = value;
+        this.sequenceDB = parent;
     }
 	
 	/**
@@ -79,5 +87,15 @@ public class MeasureDB
         this.value = value;
     }
 	
+	public SequenceDB getSequenceDB()
+	{
+	    return sequenceDB;
+	}
+	    
+	public void setSequenceDB(final SequenceDB sequenceDB)
+	{
+	    this.sequenceDB = sequenceDB;
+	}
+
 	
 }

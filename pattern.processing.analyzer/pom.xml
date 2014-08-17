@@ -61,6 +61,10 @@
       <id>vaadin-addons</id>
       <url>http://maven.vaadin.com/vaadin-addons</url>
     </repository>
+     <repository>
+     	<id>pentaho-releases</id>
+        <url>http://repository.pentaho.org/artifactory/repo/</url>
+  	</repository>
   </repositories>
 
   <dependencies>
@@ -104,6 +108,16 @@
     	<groupId>com.vaadin</groupId>
     	<artifactId>vaadin</artifactId>
     	<version>7.0.0.alpha3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.pivot4j</groupId>
+    	<artifactId>pivot4j-core</artifactId>
+    	<version>0.9</version>
+    </dependency>
+    <dependency>
+    	<groupId>pentaho</groupId>
+    	<artifactId>mondrian</artifactId>
+    	<version>3.6.7</version>
     </dependency>
   </dependencies>
 

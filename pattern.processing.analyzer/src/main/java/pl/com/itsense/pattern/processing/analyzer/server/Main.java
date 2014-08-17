@@ -7,6 +7,9 @@ import java.util.Properties;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.pivot4j.PivotModel;
+import org.pivot4j.datasource.SimpleOlapDataSource;
+import org.pivot4j.impl.PivotModelImpl;
 
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.ProgressEvent;
@@ -21,8 +24,36 @@ import pl.com.itsense.pattern.processing.analyzer.BrowserApplication;
 
 public class Main 
 {
+	private static void olap()
+	{
+		try 
+		{
+			Class.forName("mondrian.olap4j.MondrianOlap4jDriver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		final SimpleOlapDataSource dataSource = new SimpleOlapDataSource();
+		
+		//dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:odbc:MondrianFoodMart;Catalog=FoodMart.xml;");
+		dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=FoodMart.xml;");
+		
+		
+		
+		String initialMdx = "SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], " 
+				+ "[Measures].[Store Sales]} ON COLUMNS, {([Promotion Media].[All Media], "
+				+ "[Product].[All Products])} ON ROWS FROM [Sales]";
+
+		PivotModel model = new PivotModelImpl(dataSource);
+		model.setMdx(initialMdx);
+		model.initialize();
+	}
+	
 	public static void main(final String[] args) 
 	{
+		olap();
+		
         final LogAnalysis logAnalysis = new LogAnalysis(Configuration.parse(new File(args[0])));
         final EventProcessingEngine engine = logAnalysis.getEngine();
         engine.add(new ProgressListener()

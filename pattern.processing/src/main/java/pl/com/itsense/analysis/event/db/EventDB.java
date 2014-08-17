@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -36,7 +37,9 @@ public class EventDB
     /** */
     @OneToMany(targetEntity=PatternDB.class, cascade={CascadeType.ALL})
     private List<PatternDB> patterns = new ArrayList<PatternDB>(); 
-
+    /** */
+    @ManyToOne(targetEntity=SequenceDB.class, cascade={CascadeType.ALL})
+    private SequenceDB sequenceDB;
 	/**
 	 * 
 	 */
@@ -48,11 +51,12 @@ public class EventDB
 	 * 
 	 * @param event
 	 */
-    public EventDB(final Event event)
+    public EventDB(final Event event, final SequenceDB parent)
     {
         eventId = event.getId();
         timestamp = new Date(event.getTimestamp());
         line = event.getProperty(Event.PROPERTY_LINE);
+        sequenceDB = parent;
         for (final String name : event.getProperties())
         {
             final int index = name.indexOf('$');
@@ -173,4 +177,14 @@ public class EventDB
 	{
 		this.line = line;
 	}
+	
+	public SequenceDB getSequenceDB()
+    {
+        return sequenceDB;
+    }
+	
+	public void setSequenceDB(final SequenceDB sequenceDB)
+    {
+        this.sequenceDB = sequenceDB;
+    }
 }
