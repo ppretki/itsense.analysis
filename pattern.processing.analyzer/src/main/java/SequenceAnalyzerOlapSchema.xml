@@ -1,0 +1,15 @@
+<Schema name="SequenceAnalyzerSchema">
+	
+	<Cube name="SequenceAnalyzerCube">
+		<Table name="measuredb"/>
+		<Dimension name="SEQUENCE" foreignKey="sequencedb_id">
+			<Hierarchy hasAll="true" allMemberName="All Genders" primaryKey="id">
+				<Table name="sequencedb"/>
+				<Level name="SEQUANCE_ID" column="sequenceid" uniqueMembers="true"/>
+				<Level name="SEQUANCE_NAME" column="name" uniqueMembers="true"/>
+			</Hierarchy>
+		</Dimension>
+		<Measure name="VALUE" column="value" aggregator="avg" formatString="#,###"/>
+	</Cube>
+
+</Schema>

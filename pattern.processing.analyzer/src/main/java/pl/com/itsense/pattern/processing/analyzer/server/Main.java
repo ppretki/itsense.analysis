@@ -2,11 +2,17 @@ package pl.com.itsense.pattern.processing.analyzer.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
+
+import mondrian.olap.Position;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.olap4j.CellSet;
+import org.olap4j.OlapConnection;
+import org.olap4j.OlapStatement;
 import org.pivot4j.PivotModel;
 import org.pivot4j.datasource.SimpleOlapDataSource;
 import org.pivot4j.impl.PivotModelImpl;
@@ -42,13 +48,15 @@ public class Main
 		
 		
 		
-		String initialMdx = "SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], " 
-				+ "[Measures].[Store Sales]} ON COLUMNS, {([Promotion Media].[All Media], "
-				+ "[Product].[All Products])} ON ROWS FROM [Sales]";
+		String initialMdx = "SELECT {[Measures].[VALUE]} ON COLUMNS, "
+				+ "{[Time].[2014]} ON ROWS FROM [SequenceAnalyzerCube]";
 
+		
 		PivotModel model = new PivotModelImpl(dataSource);
 		model.setMdx(initialMdx);
 		model.initialize();
+		final CellSet result = model.getCellSet();
+		System.out.println("result = " + result);
 	}
 	
 	public static void main(final String[] args) 
