@@ -21,6 +21,7 @@ import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.sequence.consumer.DBRecorder;
 import pl.com.itsense.pattern.processing.analyzer.BrowserApplication;
+import pl.com.itsense.pattern.processing.analyzer.OLAPServlet;
 
 public class Main 
 {
@@ -37,7 +38,7 @@ public class Main
 		final SimpleOlapDataSource dataSource = new SimpleOlapDataSource();
 		
 		//dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:odbc:MondrianFoodMart;Catalog=FoodMart.xml;");
-		dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=FoodMart.xml;");
+		dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=http://localhost:8080/olap/catalog.xml;");
 		
 		
 		
@@ -52,7 +53,6 @@ public class Main
 	
 	public static void main(final String[] args) 
 	{
-		olap();
 		
         final LogAnalysis logAnalysis = new LogAnalysis(Configuration.parse(new File(args[0])));
         final EventProcessingEngine engine = logAnalysis.getEngine();
@@ -91,13 +91,18 @@ public class Main
         final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         context.setAttribute(BrowserApplication.CTX_ATTRIBUTE_HIBERNATE_SESSION_FACTORY, dbRecorder.getSessionFactory());
+       
         final ServletHolder holder = new ServletHolder(new BrowserApplication.Servlet());
         holder.setInitParameter("config", args[0]);
-        context.addServlet(holder,"/*");
+        context.addServlet(holder,"/analyzer/*");
+        
+        final ServletHolder olapServletHolder = new ServletHolder(new OLAPServlet());
+        context.addServlet(olapServletHolder,"/olap/*");
         server.setHandler(context);
         try 
         {
 			server.start();
+			olap();
 			server.join();
 		} 
         catch (Exception e) 
