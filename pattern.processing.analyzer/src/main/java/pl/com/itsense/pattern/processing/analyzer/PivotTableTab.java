@@ -23,8 +23,10 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.StreamResource.StreamSource;
+import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 /**
@@ -50,9 +52,11 @@ public class PivotTableTab extends VerticalLayout
 	/** */
 	//private final static String CONNECTION_MONDRIAN_STRING = "jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=http://localhost:8080/olap/catalog.xml;";
 	/** */
-	private final static String INITIAL_MDX_QUERY = "SELECT {[SEQUENCE].[SEQUANCE_ID].MEMBERS} ON COLUMNS, {[Time].[Hour].MEMBERS} ON ROWS FROM [SequenceAnalyzerCube]";
+	private final static String INITIAL_MDX_QUERY = "SELECT {[SEQUENCE].[SEQUANCE_ID].MEMBERS} ON COLUMNS, {[Time].[Five_Minutes].MEMBERS} ON ROWS FROM [SequenceAnalyzerCube] WHERE [Measures].[AVG DURATION]";
 	/** */
 	private final PivotModel pivotModel;
+	/** */
+	private final Panel panel = new Panel();
 	/** */
 	private final TextField editor = new TextField("MDX QUERY:");
 	/** */
@@ -60,11 +64,10 @@ public class PivotTableTab extends VerticalLayout
 	{
 		public InputStream getStream() 
 		{
-			System.out.println("getStream");
 			pivotModel.getCellSet();
 			final StringWriter writer = new StringWriter();
 			TableRenderer renderer = new TableRenderer();
-			renderer.setShowDimensionTitle(false); // Optionally hide the dimension title headers.
+			renderer.setShowDimensionTitle(true); // Optionally hide the dimension title headers.
 			renderer.setShowParentMembers(true); // Optionally make the parent members visible.
 			renderer.render(pivotModel, new HtmlRenderCallback(writer)); // Render the result as a HTML page.
 			writer.flush();
@@ -79,9 +82,6 @@ public class PivotTableTab extends VerticalLayout
 			return new ByteArrayInputStream(writer.getBuffer().toString().getBytes());
 		}
 	}; 
-	private final StreamResource resultTableStreamResource = new StreamResource(streamSource, "mdxResults.html");
-	/** */
-	private Embedded htmlEmbededTable;
 	/**
 	 * 
 	 */
@@ -109,15 +109,27 @@ public class PivotTableTab extends VerticalLayout
 			{
 				System.out.println("valueChange");
 				pivotModel.setMdx(editor.getValue());
-				htmlEmbededTable.markAsDirty();
+				try 
+				{
+					panel.setContent(new CustomLayout(streamSource.getStream()));
+				} 
+				catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+				panel.markAsDirty();
 			}
 		} ); 
-		resultTableStreamResource.setCacheTime(0L);
-		htmlEmbededTable = new Embedded("MDX RESULTS", new StreamResource(streamSource, "mdxResults.html"));
-		htmlEmbededTable.setWidth(100, Unit.PERCENTAGE);
-		
+		try 
+		{
+			panel.setContent(new CustomLayout(streamSource.getStream()));
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 		addComponent(editor);
-		addComponent(htmlEmbededTable);
+		addComponent(panel);
 	}
 	
 	

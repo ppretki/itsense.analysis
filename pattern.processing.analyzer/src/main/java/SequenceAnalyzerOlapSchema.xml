@@ -3,13 +3,12 @@
 	<Cube name="SequenceAnalyzerCube">
 		<Table name="measuredb"/>
 		<Dimension name="SEQUENCE" foreignKey="sequencedb_id">
-			<Hierarchy hasAll="true" allMemberName="All Genders" primaryKey="id">
+			<Hierarchy hasAll="false" primaryKey="id">
 				<Table name="sequencedb"/>
 				<Level name="SEQUANCE_ID" column="sequenceid" uniqueMembers="true"/>
 				<Level name="SEQUANCE_NAME" column="name" uniqueMembers="true"/>
 			</Hierarchy>
 		</Dimension>
-		
 		
 		
 		<Dimension name="Time" foreignKey="sequencedb_id">
@@ -36,15 +35,25 @@
 			</KeyExpression>
 		      </Level>
 
-		      <Level name="Minute" column="datebegin" type="Numeric" uniqueMembers="false">
+		      <Level name="Ten_Minutes" column="datebegin" type="Numeric" uniqueMembers="false">
 			<KeyExpression>
-			  <SQL dialect="postgresql">EXTRACT(MINUTE FROM datebegin)</SQL>
+			  <SQL dialect="postgresql">FLOOR(EXTRACT(MINUTE FROM datebegin)/10)</SQL>
+			</KeyExpression>
+		      </Level>
+		      
+		      <Level name="Five_Minutes" column="datebegin" type="Numeric" uniqueMembers="false">
+			<KeyExpression>
+			  <SQL dialect="postgresql">FLOOR(EXTRACT(MINUTE FROM datebegin)/5)</SQL>
 			</KeyExpression>
 		      </Level>
 
 		  </Hierarchy>
 		</Dimension>
-		<Measure name="VALUE" column="value" aggregator="avg" formatString="#,###"/>
+
+		<Measure name="AVG DURATION" column="value" aggregator="avg" formatString="#,###"/>
+		<Measure name="MIN DURATION" column="value" aggregator="min" formatString="#,###"/>
+		<Measure name="MAX DURATION" column="value" aggregator="max" formatString="#,###"/>
+		<Measure name="COUNT" column="value" aggregator="count" formatString="#,###"/>
 	</Cube>
 
 </Schema>
