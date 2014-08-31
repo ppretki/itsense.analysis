@@ -9,6 +9,41 @@
 				<Level name="SEQUANCE_NAME" column="name" uniqueMembers="true"/>
 			</Hierarchy>
 		</Dimension>
+		
+		
+		
+		<Dimension name="Time" foreignKey="sequencedb_id">
+		  <Hierarchy hasAll="false" primaryKey="id">
+		      <Table name="sequencedb"/>
+		      <Level name="Year" column="datebegin" type="Numeric" uniqueMembers="true">
+			<KeyExpression>
+			  <SQL dialect="postgresql">EXTRACT(YEAR FROM datebegin)</SQL>
+			</KeyExpression>
+		      </Level>
+		      <Level name="Month" column="datebegin" type="Numeric" uniqueMembers="false">
+			<KeyExpression>
+			  <SQL dialect="postgresql">EXTRACT(MONTH FROM datebegin)</SQL>
+			</KeyExpression>
+		      </Level>
+		      <Level name="Day" column="datebegin" type="Numeric" uniqueMembers="false">
+			<KeyExpression>
+			  <SQL dialect="postgresql">EXTRACT(DAY FROM datebegin)</SQL>
+			</KeyExpression>
+		      </Level>
+		      <Level name="Hour" column="datebegin" type="Numeric" uniqueMembers="false">
+			<KeyExpression>
+			  <SQL dialect="postgresql">EXTRACT(HOUR FROM datebegin)</SQL>
+			</KeyExpression>
+		      </Level>
+
+		      <Level name="Minute" column="datebegin" type="Numeric" uniqueMembers="false">
+			<KeyExpression>
+			  <SQL dialect="postgresql">EXTRACT(MINUTE FROM datebegin)</SQL>
+			</KeyExpression>
+		      </Level>
+
+		  </Hierarchy>
+		</Dimension>
 		<Measure name="VALUE" column="value" aggregator="avg" formatString="#,###"/>
 	</Cube>
 

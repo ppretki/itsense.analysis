@@ -4,7 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.com.itsense</groupId>
   <artifactId>pattern.processing.analyzer</artifactId>
-  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>Vaadin Web Application</name>
 
@@ -110,14 +109,14 @@
     	<version>7.0.0.alpha3</version>
     </dependency>
     <dependency>
-    	<groupId>org.pivot4j</groupId>
-    	<artifactId>pivot4j-core</artifactId>
-    	<version>0.9</version>
-    </dependency>
-    <dependency>
     	<groupId>pentaho</groupId>
     	<artifactId>mondrian</artifactId>
     	<version>3.6.7</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.pivot4j</groupId>
+    	<artifactId>pivot4j-core</artifactId>
+    	<version>0.9</version>
     </dependency>
   </dependencies>
 

@@ -2,15 +2,11 @@ package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import org.hibernate.internal.util.collections.BoundedConcurrentHashMap.Eviction;
-
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
 import pl.com.itsense.analysis.event.ProgressEvent;
 import pl.com.itsense.analysis.event.ProgressListener;
-import pl.com.itsense.analysis.event.ProgressProviderImpl;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.SequenceFactory;
 import pl.com.itsense.analysis.event.ProgressProvider.Granularity;

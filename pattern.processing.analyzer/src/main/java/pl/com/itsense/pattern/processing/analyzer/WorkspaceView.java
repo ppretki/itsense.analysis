@@ -1,6 +1,7 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
 import org.hibernate.SessionFactory;
+import org.pivot4j.datasource.SimpleOlapDataSource;
 
 import pl.com.itsense.pattern.processing.analyzer.query.QueryUtil;
 
@@ -32,6 +33,8 @@ public class WorkspaceView extends CustomComponent implements View
 	private MenuItem allSequancesMenuItem;
 	/** */
 	private MenuItem aggregatedSequancesMenuItem;
+	/** */
+	private MenuItem pivotTableMenuItem;
 	/** */
 	private final Navigator navigator;
 	/** */
@@ -113,6 +116,16 @@ public class WorkspaceView extends CustomComponent implements View
 			    }
 			}
 		}
+		
+		pivotTableMenuItem = browseMenuItem.addItem("Pivot Table", new Command() 
+		{
+			public void menuSelected(final MenuItem selectedItem) 
+			{
+				final SimpleOlapDataSource dataSource = new SimpleOlapDataSource();
+				workspace.addTab( new PivotTableTab(),"Pivot Table").setClosable(true);
+			}
+		});
+
 		return menuBar; 
 	}
 

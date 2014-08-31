@@ -2,21 +2,22 @@ package pl.com.itsense.pattern.processing.analyzer.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
-
-import mondrian.olap.Position;
+import org.olap4j.Position;
+import mondrian.web.servlet.MdxQueryServlet;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.olap4j.CellSet;
-import org.olap4j.OlapConnection;
-import org.olap4j.OlapStatement;
+import org.olap4j.CellSetAxis;
 import org.pivot4j.PivotModel;
 import org.pivot4j.datasource.SimpleOlapDataSource;
 import org.pivot4j.impl.PivotModelImpl;
-
+import org.pivot4j.ui.html.HtmlRenderCallback;
+import org.pivot4j.ui.table.TableRenderer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.ProgressEvent;
 import pl.com.itsense.analysis.event.ProgressListener;
@@ -31,6 +32,8 @@ import pl.com.itsense.pattern.processing.analyzer.OLAPServlet;
 
 public class Main 
 {
+	private final static String CONNECTION_MONDRIAN_STRING = "jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=file:///home/ppretki/adb/SequenceAnalyzerOlapSchema.xml;";
+
 	private static void olap()
 	{
 		try 
@@ -41,24 +44,49 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+		final String mdxQuery = "SELECT {[SEQUENCE].[SEQUANCE_ID].MEMBERS} ON COLUMNS, {[Time].[Hour].MEMBERS} ON ROWS FROM [SequenceAnalyzerCube]";
 		final SimpleOlapDataSource dataSource = new SimpleOlapDataSource();
+		dataSource.setConnectionString(CONNECTION_MONDRIAN_STRING);
+		PivotModel pModel = new PivotModelImpl(dataSource);
+		pModel.setMdx(mdxQuery);
+		pModel.initialize();
 		
-		//dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:odbc:MondrianFoodMart;Catalog=FoodMart.xml;");
-		dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:postgresql://localhost/adb?user=adb&password=adb;Catalog=http://localhost:8080/olap/catalog.xml;");
-		
-		
-		
-		String initialMdx = "SELECT {[Measures].[VALUE]} ON COLUMNS, "
-				+ "{[Time].[2014]} ON ROWS FROM [SequenceAnalyzerCube]";
+		CellSet cellSet = pModel.getCellSet();
 
+		// Axes of the resulting query.
+		List<CellSetAxis> axes = cellSet.getAxes();
+
+		// The COLUMNS axis
+		CellSetAxis columns = axes.get(0);
+
+		// The ROWS axis
+		CellSetAxis rows = axes.get(1);
+
+		// Member positions of the ROWS axis.
+		List<Position> positions = rows.getPositions();
 		
-		PivotModel model = new PivotModelImpl(dataSource);
-		model.setMdx(initialMdx);
-		model.initialize();
-		final CellSet result = model.getCellSet();
-		System.out.println("result = " + result);
+		
+		final StringWriter writer = new StringWriter();
+		TableRenderer renderer = new TableRenderer();
+		renderer.setShowDimensionTitle(false); // Optionally hide the dimension title headers.
+		renderer.setShowParentMembers(true); // Optionally make the parent members visible.
+		renderer.render(pModel, new HtmlRenderCallback(writer)); // Render the result as a HTML page.
+
+		writer.flush();
+		try 
+		{
+			writer.close();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+
+		System.out.println(writer.getBuffer().toString());
+		
+		
 	}
-	
+
 	public static void main(final String[] args) 
 	{
 		
@@ -102,15 +130,17 @@ public class Main
        
         final ServletHolder holder = new ServletHolder(new BrowserApplication.Servlet());
         holder.setInitParameter("config", args[0]);
-        context.addServlet(holder,"/analyzer/*");
+        context.addServlet(holder,"/*");
         
         final ServletHolder olapServletHolder = new ServletHolder(new OLAPServlet());
         context.addServlet(olapServletHolder,"/olap/*");
+        
         server.setHandler(context);
+        
         try 
         {
 			server.start();
-			olap();
+			//olap();
 			server.join();
 		} 
         catch (Exception e) 
