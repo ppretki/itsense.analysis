@@ -19,6 +19,8 @@ public class OLAPServlet extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	/** */
 	private final String CATALOG = "catalog.xml";
+	/** */
+	private final String CSS_FILE = "olap.css";
 	/**
 	 * 
 	 */
@@ -32,6 +34,13 @@ public class OLAPServlet extends HttpServlet
 			response.setContentType("text/xml");
 			final StringBuffer sb = SchemaProvider.loadSchema();
 			response.getOutputStream().print(sb.toString());
+			response.getOutputStream().flush();
+		}
+		else if (URI.endsWith(CSS_FILE))
+		{
+			response.setContentType("text/css");
+			
+			
 			response.getOutputStream().flush();
 		}
 	}
