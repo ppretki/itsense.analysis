@@ -1,6 +1,10 @@
 package pl.com.itsense.pattern.processing.analyzer;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,8 +43,15 @@ public class OLAPServlet extends HttpServlet
 		else if (URI.endsWith(CSS_FILE))
 		{
 			response.setContentType("text/css");
-			
-			
+			final ByteArrayOutputStream output = new ByteArrayOutputStream();
+			final InputStream input = getClass().getResourceAsStream(CSS_FILE);
+			final byte[] buffer = new byte[1024];
+			int len = 0;
+			while ((len = input.read(buffer)) > -1)
+			{
+				output.write(buffer,0, len);
+			}
+			response.getOutputStream().write(output.toByteArray());
 			response.getOutputStream().flush();
 		}
 	}
