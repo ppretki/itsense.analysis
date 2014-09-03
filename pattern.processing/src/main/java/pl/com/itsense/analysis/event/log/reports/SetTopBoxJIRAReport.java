@@ -79,9 +79,9 @@ public class SetTopBoxJIRAReport extends BaseReport
         }
     }
     
-    private ArrayList<Comparator<DescriptiveStatistics.Statistics>> getComparators(final String topCriteria)
+    private ArrayList<StatisticComparator> getComparators(final String topCriteria)
     {
-        final ArrayList<Comparator<DescriptiveStatistics.Statistics>> comparators = new ArrayList<Comparator<DescriptiveStatistics.Statistics>>();
+        final ArrayList<StatisticComparator> comparators = new ArrayList<StatisticComparator>();
         if ((topCriteria != null) && !topCriteria.isEmpty())
         {
             for (final String c : topCriteria.split(","))
@@ -112,7 +112,7 @@ public class SetTopBoxJIRAReport extends BaseReport
         final String stb,
         final DecimalFormat formatter,
         final int top,
-        final ArrayList<Comparator<DescriptiveStatistics.Statistics>> comparators) throws IOException 
+        final ArrayList<StatisticComparator> comparators) throws IOException 
     {
         final StringBuffer sb = new StringBuffer();
         if (stb != null)
@@ -133,9 +133,11 @@ public class SetTopBoxJIRAReport extends BaseReport
             sb.append("{noformat}").append("\n");
         }
         final HashMap<String,ArrayList<DescriptiveStatistics.Statistics>> collector = new HashMap<String,ArrayList<DescriptiveStatistics.Statistics>>();
+        final HashMap<DescriptiveStatistics.Statistics, String> names = new HashMap<DescriptiveStatistics.Statistics, String>();
         for (final String key : data.keySet()) 
         {
            final DescriptiveStatistics.Statistics stats = data.get(key);
+           names.put(stats, key);
            final String id;
            if ((comparators != null) && !comparators.isEmpty())
            {
@@ -160,15 +162,15 @@ public class SetTopBoxJIRAReport extends BaseReport
             final ArrayList<DescriptiveStatistics.Statistics> list = collector.get(key);
             if ((comparators != null) && !comparators.isEmpty())
             {
-                for (final Comparator<DescriptiveStatistics.Statistics> comparator : comparators)
+                for (final StatisticComparator comparator : comparators)
                 {
                     Collections.sort(list, comparator);
-                    appendStatistics(list, key, formatter, top, sb);
+                    appendStatistics(list, key, formatter, top, names, comparator.values.name() , sb);
                 }
             }
             else
             {
-                appendStatistics(list, key, formatter, top, sb);
+                appendStatistics(list, key, formatter, top, names, "" ,sb);
             }
         }
         final File output = new File(fileName);
@@ -179,12 +181,12 @@ public class SetTopBoxJIRAReport extends BaseReport
         Files.write((new File(fileName)).toPath(), sb.toString().getBytes(), StandardOpenOption.CREATE);
     }
     /** */
-    private void appendStatistics(final ArrayList<DescriptiveStatistics.Statistics> listToReport, final String listName, final DecimalFormat formatter, final int top, final StringBuffer sb)
+    private void appendStatistics(final ArrayList<DescriptiveStatistics.Statistics> listToReport, final String listName, final DecimalFormat formatter, final int top, final HashMap<DescriptiveStatistics.Statistics, String> names, final String label, final StringBuffer sb)
     {
         int count = 0;
         for (final DescriptiveStatistics.Statistics stats : listToReport )
         {
-            sb.append("*" + listName + "*:").append("\n");
+            sb.append("*" + names.get(stats) + ":" + label + "(" + count + ")*:").append("\n");
             sb.append("||Count||Min||Max||Mean||Std||Skewnees||").append("\n");
             sb.append("|" + (formatter == null ? stats.getCount()    : formatter.format(stats.getCount())) + "|");
             sb.append((formatter == null ? stats.getMin()      : formatter.format(stats.getMin()))   + "|");
@@ -262,7 +264,7 @@ public class SetTopBoxJIRAReport extends BaseReport
                      break;
 
             }
-            return (int)(Double.isFinite(value) ? value : 0);
+            return (int)(Double.isFinite(value) ? -value : 0);
         }
         
         

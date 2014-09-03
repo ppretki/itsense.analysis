@@ -44,22 +44,22 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         final String id = sequence != null ? sequence.getResolvedName() : null;
         if (id != null)
         {
-            final String[] keys  = sequence.getMeasureNames();
-            if ((keys != null) && (keys.length > 0))
+            final String[] measureNames  = sequence.getMeasureNames();
+            if ((measureNames != null) && (measureNames.length > 0))
             {
-                for (final String key : keys)
+                for (final String measure : measureNames)
                 {
-                    final String st = id + ":" + key;
-                    final Double value = sequence.getMeasure(key);
+                    final String st = id + ":" + measure;
+                    final Double value = sequence.getMeasure(measure);
                     if (value != null)
                     {
                         Statistics stats = statistics.get(st);
                         if (stats == null)
                         {
-                            stats = new Statistics(id + ":" + key);
+                            stats = new Statistics(sequence.getId() + ":" + measure);
                             statistics.put(st, stats);
                         }
-                        stats.add(sequence.getMeasure(key));
+                        stats.add(sequence.getMeasure(measure));
                     }
                 }
             }
@@ -224,7 +224,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         private double getDoubleValue(final double value)
         {
-            return value == Double.NaN ? 0.0 : value;
+            return Double.isFinite(value) ? value : 0.0;
         }
         /**
          * 
