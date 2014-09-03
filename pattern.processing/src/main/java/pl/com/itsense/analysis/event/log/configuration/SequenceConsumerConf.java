@@ -44,4 +44,10 @@ public class SequenceConsumerConf extends PropertyHolderConf
     {
         this.sequences = sequences;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "SequenceConsumerConf: type = " + type + ",  sequences  = " + sequences + "\n" + super.toString();
+    }
 }

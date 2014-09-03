@@ -2,11 +2,13 @@ package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
 import pl.com.itsense.analysis.event.ProgressEvent;
 import pl.com.itsense.analysis.event.ProgressListener;
+import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.SequenceFactory;
 import pl.com.itsense.analysis.event.ProgressProvider.Granularity;
@@ -15,6 +17,7 @@ import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
 import pl.com.itsense.analysis.event.log.configuration.FileConf;
 import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
+import pl.com.itsense.analysis.event.log.configuration.ReportConf;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 
@@ -44,7 +47,8 @@ public class LogAnalysis
      */
     public void analyze()
     {
-       engine.process(eventProviders); 
+        System.out.print(configuration);
+        engine.process(eventProviders); 
     }
     /**
      * 
@@ -126,6 +130,29 @@ public class LogAnalysis
             }
         }
 
+        // REPORTS
+        for (final ReportConf report : configuration.getReports())
+        {
+            try
+            {
+                final Class<?> type = Class.forName(report.getType());
+                if (Report.class.isAssignableFrom(type))
+                {
+                    final Report reportInstance = (Report) type.newInstance();
+                    for (final PropertyConf property : report.getProperties())
+                    {
+                        reportInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    engine.add(reportInstance);
+                }
+            }
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        
         // SEQUENCE FACTORY
         final SequenceFactory sequenceFactory = new SequenceFactory();
         sequenceFactory.setSequances(configuration.getSequences());

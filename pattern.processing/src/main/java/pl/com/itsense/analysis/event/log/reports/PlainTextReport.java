@@ -17,7 +17,7 @@ import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistic
  * @author ppretki
  * 
  */
-public class PlainTextReport extends PropertyHolderImpl implements Report 
+public class PlainTextReport extends BaseReport 
 {
     /**
      * 

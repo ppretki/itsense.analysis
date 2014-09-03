@@ -17,7 +17,7 @@ import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
  * @author ppretki
  * 
  */
-public class HTMLReport extends PropertyHolderImpl implements Report 
+public class HTMLReport extends BaseReport 
 {
     /**
      * 

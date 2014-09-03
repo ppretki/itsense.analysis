@@ -22,6 +22,8 @@ public class Configuration
     private final ArrayList<SequenceConf> sequences = new ArrayList<SequenceConf>();
     /** */
     private final ArrayList<SequenceConsumerConf> sequenceConsumers = new ArrayList<SequenceConsumerConf>();
+    /** */
+    private final ArrayList<ReportConf> reports = new ArrayList<ReportConf>();
     /**
      * 
      * @param xmlConfigFile
@@ -45,6 +47,8 @@ public class Configuration
         digester.addObjectCreate("config/sequence/term/condition",  "pl.com.itsense.analysis.event.log.configuration.ConditionConf");
         digester.addObjectCreate("config/sequenceconsumer",         "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
         digester.addObjectCreate("config/sequenceconsumer/property","pl.com.itsense.analysis.event.log.configuration.PropertyConf");
+        digester.addObjectCreate("config/report",                   "pl.com.itsense.analysis.event.log.configuration.ReportConf");
+        digester.addObjectCreate("config/report/property"          ,"pl.com.itsense.analysis.event.log.configuration.PropertyConf");
 
         digester.addSetNext("config/event",                     "add",          "pl.com.itsense.analysis.event.configuration.log.EventConf");
         digester.addSetNext("config/event/pattern",             "add",          "pl.com.itsense.analysis.event.configuration.log.PatternConf");
@@ -58,6 +62,9 @@ public class Configuration
         digester.addSetNext("config/sequence/term/condition",   "setCondition", "pl.com.itsense.analysis.event.configuration.log.ConditionConf");
         digester.addSetNext("config/sequenceconsumer",          "add",          "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
         digester.addSetNext("config/sequenceconsumer/property", "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
+        digester.addSetNext("config/report          ",          "add",          "pl.com.itsense.analysis.event.log.configuration.ReportConf");
+        digester.addSetNext("config/report/property",           "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
+
         
         digester.addSetProperties("config");
         digester.addSetProperties("config/event");
@@ -72,6 +79,8 @@ public class Configuration
         digester.addSetProperties("config/sequence/measure");
         digester.addSetProperties("config/sequenceconsumer");
         digester.addSetProperties("config/sequenceconsumer/property");
+        digester.addSetProperties("config/report");
+        digester.addSetProperties("config/report/property");
         
         digester.addCallMethod( "config/event/pattern", "setValue", 0);
         
@@ -164,6 +173,16 @@ public class Configuration
       }
   }
 
+  public void add(final ReportConf report)
+  {
+      System.out.println("DUPA: report = " + report);
+      if (!reports.contains(report) && (report != null))
+      {
+          reports.add(report);
+      }
+  }
+
+  
     /**
      * 
      * @return
@@ -190,6 +209,14 @@ public class Configuration
         return sequenceConsumers;
     }
     
+    /**
+     * 
+     * @return
+     */
+    public ArrayList<ReportConf> getReports()
+    {
+        return reports;
+    }
     
     
     @Override
@@ -220,6 +247,12 @@ public class Configuration
         for (final SequenceConsumerConf consumer: sequenceConsumers)
         {
             sb.append(consumer).append("\n");
+        }
+
+        sb.append("-------- Configuration: Reports --------").append("\n");
+        for (final ReportConf report: reports)
+        {
+            sb.append(report).append("\n");
         }
 
         return sb.toString();

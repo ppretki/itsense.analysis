@@ -11,9 +11,19 @@ public class PropertyHolderImpl implements PropertyHolder
 	 * 
 	 */
 	@Override
-	public void setProperty(final String name,final String value) 
+	public void setProperty(final String name, final String value) 
 	{
-		properties.put(name, value);
+	    properties.put(name, value);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public String getProperty(final String name, final String defaultValue)
+	{
+        final String value = getProperty(name);
+        return value != null ?  value : defaultValue;
 	}
 
 	/**
@@ -25,6 +35,7 @@ public class PropertyHolderImpl implements PropertyHolder
 		return properties.get(name);
 	}
 
+	
 	/**
 	 * 
 	 */

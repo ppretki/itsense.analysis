@@ -20,6 +20,8 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     /** */
     private Event lastEvent;
     /** */
+    private final LinkedList<Report> reports = new LinkedList<Report>();
+    /** */
     private HashMap<String, LinkedList<EventConsumer>> consumers = new HashMap<String, LinkedList<EventConsumer>>();
     /** */
     private HashMap<String, LinkedList<Sequence>> sequances = new HashMap<String, LinkedList<Sequence>>();
@@ -335,5 +337,15 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     public void change(final ProgressEvent event)
     {
         progressChanged(event.getProgress());
+    }
+
+    @Override
+    public void add(final Report report)
+    {
+        if (!reports.contains(report))
+        {
+            reports.add(report);
+            lifecycleListeners.add(report);
+        }
     }
 }

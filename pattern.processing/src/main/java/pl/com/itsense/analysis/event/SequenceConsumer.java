@@ -20,7 +20,6 @@ public interface SequenceConsumer extends PropertyHolder
      * @param sequence
      */
     void consume(Sequence sequence);
-    
     /**
      * 
      */

@@ -39,6 +39,11 @@ public interface EEngine
 	 * @param consumer
 	 */
 	void add(EventConsumer consumer);
+    /**
+     * 
+     * @param consumer
+     */
+    void add(Report report);
 	/**
 	 * 
 	 * @param consumer
