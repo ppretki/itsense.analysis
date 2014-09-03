@@ -56,7 +56,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
                         Statistics stats = statistics.get(st);
                         if (stats == null)
                         {
-                            stats = new Statistics();
+                            stats = new Statistics(id + ":" + key);
                             statistics.put(st, stats);
                         }
                         stats.add(sequence.getMeasure(key));
@@ -113,6 +113,17 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
      */
     public static class Statistics
     {
+        public enum VALUES
+        {
+            COUNT,
+            MEAN,
+            STD,
+            MAX,
+            MIN,
+            SKEWNESS
+        }
+        
+        private final String id;
         /** */
         private int count;
         /** */
@@ -126,6 +137,11 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         /** */
         private Skewness skewness = new Skewness();
 
+        
+        public Statistics(final String id)
+        {
+            this.id = id;
+        }
         /**
          * 
          * @param value
@@ -209,6 +225,14 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         private double getDoubleValue(final double value)
         {
             return value == Double.NaN ? 0.0 : value;
+        }
+        /**
+         * 
+         * @return
+         */
+        public String getId()
+        {
+            return id;
         }
     }
 }
