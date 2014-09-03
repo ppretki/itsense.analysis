@@ -45,7 +45,6 @@
            <var name="time" value="time$1"/>
        </term>
       <measure name="duration" value="time"/>
-      <measure name="size" value="width*height"/>
        
     </sequence>
     
@@ -61,7 +60,7 @@
       <measure name="duration" value="timestamp[1] - timestamp[0]"/>
       </sequence>
     
-    <sequence id="GC_REPORT" name="GC: FROM: $(total)">
+    <sequence id="GC_REPORT">
       <term index="0" event="GC_LOCK"/>
       <term index="1" event="GC_REPORT">
         <var name="free"  value="report$1"/>
@@ -73,12 +72,12 @@
     </sequence>
     
     <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION,GC_REPORT"/>
-    
     <report type="pl.com.itsense.analysis.event.log.reports.SetTopBoxJIRAReport">
-      <property name="file" value="/home/P.Pretki/stb/overnight.jira"/>
+      <property name="file" value="/home/ppretki/adb/overnight.jira"/>
       <property name="formatter" value="#.##"/>
-      <property name="proc" value="/home/P.Pretki/stb/stbdir/appolo/stb/proc"/>
+      <property name="proc" value="/home/ppretki/adb"/>
+      <property name="top_criteria" value="mean"/>
+      <property name="top" value="5"/>
     </report>
-    
-    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="10000"/>
+    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="1000000"/>
 </config>
