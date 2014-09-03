@@ -54,14 +54,14 @@ public class SetTopBoxJIRAReport extends BaseReport
                 break;
             }
         }
-        final String file = getProperty(Properties.FILE.name());
-        final String formatter = getProperty(Properties.FORMATTER.name(),"#.##");
-        final String stb = getProperty(Properties.PROC.name());
+        final String file = getProperty(Properties.FILE.name().toLowerCase());
+        final String formatter = getProperty(Properties.FORMATTER.name().toLowerCase(),"#.##");
+        final String stb = getProperty(Properties.PROC.name().toLowerCase());
         if ((file != null) && (consumer != null))
         {
             try
             {
-                createReport(file, consumer.getStatistics(), stb, new DecimalFormat(formatter));
+                createReport(file, consumer.getStatistics(), stb + File.separatorChar, new DecimalFormat(formatter));
             }
             catch (IOException e)
             {
@@ -85,7 +85,7 @@ public class SetTopBoxJIRAReport extends BaseReport
         {
             sb.append("*Generation time*:").append("\n");
             sb.append("{noformat}").append("\n");
-            sb.append(Calendar.getInstance().toString());
+            sb.append(Calendar.getInstance().getTime().toString()).append("\n");;
             sb.append("{noformat}").append("\n");
 
             sb.append("*Build*:").append("\n");
@@ -103,11 +103,11 @@ public class SetTopBoxJIRAReport extends BaseReport
             final DescriptiveStatistics.Statistics stats = data.get(key);
             sb.append("*" + key + "*:").append("\n");
             sb.append("||Count||Min||Max||Mean||Std||Skewnees||").append("\n");
-            sb.append((formatter == null ? stats.getCount()    : formatter.format(stats.getCount())) + "|").append("\n");
-            sb.append((formatter == null ? stats.getMin()      : formatter.format(stats.getMin()))   + "|").append("\n");
-            sb.append((formatter == null ? stats.getMax()      : formatter.format(stats.getMax()))   + "|").append("\n");
-            sb.append((formatter == null ? stats.getMean()     : formatter.format(stats.getMean()))  + "|").append("\n");
-            sb.append((formatter == null ? stats.getStd()      : formatter.format(stats.getStd()))   + "|").append("\n");
+            sb.append("|" + (formatter == null ? stats.getCount()    : formatter.format(stats.getCount())) + "|");
+            sb.append((formatter == null ? stats.getMin()      : formatter.format(stats.getMin()))   + "|");
+            sb.append((formatter == null ? stats.getMax()      : formatter.format(stats.getMax()))   + "|");
+            sb.append((formatter == null ? stats.getMean()     : formatter.format(stats.getMean()))  + "|");
+            sb.append((formatter == null ? stats.getStd()      : formatter.format(stats.getStd()))   + "|");
             sb.append((formatter == null ? stats.getSkewness() : formatter.format(stats.getSkewness())) + "|").append("\n");
         }
         final File output = new File(fileName);

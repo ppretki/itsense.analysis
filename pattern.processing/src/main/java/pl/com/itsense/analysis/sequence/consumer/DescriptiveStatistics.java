@@ -41,7 +41,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
     @Override
     public void consume(final Sequence sequence)
     {
-        final String id = sequence != null ? sequence.getId() : null;
+        final String id = sequence != null ? sequence.getResolvedName() : null;
         if (id != null)
         {
             final String[] keys  = sequence.getMeasureNames();
@@ -144,12 +144,12 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         public String toString()
         {
             final StringBuffer sb = new StringBuffer();
-            sb.append("count = " + count).append("\n");
-            sb.append("mean = " + mean.getResult()).append("\n");
-            sb.append("std = " + std.getResult()).append("\n");
-            sb.append("min = " + min.getResult()).append("\n");
-            sb.append("max = " + max.getResult()).append("\n");
-            sb.append("skewness = " + skewness.getResult()).append("\n");
+            sb.append("count = " + getCount()).append("\n");
+            sb.append("mean = " + getMean()).append("\n");
+            sb.append("std = " + getStd()).append("\n");
+            sb.append("min = " + getMin()).append("\n");
+            sb.append("max = " + getMax()).append("\n");
+            sb.append("skewness = " + getSkewness()).append("\n");
 
             return sb.toString();
         }
@@ -168,7 +168,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         public double getMean()
         {
-            return mean.getResult();
+            return getDoubleValue(mean.getResult());
         }
         /**
          * 
@@ -176,7 +176,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         public double getStd()
         {
-            return std.getResult();
+            return getDoubleValue(std.getResult());
         }
         /**
          * 
@@ -184,7 +184,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         public double getSkewness()
         {
-            return skewness.getResult();
+            return getDoubleValue(skewness.getResult());
         }
         /**
          * 
@@ -192,7 +192,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         public double getMax()
         {
-            return max.getResult();
+            return getDoubleValue(max.getResult());
         }
         /**
          * 
@@ -200,8 +200,15 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         public double getMin()
         {
-            return min.getResult();
+            return getDoubleValue(min.getResult());
         }
-
+        /**
+         * 
+         * @return
+         */
+        private double getDoubleValue(final double value)
+        {
+            return value == Double.NaN ? 0.0 : value;
+        }
     }
 }

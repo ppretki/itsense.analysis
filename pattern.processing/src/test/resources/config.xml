@@ -77,7 +77,7 @@
     <report type="pl.com.itsense.analysis.event.log.reports.SetTopBoxJIRAReport">
       <property name="file" value="/home/P.Pretki/stb/overnight.jira"/>
       <property name="formatter" value="#.##"/>
-      <property name="proc" value="/home/P.Pretki/stb/stbdir/appolo/stb/proc/"/>
+      <property name="proc" value="/home/P.Pretki/stb/stbdir/appolo/stb/proc"/>
     </report>
     
     <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="10000"/>

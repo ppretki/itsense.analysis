@@ -62,7 +62,7 @@ public class Configuration
         digester.addSetNext("config/sequence/term/condition",   "setCondition", "pl.com.itsense.analysis.event.log.configuration.ConditionConf");
         digester.addSetNext("config/sequenceconsumer",          "add",          "pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf");
         digester.addSetNext("config/sequenceconsumer/property", "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
-        digester.addSetNext("config/report          ",          "add",          "pl.com.itsense.analysis.event.log.configuration.ReportConf");
+        digester.addSetNext("config/report",                    "add",          "pl.com.itsense.analysis.event.log.configuration.ReportConf");
         digester.addSetNext("config/report/property",           "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
 
         

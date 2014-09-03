@@ -15,9 +15,9 @@ import pl.com.itsense.analysis.event.log.configuration.TermConf;
 public class SequenceFactory
 {
     /** */
-    private HashMap<String,SequenceConf> sequenceConfs = new HashMap<String,SequenceConf>();
+    private HashMap<String, SequenceConf> sequenceConfs = new HashMap<String, SequenceConf>();
     /** */
-    private HashMap<String,ArrayList<Sequence>> prototypes = new HashMap<String,ArrayList<Sequence>>(); 
+    private HashMap<String, ArrayList<Sequence>> prototypes = new HashMap<String, ArrayList<Sequence>>(); 
     /**
      * 
      * @param sequenceConfs
@@ -27,9 +27,8 @@ public class SequenceFactory
         this.sequenceConfs.clear();
         for (final SequenceConf sequenceConf : sequanceConfs)
         {
-            this.sequenceConfs.put(sequenceConf.getName(), sequenceConf);
+            this.sequenceConfs.put(sequenceConf.getId(), sequenceConf);
         }
-        
         prepare();
     }
     /**
@@ -62,10 +61,9 @@ public class SequenceFactory
                 for (final Sequence seq : sequence)
                 {
                     list.remove(seq);
-                    list.add(new Sequence(seq.getTerms(), sequenceConfs.get(seq.getName()).getMeasures(), seq.getName() , seq.getId()));
+                    list.add(new Sequence(seq.getTerms(), sequenceConfs.get(seq.getId()).getMeasures(), seq.getName() , seq.getId()));
                 }
             }
-
         }
         return sequence;
     }
