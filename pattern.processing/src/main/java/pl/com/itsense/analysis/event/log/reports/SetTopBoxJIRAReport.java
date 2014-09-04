@@ -19,6 +19,7 @@ import org.apache.commons.math3.ml.neuralnet.SquareNeighbourhood;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.Report;
+import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
@@ -45,6 +46,7 @@ public class SetTopBoxJIRAReport extends BaseReport
         FILE, 
         FORMATTER, 
         PROC,
+        PYRCU,
         TOP,
         TOP_CRITERIA
     }
@@ -66,11 +68,12 @@ public class SetTopBoxJIRAReport extends BaseReport
         final String stb = getProperty(Properties.PROC.name().toLowerCase());
         final String top = getProperty(Properties.TOP.name().toLowerCase(), String.valueOf(Integer.MAX_VALUE));
         final String topCriteria = getProperty(Properties.TOP_CRITERIA.name().toLowerCase());
+        final String pyrcu = getProperty(Properties.PYRCU.name().toLowerCase());
         if ((file != null) && (consumer != null))
         {
             try
             {
-                createReport(file, consumer.getStatistics(), stb + File.separatorChar, new DecimalFormat(formatter), Integer.parseInt(top), getComparators(topCriteria));
+                createReport(file, consumer.getStatistics(), stb + File.separatorChar, pyrcu, new DecimalFormat(formatter), Integer.parseInt(top), getComparators(topCriteria));
             }
             catch (IOException e)
             {
@@ -110,6 +113,7 @@ public class SetTopBoxJIRAReport extends BaseReport
         final String fileName, 
         final HashMap<String, DescriptiveStatistics.Statistics> data,
         final String stb,
+        final String pyrcu,
         final DecimalFormat formatter,
         final int top,
         final ArrayList<StatisticComparator> comparators) throws IOException 
@@ -121,7 +125,7 @@ public class SetTopBoxJIRAReport extends BaseReport
             sb.append("{noformat}").append("\n");
             sb.append(Calendar.getInstance().getTime().toString()).append("\n");;
             sb.append("{noformat}").append("\n");
-
+            
             sb.append("*Build*:").append("\n");
             sb.append("{noformat}").append("\n");
             appendFromFile(stb + BUILD_FILE, sb);
@@ -131,46 +135,49 @@ public class SetTopBoxJIRAReport extends BaseReport
             sb.append("{noformat}").append("\n");
             appendFromFile(stb + UPTIME_FILE, sb);
             sb.append("{noformat}").append("\n");
+
+            sb.append("*Pyrcu sequence*:").append("\n");
+            sb.append("{noformat}").append("\n");
+            appendFromFile(pyrcu, sb);
+            sb.append("{noformat}").append("\n");
         }
-        final HashMap<String,ArrayList<DescriptiveStatistics.Statistics>> collector = new HashMap<String,ArrayList<DescriptiveStatistics.Statistics>>();
-        final HashMap<DescriptiveStatistics.Statistics, String> names = new HashMap<DescriptiveStatistics.Statistics, String>();
-        for (final String key : data.keySet()) 
+        
+        /* SequanceId -> sequences*/
+        final HashMap<String, ArrayList<DescriptiveStatistics.Statistics>> sequanceCollector = splitIntoGroups(data.values(), new GroupIdentityGenerator()
         {
-           final DescriptiveStatistics.Statistics stats = data.get(key);
-           names.put(stats, key);
-           final String id;
-           if ((comparators != null) && !comparators.isEmpty())
-           {
-               id = stats.getId();
-           }
-           else
-           {
-               id = key;
-           }
-           ArrayList<DescriptiveStatistics.Statistics> list = collector.get(id);
-           if (list == null)
-           {
-               list = new ArrayList<DescriptiveStatistics.Statistics>();
-               collector.put(id, list);
-           }
-           list.add(stats);
-        }
-        final ArrayList<String> keys = new ArrayList<String>(collector.keySet());
-        Collections.sort(keys);
-        for (final String key : keys) 
-        {
-            final ArrayList<DescriptiveStatistics.Statistics> list = collector.get(key);
-            if ((comparators != null) && !comparators.isEmpty())
+            @Override
+            public String getGroupId(final Statistics statistics)
             {
-                for (final StatisticComparator comparator : comparators)
-                {
-                    Collections.sort(list, comparator);
-                    appendStatistics(list, key, formatter, top, names, comparator.values.name() , sb);
-                }
+                return statistics.getSequanceId();
             }
-            else
+        });
+        
+        for (final String sequanceId : sequanceCollector.keySet())
+        {
+            final ArrayList<DescriptiveStatistics.Statistics> sequanceStatistics = sequanceCollector.get(sequanceId);
+            /* SequanceId -> sequences*/
+            final HashMap<String, ArrayList<DescriptiveStatistics.Statistics>> measureCollector = splitIntoGroups(sequanceStatistics, new GroupIdentityGenerator()
             {
-                appendStatistics(list, key, formatter, top, names, "" ,sb);
+                @Override
+                public String getGroupId(final Statistics statistics)
+                {
+                    return statistics.getMeasure();
+                }
+            });
+            
+            
+            for (final String measure : measureCollector.keySet())
+            {
+                final ArrayList<DescriptiveStatistics.Statistics> list = measureCollector.get(measure);
+                if ((comparators != null) && !comparators.isEmpty())
+                {
+                    for (final StatisticComparator comparator : comparators)
+                    {
+                         
+                        Collections.sort(list, comparator);
+                        appendStatistics(list, sequanceId, measure , comparator.values.name() , formatter, top, sb);
+                    }
+                }
             }
         }
         final File output = new File(fileName);
@@ -181,13 +188,15 @@ public class SetTopBoxJIRAReport extends BaseReport
         Files.write((new File(fileName)).toPath(), sb.toString().getBytes(), StandardOpenOption.CREATE);
     }
     /** */
-    private void appendStatistics(final ArrayList<DescriptiveStatistics.Statistics> listToReport, final String listName, final DecimalFormat formatter, final int top, final HashMap<DescriptiveStatistics.Statistics, String> names, final String label, final StringBuffer sb)
+    private void appendStatistics(final ArrayList<DescriptiveStatistics.Statistics> listToReport, final String sequanceId, final String measure, final String criterion, final DecimalFormat formatter, final int top, final StringBuffer sb)
     {
         int count = 0;
+        sb.append("*" + sequanceId + ":" + measure + ":" + criterion + "*").append("\n");
+        sb.append("||Top||ID||Count||Min||Max||Mean||Std||Skewnees||").append("\n");
         for (final DescriptiveStatistics.Statistics stats : listToReport )
         {
-            sb.append("*" + names.get(stats) + ":" + label + "(" + count + ")*:").append("\n");
-            sb.append("||Count||Min||Max||Mean||Std||Skewnees||").append("\n");
+            sb.append("|" + count + "|");
+            sb.append("|" + stats.getSequanceResolvedName() + "|");
             sb.append("|" + (formatter == null ? stats.getCount()    : formatter.format(stats.getCount())) + "|");
             sb.append((formatter == null ? stats.getMin()      : formatter.format(stats.getMin()))   + "|");
             sb.append((formatter == null ? stats.getMax()      : formatter.format(stats.getMax()))   + "|");
@@ -217,6 +226,30 @@ public class SetTopBoxJIRAReport extends BaseReport
             e.printStackTrace();
         }
     }
+    
+    
+    private HashMap<String, ArrayList<DescriptiveStatistics.Statistics>> splitIntoGroups(final Collection<DescriptiveStatistics.Statistics> statistics, final GroupIdentityGenerator identityGenerator)
+    {
+        final HashMap<String, ArrayList<DescriptiveStatistics.Statistics>> collector = new HashMap<String, ArrayList<DescriptiveStatistics.Statistics>>();
+        for (DescriptiveStatistics.Statistics stats : statistics)
+        {
+            final String id = identityGenerator.getGroupId(stats);
+            ArrayList<DescriptiveStatistics.Statistics> list = collector.get(id);
+            if (list == null)
+            {
+                list = new ArrayList<DescriptiveStatistics.Statistics>();
+                collector.put(id, list);
+            }
+            list.add(stats);
+        }
+        return collector;
+    }
+    
+    private interface GroupIdentityGenerator
+    {
+        String getGroupId(DescriptiveStatistics.Statistics statistics);
+    }
+    
     /**
      * 
      * @author ppretki
@@ -264,7 +297,7 @@ public class SetTopBoxJIRAReport extends BaseReport
                      break;
 
             }
-            return (int)(Double.isFinite(value) ? -value : 0);
+            return (int)(Double.isInfinite(value) || Double.isNaN(value) ? 0 : -value);
         }
         
         

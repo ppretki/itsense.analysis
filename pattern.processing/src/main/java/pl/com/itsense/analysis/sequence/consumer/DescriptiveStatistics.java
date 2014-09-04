@@ -1,6 +1,8 @@
 package pl.com.itsense.analysis.sequence.consumer;
 
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -56,7 +58,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
                         Statistics stats = statistics.get(st);
                         if (stats == null)
                         {
-                            stats = new Statistics(sequence.getId() + ":" + measure);
+                            stats = new Statistics(sequence.getId(), sequence.getName(), sequence.getResolvedName(), measure);
                             statistics.put(st, stats);
                         }
                         stats.add(sequence.getMeasure(measure));
@@ -122,8 +124,14 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
             MIN,
             SKEWNESS
         }
-        
-        private final String id;
+        /** */
+        private final String sequanceId;
+        /** */
+        private final String sequanceName;
+        /** */
+        private final String sequanceResolvedName;
+        /** */
+        private final String measure;
         /** */
         private int count;
         /** */
@@ -138,9 +146,12 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
         private Skewness skewness = new Skewness();
 
         
-        public Statistics(final String id)
+        public Statistics(final String sequanceId, final String sequanceName, final String sequanceResolvedName, final String measure)
         {
-            this.id = id;
+            this.sequanceId = sequanceId;
+            this.sequanceName = sequanceName;
+            this.sequanceResolvedName  = sequanceResolvedName;
+            this.measure = measure;
         }
         /**
          * 
@@ -224,15 +235,39 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
          */
         private double getDoubleValue(final double value)
         {
-            return Double.isFinite(value) ? value : 0.0;
+            return Double.isInfinite(value) || Double.isNaN(value) ? 0.0 : value;
         }
         /**
          * 
          * @return
          */
-        public String getId()
+        public String getSequanceId()
         {
-            return id;
+            return sequanceId;
+        }
+        /**
+         * 
+         * @return
+         */
+        public String getSequanceName()
+        {
+            return sequanceName;
+        }
+        /**
+         * 
+         * @return
+         */
+        public String getSequanceResolvedName()
+        {
+            return sequanceResolvedName;
+        }
+        /**
+         * 
+         * @return
+         */
+        public String getMeasure()
+        {
+            return measure;
         }
     }
 }
