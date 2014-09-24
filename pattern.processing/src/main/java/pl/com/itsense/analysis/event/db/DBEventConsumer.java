@@ -11,7 +11,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import pl.com.itsense.analysis.event.BaseEventConsumer;
+import pl.com.itsense.eventprocessing.BaseEventConsumer;
 import pl.com.itsense.eventprocessing.api.EEngine;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;

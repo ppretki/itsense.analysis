@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
+
 import org.olap4j.Position;
+
 import mondrian.web.servlet.MdxQueryServlet;
 
 import org.eclipse.jetty.server.Server;
@@ -18,15 +20,16 @@ import org.pivot4j.datasource.SimpleOlapDataSource;
 import org.pivot4j.impl.PivotModelImpl;
 import org.pivot4j.ui.html.HtmlRenderCallback;
 import org.pivot4j.ui.table.TableRenderer;
-import pl.com.itsense.analysis.event.EventProcessingEngine;
-import pl.com.itsense.analysis.event.ProgressEvent;
-import pl.com.itsense.analysis.event.ProgressListener;
-import pl.com.itsense.analysis.event.ProgressProvider.Granularity;
-import pl.com.itsense.analysis.event.SequenceConsumer;
+
 import pl.com.itsense.analysis.event.log.LogAnalysis;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.sequence.consumer.DBRecorder;
+import pl.com.itsense.eventprocessing.EventProcessingEngine;
+import pl.com.itsense.eventprocessing.ProgressEvent;
+import pl.com.itsense.eventprocessing.ProgressListener;
+import pl.com.itsense.eventprocessing.SequenceConsumer;
+import pl.com.itsense.eventprocessing.ProgressProvider.Granularity;
 import pl.com.itsense.pattern.processing.analyzer.BrowserApplication;
 import pl.com.itsense.pattern.processing.analyzer.OLAPServlet;
 

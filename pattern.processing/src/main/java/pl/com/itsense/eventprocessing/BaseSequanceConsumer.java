@@ -1,9 +1,9 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing;
 
 import java.util.ArrayList;
 
-import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
+import pl.com.itsense.eventprocessing.PropertyHolderImpl;
 import pl.com.itsense.eventprocessing.api.EEngine;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;

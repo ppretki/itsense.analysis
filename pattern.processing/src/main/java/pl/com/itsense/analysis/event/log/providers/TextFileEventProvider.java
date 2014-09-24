@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pl.com.itsense.analysis.event.ProgressProviderImpl;
-import pl.com.itsense.analysis.event.PropertyHolderImpl;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.PatternConf;
+import pl.com.itsense.eventprocessing.ProgressProviderImpl;
+import pl.com.itsense.eventprocessing.PropertyHolderImpl;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventProvider;
 

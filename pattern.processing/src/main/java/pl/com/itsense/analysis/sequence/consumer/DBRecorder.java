@@ -8,12 +8,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
-import pl.com.itsense.analysis.event.BaseSequanceConsumer;
+
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.GroupDB;
 import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.eventprocessing.BaseSequanceConsumer;
 import pl.com.itsense.eventprocessing.api.EEngine;
 import pl.com.itsense.eventprocessing.api.Sequence;
 /**
