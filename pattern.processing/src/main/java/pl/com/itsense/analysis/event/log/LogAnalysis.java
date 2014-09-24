@@ -1,15 +1,9 @@
 package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
-import pl.com.itsense.analysis.event.EventConsumer;
+
 import pl.com.itsense.analysis.event.EventProcessingEngine;
-import pl.com.itsense.analysis.event.EventProvider;
-import pl.com.itsense.analysis.event.ProgressEvent;
-import pl.com.itsense.analysis.event.ProgressListener;
-import pl.com.itsense.analysis.event.Report;
-import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.SequenceFactory;
-import pl.com.itsense.analysis.event.ProgressProvider.Granularity;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
@@ -18,10 +12,15 @@ import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
 import pl.com.itsense.analysis.event.log.configuration.ReportConf;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
+import pl.com.itsense.eventprocessing.api.EventConsumer;
+import pl.com.itsense.eventprocessing.api.EventProvider;
+import pl.com.itsense.eventprocessing.api.Granularity;
+import pl.com.itsense.eventprocessing.api.ProgressEvent;
+import pl.com.itsense.eventprocessing.api.ProgressListener;
+import pl.com.itsense.eventprocessing.api.Report;
+import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 
 /**
- * 
- * @author ppretki
  *
  */
 public class LogAnalysis
