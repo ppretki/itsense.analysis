@@ -12,10 +12,10 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 import pl.com.itsense.analysis.event.BaseEventConsumer;
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.ProcessingLifecycleListener;
-import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
+import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
 
 /**
  * 
@@ -24,29 +24,6 @@ import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
  */
 public class DBEventConsumer extends BaseEventConsumer implements ProcessingLifecycleListener
 {
-    /*
-SELECT 
-  eventdb.eventid, 
-  eventdb."timestamp", 
-  patterndb.patternid, 
-  groupdb.value,
-  groupdb.groupid
-FROM 
-  public.eventdb, 
-  public.eventdb_patterndb, 
-  public.patterndb, 
-  public.patterndb_groupdb, 
-  public.groupdb
-WHERE 
-  eventdb.id = eventdb_patterndb.eventdb_id AND
-  eventdb_patterndb.patterns_id = patterndb.id AND
-  patterndb.id = patterndb_groupdb.patterndb_id AND
-  patterndb_groupdb.patterns_id = groupdb.id AND
-  (patterndb.patternid = 'activate' OR (patterndb.patternid = 'pathChange' AND groupid=2))
-  ORDER by eventdb."timestamp"
-  LIMIT 1000;
-    */
-    
     /** */
     private static int BATCH_SIZE = 1000;
     /** */
@@ -60,7 +37,7 @@ WHERE
      * 
      */
     @Override
-    public void enter(final ProcessingLifecycle lifecycle,final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle, final EEngine engine)
     {
         switch (lifecycle)
         {
@@ -129,7 +106,6 @@ WHERE
     @Override
     public void process(final Event event)
     {
-        //System.out.println("process: event = " + event);
         if (session != null)
         {
             final String line = event.getProperty("line");

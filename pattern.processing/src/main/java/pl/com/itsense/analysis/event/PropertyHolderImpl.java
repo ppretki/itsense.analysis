@@ -3,6 +3,8 @@ package pl.com.itsense.analysis.event;
 import java.util.HashMap;
 import java.util.Set;
 
+import pl.com.itsense.eventprocessing.api.PropertyHolder;
+
 public class PropertyHolderImpl implements PropertyHolder 
 {
 	/** */

@@ -4,13 +4,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.PropertyHolderImpl;
-import pl.com.itsense.analysis.event.Report;
-import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 
 /**
  * 

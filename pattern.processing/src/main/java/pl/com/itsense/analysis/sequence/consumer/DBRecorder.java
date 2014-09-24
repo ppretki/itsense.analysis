@@ -6,19 +6,16 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
-
 import pl.com.itsense.analysis.event.BaseSequanceConsumer;
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.Measure;
-import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.db.EventDB;
 import pl.com.itsense.analysis.event.db.GroupDB;
 import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.Sequence;
 /**
  * 
  * @author ppretki
@@ -71,7 +68,7 @@ public class DBRecorder extends BaseSequanceConsumer
 
     
     @Override
-    protected void processingStart(EEngine engine)
+    protected void processingStart(final EEngine engine)
     {
         final Configuration cfg = configureDB();
         sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(cfg.getProperties()).build());
@@ -82,7 +79,7 @@ public class DBRecorder extends BaseSequanceConsumer
     }
     
     @Override
-    protected void processingFinish(EEngine engine)
+    protected void processingFinish(final EEngine engine)
     {
         try
         {

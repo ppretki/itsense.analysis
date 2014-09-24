@@ -13,10 +13,10 @@ import org.apache.commons.math3.stat.descriptive.rank.Max;
 import org.apache.commons.math3.stat.descriptive.rank.Min;
 
 import pl.com.itsense.analysis.event.BaseSequanceConsumer;
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.Sequence;
-import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 import pl.com.itsense.analysis.event.log.reports.PlainTextReport;
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
+import pl.com.itsense.eventprocessing.api.Sequence;
 
 /**
  * 
@@ -90,7 +90,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
      * 
      */
     @Override
-    public void enter(final ProcessingLifecycle lifecycle,final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle, final EEngine engine)
     {
         switch (lifecycle)
         {

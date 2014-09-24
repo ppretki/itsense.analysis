@@ -1,8 +1,8 @@
 package pl.com.itsense.analysis.event;
 
+import pl.com.itsense.eventprocessing.api.EventConsumer;
+
 /**
- * 
- * @author ppretki
  *
  */
 public abstract class BaseEventConsumer extends PropertyHolderImpl implements EventConsumer 

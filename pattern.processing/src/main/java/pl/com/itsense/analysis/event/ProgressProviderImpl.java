@@ -3,12 +3,19 @@ package pl.com.itsense.analysis.event;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import pl.com.itsense.eventprocessing.api.Granularity;
+import pl.com.itsense.eventprocessing.api.ProgressEvent;
+import pl.com.itsense.eventprocessing.api.ProgressListener;
+import pl.com.itsense.eventprocessing.api.ProgressProvider;
+/**
+ *
+ */
 public abstract class ProgressProviderImpl implements ProgressProvider
 {
     /** */
     private final HashMap<Granularity,LinkedList<ProgressListener>> listeners = new HashMap<Granularity,LinkedList<ProgressListener>>(); 
     /** */
-    private final HashMap<Granularity, Double> lastProgresses = new HashMap<ProgressProvider.Granularity, Double>();
+    private final HashMap<Granularity, Double> lastProgresses = new HashMap<Granularity, Double>();
     
     {
         for (final Granularity granularity : Granularity.values())
@@ -59,7 +66,6 @@ public abstract class ProgressProviderImpl implements ProgressProvider
             {
                 final Double lastprogress = lastProgresses.get(granularity);
                 final double actualProgress = Math.floor(progress / granularity.getValue());
-//                /System.out.println("granularity = " + granularity + ", progress = " + progress + ", actual = " + actualProgress);
                 if (lastprogress != actualProgress)
                 {
                     final ProgressEvent event = new ProgressEventImpl(progress); 

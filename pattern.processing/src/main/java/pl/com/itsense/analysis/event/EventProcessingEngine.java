@@ -7,9 +7,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.EventConsumer;
+import pl.com.itsense.eventprocessing.api.EventProvider;
+import pl.com.itsense.eventprocessing.api.Granularity;
+import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
+import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
+import pl.com.itsense.eventprocessing.api.ProgressEvent;
+import pl.com.itsense.eventprocessing.api.ProgressListener;
+import pl.com.itsense.eventprocessing.api.ProgressProvider;
+import pl.com.itsense.eventprocessing.api.Report;
+import pl.com.itsense.eventprocessing.api.Sequence;
+import pl.com.itsense.eventprocessing.api.SequenceConsumer;
+
 /**
- * 
- * @author ppretki
  * 
  */
 public class EventProcessingEngine extends ProgressProviderImpl implements EEngine, ProgressListener

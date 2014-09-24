@@ -1,7 +1,5 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing.api;
 /**
- * 
- * @author ppretki
  *
  */
 public interface EventConsumer extends PropertyHolder

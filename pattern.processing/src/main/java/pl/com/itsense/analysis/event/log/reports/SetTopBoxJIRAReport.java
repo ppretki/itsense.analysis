@@ -12,10 +12,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.SequenceConsumer;
+
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
+import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 
 /**
  * 
@@ -48,7 +49,7 @@ public class SetTopBoxJIRAReport extends BaseReport
     public void create(final EEngine engine) 
     {
         DescriptiveStatistics consumer = null;
-        for (SequenceConsumer c : engine.getSequenceConsumers())
+        for (final SequenceConsumer c : engine.getSequenceConsumers())
         {
             if (c instanceof DescriptiveStatistics)
             {

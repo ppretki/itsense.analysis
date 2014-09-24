@@ -7,14 +7,15 @@ import org.mvel2.MVEL;
 import org.mvel2.integration.impl.MapVariableResolverFactory;
 
 import pl.com.itsense.analysis.event.log.configuration.MeasureConf;
-
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.Measure;
+import pl.com.itsense.eventprocessing.api.Member;
+import pl.com.itsense.eventprocessing.api.Sequence;
 
 /**
- * 
- * @author P.Pretki
  *
  */
-public class Sequence
+public class SequenceImpl implements Sequence
 {
     /** */
     private static final String CTX_VAR_TIMESTAMP = "timestamp";
@@ -40,7 +41,7 @@ public class Sequence
      * 
      * @param terms
      */
-    public Sequence(final Member[] terms,final List<MeasureConf> measureConfs, final String name, final String id)
+    public SequenceImpl(final Member[] terms,final List<MeasureConf> measureConfs, final String name, final String id)
     {
         this.terms = terms;
         for (final MeasureConf measureConf : measureConfs)

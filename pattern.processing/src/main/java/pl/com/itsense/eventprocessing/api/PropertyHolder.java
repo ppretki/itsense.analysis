@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing.api;
 
 import java.util.Set;
 

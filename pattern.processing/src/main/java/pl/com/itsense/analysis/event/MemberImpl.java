@@ -1,17 +1,21 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.HashMap;
+
 import org.mvel2.MVEL;
 import org.mvel2.integration.impl.MapVariableResolverFactory;
+
 import pl.com.itsense.analysis.event.log.configuration.MemberConf;
 import pl.com.itsense.analysis.event.log.configuration.VarConf;
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.Member;
 
 /**
  * 
  * @author P.Pretki
  *
  */
-public class Member
+public class MemberImpl implements Member
 {
     /** */
     private final String mvel;
@@ -23,7 +27,7 @@ public class Member
      * 
      * @param term
      */
-    public Member(final MemberConf term)
+    public MemberImpl(final MemberConf term)
     {
         mvel = term.getCondition() == null ? null : term.getCondition().getMvel();
         eventId = term.getEvent() == null ? null : term.getEvent().trim();

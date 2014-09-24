@@ -6,11 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-
-import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.PropertyHolderImpl;
-import pl.com.itsense.analysis.event.Report;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
+import pl.com.itsense.eventprocessing.api.EEngine;
 
 /**
  * 

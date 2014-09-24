@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
-import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.Sequence;
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.Sequence;
 
 @Proxy(lazy=false)
 @Entity

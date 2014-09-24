@@ -1,6 +1,4 @@
-package pl.com.itsense.analysis.event;
-
-import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
+package pl.com.itsense.eventprocessing.api;
 
 /**
  * 

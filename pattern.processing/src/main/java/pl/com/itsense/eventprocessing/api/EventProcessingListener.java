@@ -1,8 +1,8 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing.api;
+
+import pl.com.itsense.eventprocessing.api.EEngine;
 
 /**
- * 
- * @author ppretki
  *
  */
 public interface EventProcessingListener 

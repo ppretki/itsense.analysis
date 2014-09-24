@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing.api;
 
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 

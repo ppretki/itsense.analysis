@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event;
+package pl.com.itsense.eventprocessing.api;
 
 /**
  * 
@@ -7,11 +7,6 @@ package pl.com.itsense.analysis.event;
  */
 public interface EEngine 
 {
-	enum ProcessingLifecycle
-	{
-		START,
-		FINISH
-	}
 	/**
 	 * 
 	 * @author ppretki

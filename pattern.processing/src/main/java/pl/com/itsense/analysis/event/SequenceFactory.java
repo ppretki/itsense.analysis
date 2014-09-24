@@ -3,12 +3,14 @@ package pl.com.itsense.analysis.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
 import pl.com.itsense.analysis.event.log.configuration.MemberConf;
+import pl.com.itsense.eventprocessing.api.Event;
+import pl.com.itsense.eventprocessing.api.Member;
+import pl.com.itsense.eventprocessing.api.Sequence;
 
 /**
- * 
- * @author P.Pretki
  *
  */
 public class SequenceFactory
@@ -60,7 +62,7 @@ public class SequenceFactory
                 for (final Sequence seq : sequence)
                 {
                     list.remove(seq);
-                    list.add(new Sequence(seq.getTerms(), sequenceConfs.get(seq.getId()).getMeasures(), seq.getName() , seq.getId()));
+                    list.add(new SequenceImpl(seq.getTerms(), sequenceConfs.get(seq.getId()).getMeasures(), seq.getName() , seq.getId()));
                 }
             }
         }
@@ -82,9 +84,9 @@ public class SequenceFactory
                         final Member[] termTable = new Member[terms.size()];
                         for (int i = 0; i < terms.size(); i++)
                         {
-                            termTable[i] = new Member(terms.get(i));
+                            termTable[i] = new MemberImpl(terms.get(i));
                         }
-                        final Sequence sequence = new Sequence(termTable, sequenceConf.getMeasures(), sequenceConf.getName(), sequenceConf.getId());
+                        final Sequence sequence = new SequenceImpl(termTable, sequenceConf.getMeasures(), sequenceConf.getName(), sequenceConf.getId());
                         final String eventId = termTable[0].getEventId();
                         if (eventId != null)
                         {
