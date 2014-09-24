@@ -23,7 +23,7 @@ public class Sequence
     /** */
     private MapVariableResolverFactory resolver = new MapVariableResolverFactory(context); 
     /** */
-    private final Term[] terms;
+    private final Member[] terms;
     /** */
     private final HashMap<String, MeasureImpl> measures = new HashMap<String, MeasureImpl>();
     /** */
@@ -40,7 +40,7 @@ public class Sequence
      * 
      * @param terms
      */
-    public Sequence(final Term[] terms,final List<MeasureConf> measureConfs, final String name, final String id)
+    public Sequence(final Member[] terms,final List<MeasureConf> measureConfs, final String name, final String id)
     {
         this.terms = terms;
         for (final MeasureConf measureConf : measureConfs)
@@ -57,7 +57,7 @@ public class Sequence
      * 
      * @return
      */
-    public Term[] getTerms()
+    public Member[] getTerms()
     {
         return terms;
     }

@@ -1,7 +1,6 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
@@ -80,32 +79,11 @@ public class SequenceFactory
                 final List<MemberConf> terms = sequenceConf.getTerms();
                 if (terms != null)
                 {
-                    final ArrayList<Integer> indexes = new ArrayList<Integer>();
-                    final HashMap<Integer,MemberConf> map = new HashMap<Integer,MemberConf>();
-                    for (final MemberConf term : terms)
-                    {
-                        try
+                        final Member[] termTable = new Member[terms.size()];
+                        for (int i = 0; i < terms.size(); i++)
                         {
-                            final int index = Integer.parseInt(term.getIndex().trim());
-                            indexes.add(index);
-                            map.put(index, term);
+                            termTable[i] = new Member(terms.get(i));
                         }
-                        catch(NumberFormatException e)
-                        {
-                        }
-                    }
-                    
-                    if (!indexes.isEmpty())
-                    {
-                        if (indexes.size() > 1) Collections.sort(indexes);
-                        
-                        final Term[] termTable = new Term[indexes.size()];
-                        for (int i = 0 ; i < indexes.size(); i++)
-                        {
-                            final MemberConf term = map.get(indexes.get(i));
-                            termTable[i] = new Term(term);
-                        }
-                        
                         final Sequence sequence = new Sequence(termTable, sequenceConf.getMeasures(), sequenceConf.getName(), sequenceConf.getId());
                         final String eventId = termTable[0].getEventId();
                         if (eventId != null)
@@ -118,10 +96,8 @@ public class SequenceFactory
                             }
                             list.add(sequence);
                         }
-                    }
                 }
             }
         }
     }
-    
 }

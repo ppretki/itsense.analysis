@@ -12,8 +12,6 @@ public class MemberConf
     /** */
     private String event;
     /** */
-    private String index;
-    /** */
     private ArrayList<VarConf> variables = new ArrayList<VarConf>();
     /** */
     private ConditionConf condition;
@@ -22,26 +20,11 @@ public class MemberConf
      * 
      * @return
      */
-    public String getIndex()
-    {
-        return index;
-    }
-    /**
-     * 
-     * @return
-     */
     public String getTerm()
     {
         return event;
     }
-    /**
-     * 
-     * @param index
-     */
-    public void setIndex(final String index)
-    {
-        this.index = index;
-    }
+
     /**
      * 
      * @param term
@@ -113,7 +96,7 @@ public class MemberConf
     public String toString()
     {
         final StringBuffer sb = new StringBuffer();
-        sb.append("Term: event = " + event + ", index = " + index + ", condition = " + condition + "variables: ").append("\n");
+        sb.append("Term: event = " + event + ", condition = " + condition + "variables: ").append("\n");
         for (final VarConf var : variables)
         {
             sb.append(var).append("\n");

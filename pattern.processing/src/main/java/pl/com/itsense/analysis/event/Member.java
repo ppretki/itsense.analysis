@@ -11,7 +11,7 @@ import pl.com.itsense.analysis.event.log.configuration.VarConf;
  * @author P.Pretki
  *
  */
-public class Term
+public class Member
 {
     /** */
     private final String mvel;
@@ -23,7 +23,7 @@ public class Term
      * 
      * @param term
      */
-    public Term(final MemberConf term)
+    public Member(final MemberConf term)
     {
         mvel = term.getCondition() == null ? null : term.getCondition().getMvel();
         eventId = term.getEvent() == null ? null : term.getEvent().trim();
