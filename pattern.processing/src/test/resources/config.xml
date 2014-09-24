@@ -1,72 +1,72 @@
 <config>
-    <event id="PNG_START" fileid="argus">
+    <event id="PNG_START">
         <pattern>\[PNG Decoder\] starting decoding</pattern>
     </event>
     
-    <event id="PNG_WIDTH" fileid="argus">
+    <event id="PNG_WIDTH">
         <pattern id="width">\[PNG Decoder\]\s+width\s+=\s+(\d+)</pattern>
     </event>
     
-    <event id="PNG_HEIGHT" fileid="argus">
+    <event id="PNG_HEIGHT">
         <pattern id="height">\[PNG Decoder\]\s+height\s+=\s+(\d+)</pattern>
     </event>
 
-    <event id="PNG_STOP" fileid="argus">
+    <event id="PNG_STOP">
         <pattern id="time">\[PNG Decoder\]\s+decoder\s+took\s+(\d+)</pattern>
     </event>
     
-    <event id="STATES_PATH_CHANGE" fileid="argus">
+    <event id="STATES_PATH_CHANGE">
       <pattern id="states">\[STATES_PATH_CHANGE\]\s+source:\s+(\w+),\s+target:\s+(\w+),</pattern>
     </event>  
 
-    <event id="STATE_ACTIVATE" fileid="argus">
+    <event id="STATE_ACTIVATE">
       <pattern id="state">\[STATE_ACTIVATE\]\s+(\w+)</pattern>
     </event> 
     
-    <event id="GC_LOCK" fileid="argus">
+    <event id="GC_LOCK">
       <pattern id="state">GC lock</pattern>
     </event> 
     
-    <event id="GC_REPORT" fileid="argus">
+    <event id="GC_REPORT">
       <pattern id="report">GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms</pattern>
     </event> 
     
     
     <sequence id="PNG_DECODING" name="PNG_DECODING_$(width)x$(height)">
-       <term index="0" event="PNG_START"/>
+       <member event="PNG_START"/>
        
-       <term index="1" event="PNG_WIDTH">
+       <member event="PNG_WIDTH">
            <var name="width" value="width$1"/>
-       </term>
-       <term index="2" event="PNG_HEIGHT">
+       </member>
+       <member event="PNG_HEIGHT">
            <var name="height" value="height$1"/>
-       </term>
-       <term index="3" event="PNG_STOP">
+       </member>
+       <member event="PNG_STOP">
            <var name="time" value="time$1"/>
-       </term>
+       </member>
       <measure name="duration" value="time"/>
        
     </sequence>
     
     <sequence id="STATE_ACTIVATION" name="STATE_ACTIVATION: FROM: $(from) TO: $(to)">
-      <term index="0" event="STATES_PATH_CHANGE">
+      <member event="STATES_PATH_CHANGE">
         <var name="from" value="states$1"/>
         <var name="to" value="states$2"/>
-      </term>
-      <term index="1" event="STATE_ACTIVATE">
+      </member>
+      <member event="STATE_ACTIVATE">
         <var name="state" value="state$1"/>
         <condition mvel="state==to"/>
-      </term>
+      </member>
       <measure name="duration" value="timestamp[1] - timestamp[0]"/>
       </sequence>
     
     <sequence id="GC_REPORT">
-      <term index="0" event="GC_LOCK"/>
-      <term index="1" event="GC_REPORT">
+      <member event="GC_LOCK"/>
+      <member event="GC_REPORT">
         <var name="free"  value="report$1"/>
 	<var name="total" value="report$2"/>
 	<var name="time"  value="report$3"/>
-      </term>
+      </member>
       <measure name="duration" value="time"/>
       <measure name="free" value="free"/>
     </sequence>
@@ -76,8 +76,9 @@
       <property name="file" value="/home/ppretki/adb/overnight.jira"/>
       <property name="formatter" value="#.##"/>
       <property name="proc" value="/home/ppretki/adb"/>
+      <property name="pyrcu" value="/home/ppretki/adb"/>
       <property name="top_criteria" value="mean"/>
       <property name="top" value="5"/>
     </report>
-    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="100000"/>
+    <file path="/home/ppretki/adb/logfileAppolo.log" top="1000000"/>
 </config>
