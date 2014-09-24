@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
-import pl.com.itsense.analysis.event.log.configuration.TermConf;
+import pl.com.itsense.analysis.event.log.configuration.MemberConf;
 
 /**
  * 
@@ -77,12 +77,12 @@ public class SequenceFactory
             prototypes.clear();
             for (final SequenceConf sequenceConf : sequenceConfs.values())
             {
-                final List<TermConf> terms = sequenceConf.getTerms();
+                final List<MemberConf> terms = sequenceConf.getTerms();
                 if (terms != null)
                 {
                     final ArrayList<Integer> indexes = new ArrayList<Integer>();
-                    final HashMap<Integer,TermConf> map = new HashMap<Integer,TermConf>();
-                    for (final TermConf term : terms)
+                    final HashMap<Integer,MemberConf> map = new HashMap<Integer,MemberConf>();
+                    for (final MemberConf term : terms)
                     {
                         try
                         {
@@ -102,7 +102,7 @@ public class SequenceFactory
                         final Term[] termTable = new Term[indexes.size()];
                         for (int i = 0 ; i < indexes.size(); i++)
                         {
-                            final TermConf term = map.get(indexes.get(i));
+                            final MemberConf term = map.get(indexes.get(i));
                             termTable[i] = new Term(term);
                         }
                         

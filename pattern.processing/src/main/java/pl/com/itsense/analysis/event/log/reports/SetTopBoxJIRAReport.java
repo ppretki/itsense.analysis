@@ -12,14 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.math3.ml.neuralnet.SquareNeighbourhood;
-
 import pl.com.itsense.analysis.event.EEngine;
-import pl.com.itsense.analysis.event.PropertyHolderImpl;
-import pl.com.itsense.analysis.event.Report;
-import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
@@ -213,17 +206,31 @@ public class SetTopBoxJIRAReport extends BaseReport
     /** */
     private void appendFromFile(final String fileName, final StringBuffer sb)
     {
-        
-        try
+        if (fileName != null)
         {
-            for (final String line : Files.readAllLines((new File(fileName)).toPath() , Charset.defaultCharset()))
+            final File file = new File(fileName);
+            if (file.isFile())
             {
-                sb.append(line).append("\n");
+                try
+                {
+                    for (final String line : Files.readAllLines((new File(fileName)).toPath() , Charset.defaultCharset()))
+                    {
+                        sb.append(line).append("\n");
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                sb.append("File doesn't exist").append("\n");
             }
         }
-        catch (IOException e)
+        else
         {
-            e.printStackTrace();
+            sb.append("File doesn't exist").append("\n");
         }
     }
     

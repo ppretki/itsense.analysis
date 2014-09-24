@@ -3,7 +3,6 @@ package pl.com.itsense.analysis.event.log.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.logging.annotations.Message;
 /**
  * 
  * @author P.Pretki
@@ -16,14 +15,14 @@ public class SequenceConf
     /** */
     private String name;
     /** */
-    private List<TermConf> terms = new ArrayList<TermConf>();
+    private List<MemberConf> terms = new ArrayList<MemberConf>();
     /** */
     private List<MeasureConf> measures = new ArrayList<MeasureConf>();
     /**
      * 
      * @param term
      */
-    public void add(final TermConf term)
+    public void add(final MemberConf term)
     {
         if ((term != null) && !terms.contains(term))
         {
@@ -43,7 +42,7 @@ public class SequenceConf
      * 
      * @return
      */
-    public List<TermConf> getTerms()
+    public List<MemberConf> getTerms()
     {
         return terms;
     }
@@ -51,7 +50,7 @@ public class SequenceConf
      * 
      * @param terms
      */
-    public void setTerms(final List<TermConf> terms)
+    public void setTerms(final List<MemberConf> terms)
     {
         this.terms = terms;
     }
@@ -114,7 +113,7 @@ public class SequenceConf
         final StringBuffer sb = new StringBuffer();
         sb.append("Sequence: id = " + id).append("\n");
         sb.append("---- Terms: ").append("\n");
-        for (final TermConf term : terms)
+        for (final MemberConf term : terms)
         {
             sb.append(term).append("\n");
         }

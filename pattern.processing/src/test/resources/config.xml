@@ -79,5 +79,5 @@
       <property name="top_criteria" value="mean"/>
       <property name="top" value="5"/>
     </report>
-    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="1000000"/>
+    <file id="argus" path="/home/ppretki/adb/logfileAppolo.log" top="100000"/>
 </config>

@@ -3,7 +3,7 @@ package pl.com.itsense.analysis.event;
 import java.util.HashMap;
 import org.mvel2.MVEL;
 import org.mvel2.integration.impl.MapVariableResolverFactory;
-import pl.com.itsense.analysis.event.log.configuration.TermConf;
+import pl.com.itsense.analysis.event.log.configuration.MemberConf;
 import pl.com.itsense.analysis.event.log.configuration.VarConf;
 
 /**
@@ -23,7 +23,7 @@ public class Term
      * 
      * @param term
      */
-    public Term(final TermConf term)
+    public Term(final MemberConf term)
     {
         mvel = term.getCondition() == null ? null : term.getCondition().getMvel();
         eventId = term.getEvent() == null ? null : term.getEvent().trim();

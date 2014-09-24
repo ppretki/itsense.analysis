@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author P.Pretki
  *
  */
-public class TermConf
+public class MemberConf
 {
     /** */
     private String event;
