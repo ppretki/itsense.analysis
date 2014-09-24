@@ -15,7 +15,7 @@ public class Configuration
     /** */
     private final ArrayList<EventConf> events = new ArrayList<EventConf>();
     /** */
-    private final ArrayList<FileConf> files = new ArrayList<FileConf>();
+    private FileConf file;
     /** */
     private final ArrayList<EventConsumerConf> eventConsumers = new ArrayList<EventConsumerConf>();
     /** */
@@ -52,7 +52,7 @@ public class Configuration
 
         digester.addSetNext("config/event",                     "add",          "pl.com.itsense.analysis.event.log.configuration.EventConf");
         digester.addSetNext("config/event/pattern",             "add",          "pl.com.itsense.analysis.event.log.configuration.PatternConf");
-        digester.addSetNext("config/file",                      "add",          "pl.com.itsense.analysis.event.log.configuration.FileConf");
+        digester.addSetNext("config/file",                      "set",          "pl.com.itsense.analysis.event.log.configuration.FileConf");
         digester.addSetNext("config/consumer",                  "add",          "pl.com.itsense.analysis.event.log.configuration.EventConsumerConf");
         digester.addSetNext("config/consumer/property",         "add",          "pl.com.itsense.analysis.event.log.configuration.PropertyConf");
         digester.addSetNext("config/sequence",                  "add",          "pl.com.itsense.analysis.event.log.configuration.SequenceConf");
@@ -124,21 +124,18 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<FileConf> getFiles()
+    public FileConf getFile()
     {
-        return files;
+        return file;
     }
 
     /**
      * 
      * @param file
      */
-    public void add(final FileConf file)
+    public void set(final FileConf file)
     {
-        if (!files.contains(file) && (file != null))
-        {
-            files.add(file);
-        }
+        this.file = file;
     }
 
 
@@ -175,7 +172,6 @@ public class Configuration
 
   public void add(final ReportConf report)
   {
-      System.out.println("DUPA: report = " + report);
       if (!reports.contains(report) && (report != null))
       {
           reports.add(report);
@@ -228,11 +224,8 @@ public class Configuration
         {
             sb.append(event).append("\n");
         }
-        sb.append("-------- Configuration: Files --------").append("\n");
-        for (final FileConf file : files)
-        {
-            sb.append(file).append("\n");
-        }
+        sb.append("-------- Configuration: File --------").append("\n");
+        sb.append(file).append("\n");
         sb.append("-------- Configuration: EventConsumers --------").append("\n");
         for (final EventConsumerConf consumer : eventConsumers)
         {

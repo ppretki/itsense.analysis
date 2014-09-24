@@ -20,11 +20,7 @@ import pl.com.itsense.analysis.event.log.configuration.EventConf;
 import pl.com.itsense.analysis.event.log.configuration.PatternConf;
 
 /**
- * 
- * 
- * TODO: add events to dispatch queue - single line may produce multiple events. 
  * @author ppretki
- *
  */
 public class TextFileEventProvider extends ProgressProviderImpl implements EventProvider 
 {
@@ -38,8 +34,6 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 	/** */
 	private final EventConf[] events;
 	/** */
-	private String from;
-	/** */
 	private final int top;
 	/** */
 	private int lineCounter;
@@ -49,11 +43,10 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 	private HashMap<Pattern, PatternConf> patternDefs = new HashMap<Pattern,PatternConf>();
 	
 	/** */
-	public TextFileEventProvider(final File file, final EventConf[] events, final String from, final int top)
+	public TextFileEventProvider(final File file, final EventConf[] events, final int top)
 	{
 		this.file = file;
 		this.events = events;
-		this.from = from;
 		this.top = top;
 		init();
 	}
@@ -198,15 +191,6 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
                     {
                         break;
                     }
-				    
-					if (from != null)
-				    {
-						if (line.contains(from))
-				        {
-							from = null; 
-				        }
-				        continue;
-				    }
 					
 					for (final EventConf event : patterns.keySet())
 					{

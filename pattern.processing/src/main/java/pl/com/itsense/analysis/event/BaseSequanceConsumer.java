@@ -3,7 +3,6 @@ package pl.com.itsense.analysis.event;
 import java.util.ArrayList;
 
 import pl.com.itsense.analysis.event.PropertyHolderImpl;
-import pl.com.itsense.analysis.event.Sequence;
 import pl.com.itsense.analysis.event.SequenceConsumer;
 import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;

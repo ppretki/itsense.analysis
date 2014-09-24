@@ -12,8 +12,6 @@ public class FileConf
 	/** */
 	private String path;
 	/** */
-	private String from;
-	/** */
 	private String top;
 	/**
 	 * 
@@ -49,23 +47,6 @@ public class FileConf
 	{
 		this.path = path;
 	}
-	
-	/**
-	 * 
-	 * @param from
-	 */
-	public void setFrom(final String from) 
-	{
-            this.from = from;
-        }
-	/**
-	 * 
-	 * @return
-	 */
-	public String getFrom() 
-	{
-            return from;
-    }
 	
 	public String getTop()
     {

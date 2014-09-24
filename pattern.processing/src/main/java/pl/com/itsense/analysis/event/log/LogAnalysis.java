@@ -1,8 +1,6 @@
 package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
-import java.util.ArrayList;
-
 import pl.com.itsense.analysis.event.EventConsumer;
 import pl.com.itsense.analysis.event.EventProcessingEngine;
 import pl.com.itsense.analysis.event.EventProvider;
@@ -33,7 +31,7 @@ public class LogAnalysis
     /** */
     private final Configuration configuration;
     /** */
-    private EventProvider[] eventProviders;
+    private EventProvider eventProvider;
     /**
      * 
      */
@@ -47,8 +45,7 @@ public class LogAnalysis
      */
     public void analyze()
     {
-        System.out.print(configuration);
-        engine.process(eventProviders); 
+        engine.process(eventProvider); 
     }
     /**
      * 
@@ -56,34 +53,23 @@ public class LogAnalysis
     private void init()
     {
         // PROVIDERS
-        eventProviders = new EventProvider[configuration.getFiles().size()];
-        for (int i = 0; i < eventProviders.length; i++)
+        final FileConf file = configuration.getFile();
+        int lineCounter = Integer.MAX_VALUE;
+        try
         {
-            final FileConf file = configuration.getFiles().get(i);
-            final ArrayList<EventConf> events = new ArrayList<EventConf>();
-            for (final EventConf event : configuration.getEvents())
+            final String top = file.getTop();
+            if (top != null)
             {
-                if (file.getId().equals(event.getFileid()))
-                {
-                    events.add(event);
-                }
+                lineCounter = Integer.parseInt(top.trim());
             }
-            int lineCounter = Integer.MAX_VALUE;
-            try
-            {
-                final String top = file.getTop();
-                if (top != null)
-                {
-                    lineCounter = Integer.parseInt(top.trim());
-                }
-            }
-            catch(NumberFormatException e)
-            {
-                lineCounter = Integer.MAX_VALUE;
-            }
-            
-            eventProviders[i] = new TextFileEventProvider(new File(file.getPath()), events.toArray(new EventConf[0]), file.getFrom(), lineCounter);
         }
+        catch(NumberFormatException e)
+        {
+            lineCounter = Integer.MAX_VALUE;
+        }
+            
+        eventProvider = new TextFileEventProvider(new File(file.getPath()), configuration.getEvents().toArray(new EventConf[0]), lineCounter);
+        
 
         // EVENT CONSUMERS
         for (final EventConsumerConf consumer : configuration.getEventConsumers())

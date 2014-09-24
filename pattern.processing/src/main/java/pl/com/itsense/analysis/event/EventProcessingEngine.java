@@ -1,7 +1,6 @@
 package pl.com.itsense.analysis.event;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,50 +33,27 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     /** */
     private SequenceFactory sequenceFactory;
     /** */
-    public void process(final EventProvider[] providers)
+    public void process(final EventProvider provider)
     {
-        final Event[] currentEvents = new Event[providers.length];
-        final Iterator<Event>[] iterators = new Iterator[providers.length];
-        for (int i = 0; i < providers.length; i++)
+        final Iterator<Event> iterator = provider.iterator();
+        if (provider instanceof ProgressProvider)
         {
-            iterators[i] = providers[i].iterator();
-            if (providers[i] instanceof ProgressProvider)
-            {
-                ((ProgressProvider)providers[i]).add(this, Granularity.PERCENT);
-            }
+            ((ProgressProvider)provider).add(this, Granularity.PERCENT);
+            
         }
         enterLifecycle(ProcessingLifecycle.START);
         while (true)
         {
-            for (int i = 0; i < currentEvents.length; i++)
-            {
-                if ((currentEvents[i] == null) && (iterators[i].hasNext()))
-                {
-                    currentEvents[i] = iterators[i].next();
-                }
-            }
-
-            Event event = null;
-            int eventIndex = -1;
-            for (int i = 0; i < currentEvents.length; i++)
-            {
-                if ((currentEvents[i] != null) && ((event == null) || (event.getTimestamp() > currentEvents[i].getTimestamp())))
-                {
-                    eventIndex = i;
-                    event = currentEvents[i];
-                }
-            }
-            if (event == null)
+            final Event currentEvents = iterator.next();
+            if (currentEvents  == null)
             {
                 break;
             }
             else
             {
-                process(event);
-                lastEvent = event;
+                process(currentEvents);
+                lastEvent = currentEvents ;
                 events.add(lastEvent);
-                currentEvents[eventIndex] = null;
-
             }
         }
         enterLifecycle(ProcessingLifecycle.FINISH);

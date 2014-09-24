@@ -14,7 +14,6 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import pl.com.itsense.analysis.event.BaseEventConsumer;
 import pl.com.itsense.analysis.event.EEngine;
 import pl.com.itsense.analysis.event.Event;
-import pl.com.itsense.analysis.event.EventProcessingListener;
 import pl.com.itsense.analysis.event.ProcessingLifecycleListener;
 import pl.com.itsense.analysis.event.EEngine.ProcessingLifecycle;
 
@@ -81,9 +80,7 @@ WHERE
     private void beginProcessing(final EEngine engine)
     {
         final Configuration cfg = configureDB();
-        sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(
-            cfg.getProperties())
-            .build());
+        sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(cfg.getProperties()).build());
         if (sessionFactory != null)
         {
             session = sessionFactory.openSession();
