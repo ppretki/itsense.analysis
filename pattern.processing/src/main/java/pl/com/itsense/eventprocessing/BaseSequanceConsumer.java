@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.eventprocessing.PropertyHolderImpl;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
 import pl.com.itsense.eventprocessing.api.SequenceConsumer;
@@ -46,7 +46,7 @@ public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements
      * 
      */
     @Override
-    public void enter(final ProcessingLifecycle lifecycle, final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle, final EventProcessingEngine engine)
     {
         switch (lifecycle)
         {
@@ -60,13 +60,13 @@ public abstract class BaseSequanceConsumer extends PropertyHolderImpl implements
         }
     }
     /** */
-    protected void processingStart(final EEngine engine)
+    protected void processingStart(final EventProcessingEngine engine)
     {
         
     }
     
     /** */
-    protected void processingFinish(final EEngine engine)
+    protected void processingFinish(final EventProcessingEngine engine)
     {
         
     }

@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics.Statistics;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 
 /**
@@ -46,7 +46,7 @@ public class SetTopBoxJIRAReport extends BaseReport
     }
 
     @Override
-    public void create(final EEngine engine) 
+    public void create(final EventProcessingEngine engine) 
     {
         DescriptiveStatistics consumer = null;
         for (final SequenceConsumer c : engine.getSequenceConsumers())

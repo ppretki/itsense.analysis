@@ -12,7 +12,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 import pl.com.itsense.eventprocessing.BaseEventConsumer;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
@@ -37,7 +37,7 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
      * 
      */
     @Override
-    public void enter(final ProcessingLifecycle lifecycle, final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle, final EventProcessingEngine engine)
     {
         switch (lifecycle)
         {
@@ -54,7 +54,7 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
     /**
      * 
      */
-    private void beginProcessing(final EEngine engine)
+    private void beginProcessing(final EventProcessingEngine engine)
     {
         final Configuration cfg = configureDB();
         sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(cfg.getProperties()).build());
@@ -68,7 +68,7 @@ public class DBEventConsumer extends BaseEventConsumer implements ProcessingLife
     /**
      * 
      */
-    private void endProcessing(final EEngine engine)
+    private void endProcessing(final EventProcessingEngine engine)
     {
         try
         {

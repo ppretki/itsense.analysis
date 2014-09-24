@@ -25,7 +25,7 @@ import pl.com.itsense.analysis.event.log.LogAnalysis;
 import pl.com.itsense.analysis.event.log.configuration.Configuration;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.sequence.consumer.DBRecorder;
-import pl.com.itsense.eventprocessing.EventProcessingEngine;
+import pl.com.itsense.eventprocessing.EventProcessingEngineImpl;
 import pl.com.itsense.eventprocessing.ProgressEvent;
 import pl.com.itsense.eventprocessing.ProgressListener;
 import pl.com.itsense.eventprocessing.SequenceConsumer;
@@ -94,7 +94,7 @@ public class Main
 	{
 		
         final LogAnalysis logAnalysis = new LogAnalysis(Configuration.parse(new File(args[0])));
-        final EventProcessingEngine engine = logAnalysis.getEngine();
+        final EventProcessingEngineImpl engine = logAnalysis.getEngine();
         engine.add(new ProgressListener()
         {
 

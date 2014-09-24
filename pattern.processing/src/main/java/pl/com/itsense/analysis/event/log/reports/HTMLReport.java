@@ -7,7 +7,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class HTMLReport extends BaseReport
     }
 
     @Override
-    public void create(final EEngine engine) 
+    public void create(final EventProcessingEngine engine) 
     {
     }
 

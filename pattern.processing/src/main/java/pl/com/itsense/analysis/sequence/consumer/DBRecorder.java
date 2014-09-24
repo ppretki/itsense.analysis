@@ -15,7 +15,7 @@ import pl.com.itsense.analysis.event.db.MeasureDB;
 import pl.com.itsense.analysis.event.db.PatternDB;
 import pl.com.itsense.analysis.event.db.SequenceDB;
 import pl.com.itsense.eventprocessing.BaseSequanceConsumer;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.Sequence;
 /**
  * 
@@ -69,7 +69,7 @@ public class DBRecorder extends BaseSequanceConsumer
 
     
     @Override
-    protected void processingStart(final EEngine engine)
+    protected void processingStart(final EventProcessingEngine engine)
     {
         final Configuration cfg = configureDB();
         sessionFactory = cfg.buildSessionFactory((new ServiceRegistryBuilder()).applySettings(cfg.getProperties()).build());
@@ -80,7 +80,7 @@ public class DBRecorder extends BaseSequanceConsumer
     }
     
     @Override
-    protected void processingFinish(final EEngine engine)
+    protected void processingFinish(final EventProcessingEngine engine)
     {
         try
         {

@@ -14,7 +14,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Min;
 
 import pl.com.itsense.analysis.event.log.reports.PlainTextReport;
 import pl.com.itsense.eventprocessing.BaseSequanceConsumer;
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
 import pl.com.itsense.eventprocessing.api.Sequence;
 
@@ -90,7 +90,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
      * 
      */
     @Override
-    public void enter(final ProcessingLifecycle lifecycle, final EEngine engine)
+    public void enter(final ProcessingLifecycle lifecycle, final EventProcessingEngine engine)
     {
         switch (lifecycle)
         {
@@ -104,7 +104,7 @@ public class DescriptiveStatistics extends BaseSequanceConsumer
     /**
      * 
      */
-    public void endProcessing(final EEngine engine)
+    public void endProcessing(final EventProcessingEngine engine)
     {
         new PlainTextReport().create(engine);
     }

@@ -10,7 +10,7 @@ import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
 import pl.com.itsense.analysis.event.log.configuration.ReportConf;
 import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
-import pl.com.itsense.eventprocessing.EventProcessingEngine;
+import pl.com.itsense.eventprocessing.EventProcessingEngineImpl;
 import pl.com.itsense.eventprocessing.SequenceFactory;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
 import pl.com.itsense.eventprocessing.api.EventProvider;
@@ -26,7 +26,7 @@ import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 public class LogAnalysis
 {
     /** */
-    private final EventProcessingEngine engine = new EventProcessingEngine();
+    private final EventProcessingEngineImpl engine = new EventProcessingEngineImpl();
     /** */
     private final Configuration configuration;
     /** */
@@ -165,7 +165,7 @@ public class LogAnalysis
      * 
      * @return
      */
-    public EventProcessingEngine getEngine()
+    public EventProcessingEngineImpl getEngine()
     {
         return engine;
     }

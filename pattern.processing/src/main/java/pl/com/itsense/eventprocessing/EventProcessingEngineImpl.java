@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import pl.com.itsense.eventprocessing.api.EEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
 import pl.com.itsense.eventprocessing.api.EventProvider;
@@ -24,7 +24,7 @@ import pl.com.itsense.eventprocessing.api.SequenceConsumer;
 /**
  * 
  */
-public class EventProcessingEngine extends ProgressProviderImpl implements EEngine, ProgressListener
+public class EventProcessingEngineImpl extends ProgressProviderImpl implements EventProcessingEngine, ProgressListener
 {
     /** */
     private final LinkedList<Event> events = new LinkedList<Event>();
@@ -37,7 +37,7 @@ public class EventProcessingEngine extends ProgressProviderImpl implements EEngi
     /** */
     private HashMap<String, LinkedList<Sequence>> sequances = new HashMap<String, LinkedList<Sequence>>();
     /** */
-    private HashMap<EEngine.LogLevel, ArrayList<String>> logs = new HashMap<EEngine.LogLevel, ArrayList<String>>();
+    private HashMap<EventProcessingEngine.LogLevel, ArrayList<String>> logs = new HashMap<EventProcessingEngine.LogLevel, ArrayList<String>>();
     /** */
     private LinkedList<ProcessingLifecycleListener> lifecycleListeners = new LinkedList<ProcessingLifecycleListener>();
     /** */

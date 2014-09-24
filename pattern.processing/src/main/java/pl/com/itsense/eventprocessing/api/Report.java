@@ -7,5 +7,5 @@ package pl.com.itsense.eventprocessing.api;
  */
 public interface Report extends PropertyHolder, ProcessingLifecycleListener
 {
-	void create(EEngine engine);
+	void create(EventProcessingEngine engine);
 }

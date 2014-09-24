@@ -5,7 +5,7 @@ package pl.com.itsense.eventprocessing.api;
  * @author ppretki
  *
  */
-public interface EEngine 
+public interface EventProcessingEngine 
 {
 	/**
 	 * 
