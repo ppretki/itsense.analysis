@@ -9,23 +9,6 @@ public interface EventProcessingEngine
 {
 	/**
 	 * 
-	 * @author ppretki
-	 *
-	 */
-	enum LogLevel
-	{
-		INFO,
-		WARNING,
-		ERROR
-	}
-	/**
-	 * 
-	 * @param msg
-	 * @param level
-	 */
-	void log(String msg, LogLevel level);
-	/**
-	 * 
 	 * @param listener
 	 */
 	void add(ProcessingLifecycleListener listener);

@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log.reports;
+package pl.com.itsense.eventprocessing.report;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics;
+
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
+import pl.com.itsense.eventprocessing.consumer.DescriptiveStatistics;
 
 /**
  * 

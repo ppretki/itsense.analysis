@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.db;
+package pl.com.itsense.eventprocessing.db;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -22,7 +22,7 @@ import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
  * @author ppretki
  * 
  */
-public class DBEventConsumer extends BaseEventConsumer implements ProcessingLifecycleListener
+public class EventConsumerDB extends BaseEventConsumer implements ProcessingLifecycleListener
 {
     /** */
     private static int BATCH_SIZE = 1000;

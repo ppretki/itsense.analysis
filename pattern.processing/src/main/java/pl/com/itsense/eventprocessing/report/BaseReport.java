@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log.reports;
+package pl.com.itsense.eventprocessing.report;
 
 import pl.com.itsense.eventprocessing.PropertyHolderImpl;
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;

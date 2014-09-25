@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.sequence.consumer;
+package pl.com.itsense.eventprocessing.consumer;
 
 import java.util.LinkedList;
 
@@ -9,14 +9,14 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import pl.com.itsense.analysis.event.db.EventDB;
-import pl.com.itsense.analysis.event.db.GroupDB;
-import pl.com.itsense.analysis.event.db.MeasureDB;
-import pl.com.itsense.analysis.event.db.PatternDB;
-import pl.com.itsense.analysis.event.db.SequenceDB;
 import pl.com.itsense.eventprocessing.BaseSequanceConsumer;
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.Sequence;
+import pl.com.itsense.eventprocessing.db.EventDB;
+import pl.com.itsense.eventprocessing.db.GroupDB;
+import pl.com.itsense.eventprocessing.db.MeasureDB;
+import pl.com.itsense.eventprocessing.db.PatternDB;
+import pl.com.itsense.eventprocessing.db.SequenceDB;
 /**
  * 
  * @author ppretki

@@ -15,7 +15,7 @@ import org.hibernate.sql.JoinType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.Type;
 
-import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.eventprocessing.db.SequenceDB;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;

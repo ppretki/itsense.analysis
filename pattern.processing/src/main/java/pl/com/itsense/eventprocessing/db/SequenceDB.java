@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.db;
+package pl.com.itsense.eventprocessing.db;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -21,15 +21,15 @@ import org.pivot4j.impl.PivotModelImpl;
 import org.pivot4j.ui.html.HtmlRenderCallback;
 import org.pivot4j.ui.table.TableRenderer;
 
-import pl.com.itsense.analysis.event.log.LogAnalysis;
-import pl.com.itsense.analysis.sequence.consumer.DBRecorder;
 import pl.com.itsense.eventprocessing.EventProcessingEngineImpl;
+import pl.com.itsense.eventprocessing.LogFileAnalysis;
 import pl.com.itsense.eventprocessing.ProgressEvent;
 import pl.com.itsense.eventprocessing.ProgressListener;
 import pl.com.itsense.eventprocessing.SequenceConsumer;
 import pl.com.itsense.eventprocessing.ProgressProvider.Granularity;
 import pl.com.itsense.eventprocessing.configuration.Configuration;
 import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
+import pl.com.itsense.eventprocessing.consumer.DBRecorder;
 import pl.com.itsense.pattern.processing.analyzer.BrowserApplication;
 import pl.com.itsense.pattern.processing.analyzer.OLAPServlet;
 
@@ -93,7 +93,7 @@ public class Main
 	public static void main(final String[] args) 
 	{
 		
-        final LogAnalysis logAnalysis = new LogAnalysis(Configuration.parse(new File(args[0])));
+        final LogFileAnalysis logAnalysis = new LogFileAnalysis(Configuration.parse(new File(args[0])));
         final EventProcessingEngineImpl engine = logAnalysis.getEngine();
         engine.add(new ProgressListener()
         {

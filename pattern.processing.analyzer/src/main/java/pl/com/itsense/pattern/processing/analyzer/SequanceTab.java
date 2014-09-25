@@ -11,9 +11,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import pl.com.itsense.analysis.event.db.EventDB;
-import pl.com.itsense.analysis.event.db.MeasureDB;
-import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.eventprocessing.db.EventDB;
+import pl.com.itsense.eventprocessing.db.MeasureDB;
+import pl.com.itsense.eventprocessing.db.SequenceDB;
 import pl.com.itsense.pattern.processing.analyzer.query.QueryUtil;
 
 import com.vaadin.data.Property;

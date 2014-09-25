@@ -16,8 +16,6 @@ import pl.com.itsense.eventprocessing.configuration.ReportConf;
 import pl.com.itsense.eventprocessing.configuration.SequenceConf;
 import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
 /**
- * 
- * @author ppretki
  *
  */
 public class XMLConfiguration implements Configuration
@@ -38,10 +36,8 @@ public class XMLConfiguration implements Configuration
      * 
      * @param xmlConfigFile
      */
-    public static final Configuration parse(final File file)
+    public static XMLConfiguration parse(final File file)
     {
-        Configuration configuration = null;
-
         final Digester digester = new Digester();
         digester.setValidating(false);
         digester.addObjectCreate("config",                          "pl.com.itsense.analysis.event.log.configuration.Configuration");
@@ -94,7 +90,7 @@ public class XMLConfiguration implements Configuration
         
         digester.addCallMethod( "config/event/pattern", "setValue", 0);
         
-
+        XMLConfiguration configuration = null;
         try
         {
             configuration = digester.parse(file);
@@ -110,6 +106,9 @@ public class XMLConfiguration implements Configuration
         return configuration;
     }
 
+    private XMLConfiguration()
+    {
+    }
     /**
      * 
      * @return

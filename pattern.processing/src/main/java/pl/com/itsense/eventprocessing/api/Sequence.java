@@ -44,9 +44,6 @@ public interface Sequence
     String getResolvedName();
     /**
      * 
-     */
-    /**
-     * 
      * @return
      */
     String[] getMeasureNames();

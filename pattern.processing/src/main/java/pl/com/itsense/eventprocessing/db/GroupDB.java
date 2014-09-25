@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.db;
+package pl.com.itsense.eventprocessing.db;
 
 
 import javax.persistence.Entity;

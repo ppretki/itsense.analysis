@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log.providers;
+package pl.com.itsense.eventprocessing.provider;
 
 import java.io.BufferedReader;
 import java.io.File;

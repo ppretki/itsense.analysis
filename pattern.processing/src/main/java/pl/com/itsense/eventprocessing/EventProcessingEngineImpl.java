@@ -1,5 +1,6 @@
 package pl.com.itsense.eventprocessing;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import pl.com.itsense.eventprocessing.api.Configuration;
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
@@ -20,12 +22,21 @@ import pl.com.itsense.eventprocessing.api.ProgressProvider;
 import pl.com.itsense.eventprocessing.api.Report;
 import pl.com.itsense.eventprocessing.api.Sequence;
 import pl.com.itsense.eventprocessing.api.SequenceConsumer;
+import pl.com.itsense.eventprocessing.configuration.EventConf;
+import pl.com.itsense.eventprocessing.configuration.EventConsumerConf;
+import pl.com.itsense.eventprocessing.configuration.FileConf;
+import pl.com.itsense.eventprocessing.configuration.PropertyConf;
+import pl.com.itsense.eventprocessing.configuration.ReportConf;
+import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
+import pl.com.itsense.eventprocessing.provider.TextFileEventProvider;
 
 /**
  * 
  */
 public class EventProcessingEngineImpl extends ProgressProviderImpl implements EventProcessingEngine, ProgressListener
 {
+    /** */
+    private EventProvider provider;
     /** */
     private final LinkedList<Event> events = new LinkedList<Event>();
     /** */
@@ -37,15 +48,121 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
     /** */
     private HashMap<String, LinkedList<Sequence>> sequances = new HashMap<String, LinkedList<Sequence>>();
     /** */
-    private HashMap<EventProcessingEngine.LogLevel, ArrayList<String>> logs = new HashMap<EventProcessingEngine.LogLevel, ArrayList<String>>();
-    /** */
     private LinkedList<ProcessingLifecycleListener> lifecycleListeners = new LinkedList<ProcessingLifecycleListener>();
     /** */
     private HashMap<String,LinkedList<SequenceConsumer>> sequenceConsumers = new HashMap<String,LinkedList<SequenceConsumer>>();
     /** */
     private SequenceFactory sequenceFactory;
     /** */
-    public void process(final EventProvider provider)
+    private final Configuration configuration;
+    /**
+     * 
+     */
+    public EventProcessingEngineImpl(final Configuration configuration)
+    {
+        this.configuration = configuration;
+        if (configuration != null)
+        {
+            init();
+        }
+    }
+    /**
+     * 
+     */
+    private void init()
+    {
+        final FileConf file = configuration.getFile();
+        int lineCounter = Integer.MAX_VALUE;
+        try
+        {
+            final String top = file.getTop();
+            if (top != null)
+            {
+                lineCounter = Integer.parseInt(top.trim());
+            }
+        }
+        catch(NumberFormatException e)
+        {
+            lineCounter = Integer.MAX_VALUE;
+        }
+        provider = new TextFileEventProvider(new File(file.getPath()), configuration.getEvents().toArray(new EventConf[0]), lineCounter);
+
+        for (final EventConsumerConf consumer : configuration.getEventConsumers())
+        {
+            try
+            {
+                final Class<?> type = Class.forName(consumer.getType());
+                if (EventConsumer.class.isAssignableFrom(type))
+                {
+                    final EventConsumer consumerInstance = (EventConsumer) type.newInstance();
+                    for (final PropertyConf property : consumer.getProperties())
+                    {
+                        consumerInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    add(consumerInstance);
+                }
+            }
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        for (final SequenceConsumerConf consumer : configuration.getSequenceConsumers())
+        {
+            try
+            {
+                final Class<?> type = Class.forName(consumer.getType());
+                if (SequenceConsumer.class.isAssignableFrom(type))
+                {
+                    final SequenceConsumer consumerInstance = (SequenceConsumer) type.newInstance();
+                    for (final PropertyConf property : consumer.getProperties())
+                    {
+                        consumerInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    consumerInstance.configure(consumer);
+                    add(consumerInstance);
+                }
+            }
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        // REPORTS
+        for (final ReportConf report : configuration.getReports())
+        {
+            try
+            {
+                final Class<?> type = Class.forName(report.getType());
+                if (Report.class.isAssignableFrom(type))
+                {
+                    final Report reportInstance = (Report) type.newInstance();
+                    for (final PropertyConf property : report.getProperties())
+                    {
+                        reportInstance.setProperty(property.getName(), property.getValue());
+                    }
+                    add(reportInstance);
+                }
+            }
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        
+        // SEQUENCE FACTORY
+        sequenceFactory = new SequenceFactory();
+        sequenceFactory.setSequances(configuration.getSequences());
+    }
+
+    /**
+     * 
+     * @param provider
+     */
+    public void execute()
     {
         final Iterator<Event> iterator = provider.iterator();
         if (provider instanceof ProgressProvider)
@@ -71,7 +188,10 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         enterLifecycle(ProcessingLifecycle.FINISH);
     }
 
-    /** */
+    /**
+     * 
+     * @param lifecycle
+     */
     private void enterLifecycle(final ProcessingLifecycle lifecycle)
     {
     	for (final ProcessingLifecycleListener listener : lifecycleListeners)
@@ -82,6 +202,7 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
 
     /**
      * 
+     * @param event
      */
     private void process(final Event event)
     {
@@ -130,7 +251,11 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         }
         notifyEventConsumers(event);
     }
-    /** */
+    
+    /**
+     * 
+     * @param closed
+     */
     private void notifySequenceConsumers(final ArrayList<Sequence> closed)
     {
         for (final Sequence sequence : closed)
@@ -156,7 +281,10 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         }
     }
     
-    /** */
+    /**
+     * 
+     * @param sequence
+     */
     private void addToQueue(final Sequence sequence)
     {
         final String queueName = sequence.acceptedEventId();
@@ -168,7 +296,10 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         }
         queue.add(sequence);
     }
-    /** */
+    /**
+     * 
+     * @param event
+     */
     private void notifyEventConsumers(final Event event)
     {
         final LinkedList<EventConsumer> consumerLists = consumers.get(event.getId());
@@ -180,9 +311,7 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
             }
         }
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void add(final EventConsumer consumer)
     {
@@ -227,26 +356,6 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         return result;
     }
     
-    
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void log(final String msg, final LogLevel level)
-    {
-        ArrayList<String> log = logs.get(level);
-        if (log == null)
-        {
-            log = new ArrayList<String>();
-            logs.put(level, log);
-        }
-        log.add(msg);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
 	@Override
 	public void add(final ProcessingLifecycleListener listener) 
 	{
@@ -263,10 +372,8 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
     {
         this.sequenceFactory = sequenceFactory;
     }
-	/**
-	 * 
-	 */
-    @Override
+
+	@Override
     public void add(final SequenceConsumer consumer)
     {
         if (isAllEventConsumer(consumer))
@@ -304,9 +411,6 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         }
     }
 
-    /**
-     * 
-     */
     @Override
     public SequenceConsumer[] getSequenceConsumers()
     {
@@ -318,9 +422,7 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         }
         return seqConsumers.toArray(new SequenceConsumer[0]);
     }
-    /**
-     * 
-     */
+
     @Override
     public void change(final ProgressEvent event)
     {

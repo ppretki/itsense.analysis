@@ -14,7 +14,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
-import pl.com.itsense.analysis.event.db.SequenceDB;
+import pl.com.itsense.eventprocessing.db.SequenceDB;
 
 /**
  * 
