@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import pl.com.itsense.analysis.event.log.configuration.SequenceConf;
-import pl.com.itsense.analysis.event.log.configuration.MemberConf;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.Member;
 import pl.com.itsense.eventprocessing.api.Sequence;
+import pl.com.itsense.eventprocessing.configuration.MemberConf;
+import pl.com.itsense.eventprocessing.configuration.SequenceConf;
 
 /**
  *
@@ -23,7 +23,7 @@ public class SequenceFactory
      * 
      * @param sequenceConfs
      */
-    public void setSequances(final ArrayList<SequenceConf> sequanceConfs)
+    public void setSequances(final List<SequenceConf> sequanceConfs)
     {
         this.sequenceConfs.clear();
         for (final SequenceConf sequenceConf : sequanceConfs)

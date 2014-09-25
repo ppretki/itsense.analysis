@@ -22,14 +22,14 @@ import org.pivot4j.ui.html.HtmlRenderCallback;
 import org.pivot4j.ui.table.TableRenderer;
 
 import pl.com.itsense.analysis.event.log.LogAnalysis;
-import pl.com.itsense.analysis.event.log.configuration.Configuration;
-import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.sequence.consumer.DBRecorder;
 import pl.com.itsense.eventprocessing.EventProcessingEngineImpl;
 import pl.com.itsense.eventprocessing.ProgressEvent;
 import pl.com.itsense.eventprocessing.ProgressListener;
 import pl.com.itsense.eventprocessing.SequenceConsumer;
 import pl.com.itsense.eventprocessing.ProgressProvider.Granularity;
+import pl.com.itsense.eventprocessing.configuration.Configuration;
+import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
 import pl.com.itsense.pattern.processing.analyzer.BrowserApplication;
 import pl.com.itsense.pattern.processing.analyzer.OLAPServlet;
 

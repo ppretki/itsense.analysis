@@ -1,11 +1,11 @@
-package pl.com.itsense.analysis.event.log.configuration;
+package pl.com.itsense.eventprocessing.configuration;
 
 /**
  * 
  * @author P.Pretki
  *
  */
-public class MeasureConf
+public class VarConf
 {
     /** */
     private String value;

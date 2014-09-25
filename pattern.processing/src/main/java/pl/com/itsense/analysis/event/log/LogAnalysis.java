@@ -2,16 +2,10 @@ package pl.com.itsense.analysis.event.log;
 
 import java.io.File;
 
-import pl.com.itsense.analysis.event.log.configuration.Configuration;
-import pl.com.itsense.analysis.event.log.configuration.EventConf;
-import pl.com.itsense.analysis.event.log.configuration.EventConsumerConf;
-import pl.com.itsense.analysis.event.log.configuration.FileConf;
-import pl.com.itsense.analysis.event.log.configuration.PropertyConf;
-import pl.com.itsense.analysis.event.log.configuration.ReportConf;
-import pl.com.itsense.analysis.event.log.configuration.SequenceConsumerConf;
 import pl.com.itsense.analysis.event.log.providers.TextFileEventProvider;
 import pl.com.itsense.eventprocessing.EventProcessingEngineImpl;
 import pl.com.itsense.eventprocessing.SequenceFactory;
+import pl.com.itsense.eventprocessing.api.Configuration;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
 import pl.com.itsense.eventprocessing.api.EventProvider;
 import pl.com.itsense.eventprocessing.api.Granularity;
@@ -19,6 +13,12 @@ import pl.com.itsense.eventprocessing.api.ProgressEvent;
 import pl.com.itsense.eventprocessing.api.ProgressListener;
 import pl.com.itsense.eventprocessing.api.Report;
 import pl.com.itsense.eventprocessing.api.SequenceConsumer;
+import pl.com.itsense.eventprocessing.configuration.EventConf;
+import pl.com.itsense.eventprocessing.configuration.EventConsumerConf;
+import pl.com.itsense.eventprocessing.configuration.FileConf;
+import pl.com.itsense.eventprocessing.configuration.PropertyConf;
+import pl.com.itsense.eventprocessing.configuration.ReportConf;
+import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
 
 /**
  *

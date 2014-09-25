@@ -5,10 +5,10 @@ import java.util.HashMap;
 import org.mvel2.MVEL;
 import org.mvel2.integration.impl.MapVariableResolverFactory;
 
-import pl.com.itsense.analysis.event.log.configuration.MemberConf;
-import pl.com.itsense.analysis.event.log.configuration.VarConf;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.Member;
+import pl.com.itsense.eventprocessing.configuration.MemberConf;
+import pl.com.itsense.eventprocessing.configuration.VarConf;
 
 /**
  * 

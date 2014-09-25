@@ -1,4 +1,4 @@
-package pl.com.itsense.analysis.event.log.configuration;
+package pl.com.itsense.eventprocessing.configuration;
 
 import java.util.ArrayList;
 import java.util.List;

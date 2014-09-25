@@ -1,16 +1,26 @@
-package pl.com.itsense.analysis.event.log.configuration;
+package pl.com.itsense.eventprocessing;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.digester3.Digester;
 import org.xml.sax.SAXException;
+
+import pl.com.itsense.eventprocessing.api.Configuration;
+import pl.com.itsense.eventprocessing.configuration.EventConf;
+import pl.com.itsense.eventprocessing.configuration.EventConsumerConf;
+import pl.com.itsense.eventprocessing.configuration.FileConf;
+import pl.com.itsense.eventprocessing.configuration.ReportConf;
+import pl.com.itsense.eventprocessing.configuration.SequenceConf;
+import pl.com.itsense.eventprocessing.configuration.SequenceConsumerConf;
 /**
  * 
  * @author ppretki
  *
  */
-public class Configuration
+public class XMLConfiguration implements Configuration
 {
     /** */
     private final ArrayList<EventConf> events = new ArrayList<EventConf>();
@@ -183,7 +193,7 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<SequenceConf> getSequences()
+    public List<SequenceConf> getSequences()
     {
         return sequences;
     }
@@ -191,7 +201,7 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<EventConsumerConf> getEventConsumers()
+    public List<EventConsumerConf> getEventConsumers()
     {
         return eventConsumers;
     }
@@ -200,7 +210,7 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<SequenceConsumerConf> getSequenceConsumers()
+    public List<SequenceConsumerConf> getSequenceConsumers()
     {
         return sequenceConsumers;
     }
@@ -209,7 +219,7 @@ public class Configuration
      * 
      * @return
      */
-    public ArrayList<ReportConf> getReports()
+    public List<ReportConf> getReports()
     {
         return reports;
     }
