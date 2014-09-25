@@ -1,8 +1,6 @@
 package pl.com.itsense.eventprocessing.consumer;
 
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -19,8 +17,6 @@ import pl.com.itsense.eventprocessing.api.Sequence;
 import pl.com.itsense.eventprocessing.report.PlainTextReport;
 
 /**
- * 
- * @author ppretki
  *
  */
 public class DescriptiveStatistics extends BaseSequanceConsumer

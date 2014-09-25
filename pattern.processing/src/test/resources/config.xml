@@ -1,78 +1,29 @@
 <config>
-    <event id="PNG_START">
-        <pattern>\[PNG Decoder\] starting decoding</pattern>
-    </event>
-    
-    <event id="PNG_WIDTH">
-        <pattern id="width">\[PNG Decoder\]\s+width\s+=\s+(\d+)</pattern>
-    </event>
-    
-    <event id="PNG_HEIGHT">
-        <pattern id="height">\[PNG Decoder\]\s+height\s+=\s+(\d+)</pattern>
-    </event>
-
-    <event id="PNG_STOP">
-        <pattern id="time">\[PNG Decoder\]\s+decoder\s+took\s+(\d+)</pattern>
-    </event>
-    
-    <event id="STATES_PATH_CHANGE">
-      <pattern id="states">\[STATES_PATH_CHANGE\]\s+source:\s+(\w+),\s+target:\s+(\w+),</pattern>
-    </event>  
-
-    <event id="STATE_ACTIVATE">
-      <pattern id="state">\[STATE_ACTIVATE\]\s+(\w+)</pattern>
-    </event> 
-    
-    <event id="GC_LOCK">
-      <pattern id="state">GC lock</pattern>
-    </event> 
-    
-    <event id="GC_REPORT">
-      <pattern id="report">GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms</pattern>
-    </event> 
+    <eventprovider class="pl.com.itsense.eventprocessing.provider.TextFileEventProvider">
+      <property name="file" value="/home/ppretki/adb/logfileAppolo.log">
+      <property name="top" value="10000">
+      <event id="GC_REPORT_EVENT">
+	<property name="pattern" value="GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms"/>
+	<context >
+      </event> 
+    </eventprovider>
     
     
-    <sequence id="PNG_DECODING" name="PNG_DECODING_$(width)x$(height)">
-       <member event="PNG_START"/>
-       
-       <member event="PNG_WIDTH">
-           <var name="width" value="width$1"/>
-       </member>
-       <member event="PNG_HEIGHT">
-           <var name="height" value="height$1"/>
-       </member>
-       <member event="PNG_STOP">
-           <var name="time" value="time$1"/>
-       </member>
-      <measure name="duration" value="time"/>
-       
-    </sequence>
-    
-    <sequence id="STATE_ACTIVATION" name="STATE_ACTIVATION: FROM: $(from) TO: $(to)">
-      <member event="STATES_PATH_CHANGE">
-        <var name="from" value="states$1"/>
-        <var name="to" value="states$2"/>
-      </member>
-      <member event="STATE_ACTIVATE">
-        <var name="state" value="state$1"/>
-        <condition mvel="state==to"/>
-      </member>
-      <measure name="duration" value="timestamp[1] - timestamp[0]"/>
+    <sequenceconsumer class="pl.com.itsense.eventprocessing.consumer.DescriptiveStatistics">
+      
+      <sequence id="GC_REPORT_SEQ">
+	<event id="GC_REPORT_EVENT">
+	  <var name="free"  value="report$1"/>
+	  <var name="total" value="report$2"/>
+	  <var name="time"  value="report$3"/>
+	</event>
+	<measure name="duration" value="time"/>
+	<measure name="free" value="free"/>
       </sequence>
-    
-    <sequence id="GC_REPORT">
-      <member event="GC_LOCK"/>
-      <member event="GC_REPORT">
-        <var name="free"  value="report$1"/>
-	<var name="total" value="report$2"/>
-	<var name="time"  value="report$3"/>
-      </member>
-      <measure name="duration" value="time"/>
-      <measure name="free" value="free"/>
-    </sequence>
-    
-    <sequenceconsumer type="pl.com.itsense.analysis.sequence.consumer.DescriptiveStatistics" sequences="PNG_DECODING,STATE_ACTIVATION,GC_REPORT"/>
-    <report type="pl.com.itsense.analysis.event.log.reports.SetTopBoxJIRAReport">
+      
+    </sequenceconsumer>
+
+    <report class="pl.com.itsense.analysis.event.log.reports.SetTopBoxJIRAReport">
       <property name="file" value="/home/ppretki/adb/overnight.jira"/>
       <property name="formatter" value="#.##"/>
       <property name="proc" value="/home/ppretki/adb"/>
