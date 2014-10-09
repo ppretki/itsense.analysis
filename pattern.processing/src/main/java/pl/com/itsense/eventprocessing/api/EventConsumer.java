@@ -1,11 +1,10 @@
 package pl.com.itsense.eventprocessing.api;
+
 /**
  *
  */
-public interface EventConsumer extends PropertyHolder
+public interface EventConsumer
 {
-	/** */
-	void process(Event event);
-	/** */
-	boolean isConsumed(String eventId);
+    /** */
+    void process(Event event);
 }

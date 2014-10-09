@@ -1,35 +1,11 @@
-<config>
-    <eventprovider class="pl.com.itsense.eventprocessing.provider.TextFileEventProvider">
-      <property name="file" value="/home/ppretki/adb/logfileAppolo.log">
-      <property name="top" value="10000">
-      <event id="GC_REPORT_EVENT">
-	<property name="pattern" value="GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms"/>
-	<context >
-      </event> 
-    </eventprovider>
-    
-    
-    <sequenceconsumer class="pl.com.itsense.eventprocessing.consumer.DescriptiveStatistics">
-      
-      <sequence id="GC_REPORT_SEQ">
-	<event id="GC_REPORT_EVENT">
-	  <var name="free"  value="report$1"/>
-	  <var name="total" value="report$2"/>
-	  <var name="time"  value="report$3"/>
-	</event>
-	<measure name="duration" value="time"/>
-	<measure name="free" value="free"/>
-      </sequence>
-      
-    </sequenceconsumer>
-
-    <report class="pl.com.itsense.analysis.event.log.reports.SetTopBoxJIRAReport">
-      <property name="file" value="/home/ppretki/adb/overnight.jira"/>
-      <property name="formatter" value="#.##"/>
-      <property name="proc" value="/home/ppretki/adb"/>
-      <property name="pyrcu" value="/home/ppretki/adb"/>
-      <property name="top_criteria" value="mean"/>
-      <property name="top" value="5"/>
-    </report>
-    <file path="/home/ppretki/adb/logfileAppolo.log" top="1000000"/>
-</config>
+<engine>
+	<providers>
+		<textfileprovider file="/home/ppretki/adb/logfileAppolo.log">
+			<rexpression value="GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms"/>
+		</textfileprovider>
+	</providers>
+	<consumers>
+		<sqlconsumer>
+		</sqlconsumer>
+	</consumers>
+</engine>

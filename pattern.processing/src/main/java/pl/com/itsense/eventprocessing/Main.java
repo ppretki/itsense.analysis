@@ -5,16 +5,17 @@ import java.io.File;
 import pl.com.itsense.eventprocessing.api.Granularity;
 import pl.com.itsense.eventprocessing.api.ProgressEvent;
 import pl.com.itsense.eventprocessing.api.ProgressListener;
+import pl.com.itsense.eventprocessing.impl.EventProcessingEngineImpl;
 
 /**
  *
  */
-public class LogFileAnalysis
+public class Main
 {
     /**
      * 
      */
-    private LogFileAnalysis()
+    private Main()
     {
     }
     

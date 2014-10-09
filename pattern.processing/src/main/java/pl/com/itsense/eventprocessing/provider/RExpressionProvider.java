@@ -16,13 +16,13 @@ import pl.com.itsense.eventprocessing.ProgressProviderImpl;
 import pl.com.itsense.eventprocessing.PropertyHolderImpl;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventProvider;
-import pl.com.itsense.eventprocessing.configuration.EventConf;
-import pl.com.itsense.eventprocessing.configuration.PatternConf;
+import pl.com.itsense.eventprocessing.xml.EventConf;
+import pl.com.itsense.eventprocessing.xml.PatternConf;
 
 /**
  * @author ppretki
  */
-public class TextFileEventProvider extends ProgressProviderImpl implements EventProvider 
+public class RExpressionProvider extends ProgressProviderImpl implements EventProvider 
 {
 	/** */
 	private final File file;
@@ -43,7 +43,7 @@ public class TextFileEventProvider extends ProgressProviderImpl implements Event
 	private HashMap<Pattern, PatternConf> patternDefs = new HashMap<Pattern,PatternConf>();
 	
 	/** */
-	public TextFileEventProvider(final File file, final EventConf[] events, final int top)
+	public RExpressionProvider(final File file, final EventConf[] events, final int top)
 	{
 		this.file = file;
 		this.events = events;
