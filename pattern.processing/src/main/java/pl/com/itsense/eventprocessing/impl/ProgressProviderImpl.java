@@ -1,4 +1,4 @@
-package pl.com.itsense.eventprocessing;
+package pl.com.itsense.eventprocessing.impl;
 
 import java.util.HashMap;
 import java.util.LinkedList;

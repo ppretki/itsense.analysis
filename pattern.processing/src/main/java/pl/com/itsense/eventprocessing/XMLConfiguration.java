@@ -22,9 +22,9 @@ public class XMLConfiguration
         final Digester digester = new Digester();
         digester.setValidating(false);
         digester.addObjectCreate("engine", "pl.com.itsense.eventprocessing.EventProcessingEngineImpl");
-        digester.addObjectCreate("engine/providers/textfileprovider", "pl.com.itsense.eventprocessing.provider.TextFileEventProvider");
-        digester.addObjectCreate("engine/providers/textfileprovider/rexpression", "pl.com.itsense.analysis.event.log.configuration.FileConf");
-        digester.addObjectCreate("engine/consumers/sqlconsumer", "");
+        digester.addObjectCreate("engine/providers/rexpressionprovider", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionProvider");
+        digester.addObjectCreate("engine/providers/rexpressionprovider/rexpression", "pl.com.itsense.eventprocessing.provider.rexpression.RExpression");
+        digester.addObjectCreate("engine/providers/rexpressionprovider/rexpression/group", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup");
 
         digester.addSetProperties("engine");
         digester.addSetProperties("engine/providers/textfileprovider");

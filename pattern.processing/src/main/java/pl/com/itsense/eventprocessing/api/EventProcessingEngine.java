@@ -18,4 +18,12 @@ public interface EventProcessingEngine
      * @param consumer
      */
     void add(EventConsumer consumer);
+    /**
+     * 
+     */
+    void run();
+    /**
+     * 
+     */
+    <T extends Event> Class<T>[] getEventClasses();
 }

@@ -1,8 +1,12 @@
 <engine>
 	<providers>
-		<textfileprovider file="/home/ppretki/adb/logfileAppolo.log">
-			<rexpression value="GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms"/>
-		</textfileprovider>
+		<rexpressionprovider file="/home/ppretki/adb/logfileAppolo.log" timestampexpression="^(\d{2})-(\d{2}):(\d{2}):(\d{2}).(\d{3})" timestampexpressiongroups="d,H,m,s,S">
+			<rexpression value="GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms">
+			     <rexpressiongroup number="1" type="int" name="memory"/>
+			     <rexpressiongroup number="2" type="int" name="totalmemory"/>
+			     <rexpressiongroup number="3" type="long" name="time"/>
+			</rexpression>
+		</rexpressionprovider>
 	</providers>
 	<consumers>
 		<sqlconsumer>

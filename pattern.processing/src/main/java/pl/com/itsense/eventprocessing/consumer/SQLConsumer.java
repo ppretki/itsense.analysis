@@ -9,8 +9,10 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 
+import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
+import pl.com.itsense.eventprocessing.api.EventProcessingListener;
 l.com.itsense.eventprocessing.api.EventProcessingEngine;
 
 /**
@@ -80,6 +82,30 @@ public class SQLConsumer implements EventConsumer, EventProcessingListener
     public SessionFactory getSessionFactory()
     {
         return sessionFactory;
+    }
+
+
+    @Override
+    public void process(Event event)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public void beginProcessing(EventProcessingEngine engine)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public void endProcessing(EventProcessingEngine engine)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

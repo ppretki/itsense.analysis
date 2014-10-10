@@ -5,9 +5,8 @@ package pl.com.itsense.eventprocessing.api;
  * @author ppretki
  *
  */
-public interface Event  extends PropertyHolder
+public interface Event
 {
-   String PROPERTY_LINE = "LINE"; 
 	/**
 	 * 
 	 * @return
@@ -17,5 +16,5 @@ public interface Event  extends PropertyHolder
 	 * 
 	 * @return
 	 */
-	String getId();
+	String getName();
 }

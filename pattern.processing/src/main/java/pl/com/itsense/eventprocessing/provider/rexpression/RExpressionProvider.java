@@ -1,4 +1,4 @@
-package pl.com.itsense.eventprocessing.provider;
+package pl.com.itsense.eventprocessing.provider.rexpression;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,16 +8,13 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import pl.com.itsense.eventprocessing.ProgressProviderImpl;
-import pl.com.itsense.eventprocessing.PropertyHolderImpl;
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventProvider;
-import pl.com.itsense.eventprocessing.xml.EventConf;
-import pl.com.itsense.eventprocessing.xml.PatternConf;
+import pl.com.itsense.eventprocessing.impl.ProgressProviderImpl;
 
 /**
  * @author ppretki
@@ -25,35 +22,34 @@ import pl.com.itsense.eventprocessing.xml.PatternConf;
 public class RExpressionProvider extends ProgressProviderImpl implements EventProvider 
 {
 	/** */
-	private final File file;
-	//16-11:32:58.816
+	private String file;
+    /** */
+    private String timestampexpression;
+    /** */
+    private String timestampexpressiongroups;
 	/** */
-	private final Pattern timeStampPattern = Pattern.compile("^(\\d{2})-(\\d{2}):(\\d{2}):(\\d{2}).(\\d{3})");
+	private Pattern timeStampPattern;
 	/** */
-	private Iterator<Event> iterator;
-	/** */
-	private final EventConf[] events;
-	/** */
-	private final int top;
-	/** */
-	private int lineCounter;
-	/** */
-	private HashMap<EventConf,Pattern[]> patterns = new HashMap<EventConf,Pattern[]>();   
-	/** */
-	private HashMap<Pattern, PatternConf> patternDefs = new HashMap<Pattern,PatternConf>();
+	private final LinkedList<RExpression> rExpressions = new LinkedList<RExpression>();
 	
 	/** */
-	public RExpressionProvider(final File file, final EventConf[] events, final int top)
+	public RExpressionProvider()
 	{
-		this.file = file;
-		this.events = events;
-		this.top = top;
-		init();
+	}
+	
+	public void add(final RExpression rExpression)
+	{
+	    if (!rExpressions.contains(rExpression))
+	    {
+	        rExpressions.add(rExpression);
+	    }
 	}
 	
 	/** */
 	private void init()
 	{
+	    
+	    
 		for (final EventConf event : events)
 		{
 			final List<PatternConf> list = event.getPatterns();
@@ -72,29 +68,6 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 			}
 		}
 	}
-	
-	/** */
-	public Iterator<Event> iterator() 
-	{
-		if ((iterator == null) && (file != null) && (file.exists()))
-		{
-			iterator = new TextLineIterator(file);
-		}
-		return iterator;
-	}
-	
-	/**
-	 * 
-	 */
-	public String[] getEventIds() 
-	{
-	    final String[] ids = new String[events.length];
-	    for (int i = 0 ; i < events.length ; i++)
-	    {
-	        ids[i] = events[i].getId();
-	    }
-	    return ids;
-	}
 
 	/**
 	 * 
@@ -112,7 +85,7 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 		private long filePos;
 
 		/** */
-		private TextLineIterator(final File file)
+		private TextLineIterator(final File file, final Pattern timestampPattern, final HashMap<Integer,Integer> calendarMappings)
 		{
 			try 
 			{
@@ -256,56 +229,17 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 			throw new UnsupportedOperationException("TextLineInputProvider is read only - file sequantial scaner");
 		}
 		
-		/**
-		 * 
-		 * @author ppretki
-		 *
-		 */
-		private class TextLine extends PropertyHolderImpl implements Event
-		{
-			/** */
-			private final long timestamp;
-			/** */
-			private final String eventId;
-			/**
-			 * 
-			 */
-			public TextLine(final String eventId, final long timestamp) 
-			{
-				this.eventId = eventId;
-				this.timestamp = timestamp;
-			}
-			
-			/** */
-			public long getTimestamp() 
-			{
-				return timestamp;
-			}
-			/**
-			 * 
-			 */
-			public String getId() 
-			{
-				return eventId;
-			}
-			
-			/**
-			 * 
-			 */
-			@Override
-			public String getProperty(String name) 
-			{
-				return super.getProperty(name);
-			}
-			
-			@Override
-			public String toString() 
-			{
-				return "TextLineEvent: id = " + eventId + ", timestamp = " + timestamp + "\n " + super.toString();
-			}
-			
-			
-		}
-		
 	}
+	
+    @Override
+    public Event next(long wait)
+    {
+        return null;
+    }
+
+    @Override
+    public <T extends Event> Class<T>[] getEventClasses()
+    {
+        return null;
+    }
 }
