@@ -80,8 +80,6 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 		/** */
 		private BufferedReader reader;
 		/** */
-		private TextLine nextEvent;
-		/** */
 		private long filePos;
 
 		/** */
@@ -149,23 +147,17 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 		 * @throws IOException 
 		 * 
 		 */
-		private TextLine read()
+		private Event read()
 		{
 			String line = null;
 			try
 			{
 				while ((line = reader.readLine()) != null)
 				{
-				    lineCounter++;
 				    filePos += line.getBytes().length;
 				    progressChanged((double)filePos/(double)file.length());
-				    
-                    if (lineCounter >= top)
-                    {
-                        break;
-                    }
 					
-					for (final EventConf event : patterns.keySet())
+					for (final RExpression expression : rExpressions)
 					{
 						
 						for (final Pattern pattern : patterns.get(event))
