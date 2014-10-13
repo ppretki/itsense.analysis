@@ -31,10 +31,14 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 	private Pattern timeStampPattern;
 	/** */
 	private final LinkedList<RExpression> rExpressions = new LinkedList<RExpression>();
-	
+	/** */
+	private TextLineIterator textLineIterator;
+	/** */
+	private File inputFile;
 	/** */
 	public RExpressionProvider()
 	{
+	    
 	}
 	
 	public void add(final RExpression rExpression)
@@ -48,46 +52,42 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 	/** */
 	private void init()
 	{
+	    if (timestampexpression != null)
+	    {
+	        timeStampPattern = Pattern.compile(timestampexpression);
+	    }
+	    else
+	    {
+	        timeStampPattern = null;
+	    }
 	    
-	    
-		for (final EventConf event : events)
-		{
-			final List<PatternConf> list = event.getPatterns();
-			if (!list.isEmpty())
-			{
-				int i = 0;
-				final Pattern[] p = new Pattern[list.size()]; 
-				for (final PatternConf pattern : list)
-				{
-					final String expression = pattern.getRegExp() == null ? pattern.getValue() : pattern.getRegExp();
-					p[i] = Pattern.compile(expression);
-					patternDefs.put(p[i], pattern);
-					i++;
-				}
-				patterns.put(event, p);
-			}
-		}
+	    if (file != null)
+	    {
+	        inputFile = new File(file);
+	        if (!inputFile.exists())
+	        {
+	            inputFile = null;
+	        }
+	    }
 	}
+	
 
 	/**
 	 * 
 	 * @author ppretki
 	 *
 	 */
-	private class TextLineIterator implements Iterator<Event>
+	private class TextLineIterator
 	{
 		private final Calendar calendar = Calendar.getInstance();
 		/** */
 		private BufferedReader reader;
-		/** */
-		private long filePos;
 
 		/** */
-		private TextLineIterator(final File file, final Pattern timestampPattern, final HashMap<Integer,Integer> calendarMappings)
+		private TextLineIterator(final File file)
 		{
 			try 
 			{
-			    filePos = 0;
 				calendar.setTimeInMillis(file.lastModified());
 				reader = new BufferedReader(new FileReader(file));
 				
@@ -96,33 +96,6 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 			{
 				e.printStackTrace();
 			}
-		}
-		
-		
-		/** */
-		public boolean hasNext() 
-		{
-			if ((nextEvent == null) && (reader != null))
-			{
-				nextEvent = read();
-			}
-			return nextEvent != null;
-		}
-
-		
-		public Event next() 
-		{
-			Event event = null;
-			if (nextEvent != null)
-			{
-				event = nextEvent;
-				nextEvent = null;
-			}
-			else
-			{
-				event = read();
-			}
-			return event;
 		}
 
 		/**
@@ -147,43 +120,26 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 		 * @throws IOException 
 		 * 
 		 */
-		private Event read()
+		private RExpressionEvent read()
 		{
 			String line = null;
 			try
 			{
 				while ((line = reader.readLine()) != null)
 				{
-				    filePos += line.getBytes().length;
-				    progressChanged((double)filePos/(double)file.length());
-					
-					for (final RExpression expression : rExpressions)
-					{
-						
-						for (final Pattern pattern : patterns.get(event))
-						{
-							final Matcher matcher = pattern.matcher(line);
-							if (matcher.find())
-							{
-							    
-								final long timestamp = parseDateTimeStamp(line);
-								if (timestamp > -1)
-								{
-									final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
-									textLineEvent.setProperty(Event.PROPERTY_LINE, line);
-									if (matcher.groupCount() > 0)
-									{
-										final PatternConf patternConf = patternDefs.get(pattern);
-										for (int i = 1 ; i < (matcher.groupCount()+1); i++)
-										{
-											textLineEvent.setProperty(patternConf.getId() + "$" + i, matcher.group(i));
-										}
-									}
-									return textLineEvent; 	
-								}
-							}
-						}
-					}
+                    final long timestamp = parseDateTimeStamp(line);
+                    if (timestamp > -1)
+                    {
+                        for (final RExpression expression : rExpressions)
+                        {
+                            final RExpressionEvent event = expression.getEvent(timestamp, line);
+                            if (event != null)
+                            {
+                                return event;
+                            }
+                            
+                        }                        
+                    }
 				}
 				closeReader();
 			}
@@ -226,12 +182,19 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
     @Override
     public Event next(long wait)
     {
-        return null;
-    }
-
-    @Override
-    public <T extends Event> Class<T>[] getEventClasses()
-    {
-        return null;
+        final Event event;
+        if (textLineIterator == null && inputFile != null && timeStampPattern != null)
+        {
+            textLineIterator = new TextLineIterator(inputFile);
+        }
+        if (textLineIterator != null)
+        {
+            event = textLineIterator.read();
+        }
+        else
+        {
+            event = null;
+        }
+        return event;
     }
 }

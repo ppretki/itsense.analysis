@@ -18,8 +18,6 @@ public class RExpression
     private String value;
     /** */
     private final LinkedList<RExpressionGroup> groups = new LinkedList<RExpressionGroup>();
-    /** */
-    private Class eventClass;
     /**
      * 
      * @param value
@@ -50,44 +48,21 @@ public class RExpression
      * @param timestamp
      * @return
      */
-    public Event getEvent(final String line, final long timestamp)
+    public RExpressionEvent getEvent(final long timestamp, final String line)
     {
-        Event result = null;
-        if (pattern != null && line != null)
+        RExpressionEvent event = null;
+        if (pattern != null && line != null && timestamp > 0)
         {
             final Matcher matcher = pattern.matcher(line);
             if (matcher.find())
             {
                 if (matcher.groupCount() == groups.size() + 1)
                 {
-                    final Object instance = eventClass.newInstance();
-                    eventClass.getMethod("get", parameterTypes);
-                    Method lMethod = c.getMethod("showLong", cArg);
-                    
+                    event = new RExpressionEvent(this);
                 }
             }
         }
-        
-        
-        
-        if (matcher.find())
-        {
-            
-            final long timestamp = parseDateTimeStamp(line);
-            if (timestamp > -1)
-            {
-                final TextLine textLineEvent = new TextLine(event.getId(), timestamp);
-                textLineEvent.setProperty(Event.PROPERTY_LINE, line);
-                if (matcher.groupCount() > 0)
-                {
-                    final PatternConf patternConf = patternDefs.get(pattern);
-                    for (int i = 1 ; i < (matcher.groupCount()+1); i++)
-                    {
-                        textLineEvent.setProperty(patternConf.getId() + "$" + i, matcher.group(i));
-                    }
-                }
-                return textLineEvent;   
-        return result;
+        return event;
     }
 
 }
