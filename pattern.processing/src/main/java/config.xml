@@ -1,0 +1,15 @@
+<engine>
+	<providers>
+		<rexpressionprovider file="/home/P.Pretki/stb/2850ST.log" timestampexpression="^(\d{2})-(\d{2}):(\d{2}):(\d{2}).(\d{3})" timestampexpressiongroups="d,H,m,s,S">
+			<rexpression id="gc" value="|GC Object Memory: (\d+) free of (\d+) total, took (\d+) ms.">
+			     <rexpressiongroup index="1" type="int" name="memory"/>
+			     <rexpressiongroup index="2" type="int" name="totalmemory"/>
+			     <rexpressiongroup index="3" type="long" name="time"/>
+			</rexpression>
+		</rexpressionprovider>
+	</providers>
+	<consumers>
+		<sqlconsumer url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" username="" password=""  driver="org.h2.Driver"/>
+		<!-- <sqlconsumer url="jdbc:postgresql://localhost/adb" username="adb" password="adb"  dialect="org.hibernate.dialect.PostgreSQLDialect" driver_class="org.postgresql.Driver"/> -->
+	</consumers>
+</engine>

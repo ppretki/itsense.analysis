@@ -6,10 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import pl.com.itsense.eventprocessing.api.Event;
@@ -38,7 +35,6 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 	/** */
 	public RExpressionProvider()
 	{
-	    
 	}
 	
 	public void add(final RExpression rExpression)
@@ -50,7 +46,7 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
 	}
 	
 	/** */
-	private void init()
+	public void init()
 	{
 	    if (timestampexpression != null)
 	    {
@@ -196,5 +192,64 @@ public class RExpressionProvider extends ProgressProviderImpl implements EventPr
             event = null;
         }
         return event;
+    }
+    /**
+     * 
+     * @return
+     */
+    public RExpression[] getRExpressions()
+    {
+        return rExpressions.toArray(new RExpression[0]);
+    }
+    
+    /**
+     * 
+     * @param file
+     */
+    public void setFile(final String file)
+    {
+        this.file = file;
+    }
+    
+    /**
+     * 
+     * @param timestampexpression
+     */
+    public void setTimestampexpression(final String timestampexpression)
+    {
+        this.timestampexpression = timestampexpression;
+    }
+    
+    /**
+     * 
+     * @param timestampexpressiongroups
+     */
+    public void setTimestampexpressiongroups(final String timestampexpressiongroups)
+    {
+        this.timestampexpressiongroups = timestampexpressiongroups;
+    }
+    /**
+     * 
+     * @return
+     */
+    public String getFile()
+    {
+        return file;
+    }
+    /**
+     * 
+     * @return
+     */
+    public String getTimestampexpression()
+    {
+        return timestampexpression;
+    }
+    /**
+     * 
+     * @return
+     */
+    public String getTimestampexpressiongroups()
+    {
+        return timestampexpressiongroups;
     }
 }

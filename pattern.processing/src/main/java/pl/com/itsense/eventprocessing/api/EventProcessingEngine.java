@@ -21,9 +21,14 @@ public interface EventProcessingEngine
     /**
      * 
      */
-    void run();
+    void add(EventProvider provider);
     /**
      * 
      */
-    <T extends Event> Class<T>[] getEventClasses();
+    void run();
+    /**
+     * 
+     * @return
+     */
+    EventProvider[] getProviders();
 }

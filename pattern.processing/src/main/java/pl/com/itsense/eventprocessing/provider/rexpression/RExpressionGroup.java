@@ -7,7 +7,7 @@ package pl.com.itsense.eventprocessing.provider.rexpression;
 public class RExpressionGroup implements Comparable<RExpressionGroup>
 {
     /** */
-    private int number;
+    private int index;
     /** */
     private String type;
     /** */
@@ -16,7 +16,7 @@ public class RExpressionGroup implements Comparable<RExpressionGroup>
     @Override
     public int compareTo(final RExpressionGroup o)
     {
-        return number - o.number;
+        return index - o.index;
     }
     /**
      * 
@@ -30,9 +30,9 @@ public class RExpressionGroup implements Comparable<RExpressionGroup>
      * 
      * @param number
      */
-    public void setNumber(final int number)
+    public void setIndex(final int index)
     {
-        this.number = number;
+        this.index = index;
     }
     /**
      * 
@@ -54,9 +54,9 @@ public class RExpressionGroup implements Comparable<RExpressionGroup>
      * 
      * @return
      */
-    public int getNumber()
+    public int getIndex()
     {
-        return number;
+        return index;
     }
     /**
      * 

@@ -21,18 +21,22 @@ public class XMLConfiguration
     public static EventProcessingEngine parse(final File file){
         final Digester digester = new Digester();
         digester.setValidating(false);
-        digester.addObjectCreate("engine", "pl.com.itsense.eventprocessing.EventProcessingEngineImpl");
+        digester.addObjectCreate("engine", "pl.com.itsense.eventprocessing.impl.EventProcessingEngineImpl");
         digester.addObjectCreate("engine/providers/rexpressionprovider", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionProvider");
         digester.addObjectCreate("engine/providers/rexpressionprovider/rexpression", "pl.com.itsense.eventprocessing.provider.rexpression.RExpression");
-        digester.addObjectCreate("engine/providers/rexpressionprovider/rexpression/group", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup");
+        digester.addObjectCreate("engine/providers/rexpressionprovider/rexpression/rexpressiongroup", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup");
+        digester.addObjectCreate("engine/consumers/sqlconsumer", "pl.com.itsense.eventprocessing.consumer.sql.SQLConsumer");
+
+        digester.addSetNext( "engine/providers/rexpressionprovider", "add", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionProvider" );
+        digester.addSetNext( "engine/consumers/sqlconsumer", "add", "pl.com.itsense.eventprocessing.consumer.sql.SQLConsumer" );
+        digester.addSetNext( "engine/providers/rexpressionprovider/rexpression", "add", "pl.com.itsense.eventprocessing.provider.rexpression.RExpression" );
+        digester.addSetNext( "engine/providers/rexpressionprovider/rexpression/rexpressiongroup", "add", "pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup" );
 
         digester.addSetProperties("engine");
-        digester.addSetProperties("engine/providers/textfileprovider");
-        digester.addSetProperties("engine/providers/textfileprovider/rexpression");
-        digester.addSetProperties("config/consumer");
+        digester.addSetProperties("engine/providers/rexpressionprovider");
         digester.addSetProperties("engine/consumers/sqlconsumer");
-
-        digester.addCallMethod("config/event/pattern", "setValue", 0);
+        digester.addSetProperties("engine/providers/rexpressionprovider/rexpression");
+        digester.addSetProperties("engine/providers/rexpressionprovider/rexpression/rexpressiongroup");
 
         EventProcessingEngineImpl engine = null;
         try

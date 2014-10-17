@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pl.com.itsense.eventprocessing.api.Event;
-
 /**
  * 
  * @author ppretki
@@ -13,6 +11,9 @@ import pl.com.itsense.eventprocessing.api.Event;
  */
 public class RExpression
 {
+    /** */
+    private String id;
+    /** */
     private Pattern pattern;
     /** */
     private String value;
@@ -48,7 +49,7 @@ public class RExpression
      * @param timestamp
      * @return
      */
-    public RExpressionEvent getEvent(final long timestamp, final String line)
+    RExpressionEvent getEvent(final long timestamp, final String line)
     {
         RExpressionEvent event = null;
         if (pattern != null && line != null && timestamp > 0)
@@ -56,13 +57,51 @@ public class RExpression
             final Matcher matcher = pattern.matcher(line);
             if (matcher.find())
             {
-                if (matcher.groupCount() == groups.size() + 1)
+                System.out.println(matcher.groupCount());
+                if (matcher.groupCount() == groups.size())
                 {
-                    event = new RExpressionEvent(this);
+                    for (final RExpressionGroup group : groups)
+                    {
+                        try
+                        {
+                            final String groupValue = matcher.group(group.getIndex());
+                            event = new RExpressionEvent(this);
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                        }
+                        catch(IllegalStateException e)
+                        {
+                        }
+                    }
                 }
             }
         }
         return event;
     }
+    /**
+     * 
+     * @return
+     */
+    public String getId()
+    {
+        return id;
+    }
+    /**
+     * 
+     * @param id
+     */
+    public void setId(final String id)
+    {
+        this.id = id;
+    }
 
+    /**
+     * 
+     * @return
+     */
+    public RExpressionGroup[] getGroups()
+    {
+        return groups.toArray(new RExpressionGroup[0]);
+    }
 }

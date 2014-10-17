@@ -30,7 +30,11 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
     public void run()
     {
         if (!providers.isEmpty())
-        {
+        { 
+            for (final EventProvider provider : providers)
+            {
+                provider.init();
+            }
             enterLifecycle(ProcessingLifecycle.START);
             final Event[] events = new Event[providers.size()];
             final EventProvider[] eventProviders = providers.toArray(new EventProvider[0]);
@@ -110,15 +114,26 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
         if (!consumers.contains(consumer))
         {
             consumers.add(consumer);
+            if (consumer instanceof ProcessingLifecycleListener)
+            {
+                add((ProcessingLifecycleListener)consumer);
+            }
         }
     
     }
-
+    
     @Override
-    public <T extends Event> Class<T>[] getEventClasses()
+    public EventProvider[] getProviders()
     {
-        
-        return null;
+        return providers.toArray(new EventProvider[0]);
     }
 
+    @Override
+    public void add(final EventProvider provider)
+    {
+        if (!providers.contains(provider))
+        {
+            providers.add(provider);
+        }
+    }
 }

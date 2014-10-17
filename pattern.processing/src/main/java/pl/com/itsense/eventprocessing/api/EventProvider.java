@@ -11,4 +11,8 @@ public interface EventProvider
      * @return
      */
     Event next(long wait);
+    /**
+     * 
+     */
+    void init();
 }
