@@ -3,14 +3,11 @@ package pl.com.itsense.eventprocessing.consumer.sql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 import pl.com.itsense.eventprocessing.api.Event;
 import pl.com.itsense.eventprocessing.api.EventConsumer;
 import pl.com.itsense.eventprocessing.api.EventProcessingEngine;
-import pl.com.itsense.eventprocessing.api.EventProcessingListener;
 import pl.com.itsense.eventprocessing.api.EventProvider;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycle;
 import pl.com.itsense.eventprocessing.api.ProcessingLifecycleListener;
@@ -25,7 +22,7 @@ import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionProvider;
  */
 public class SQLConsumer implements EventConsumer, ProcessingLifecycleListener
 {
-    private List<SQLTable> tables = new ArrayList<SQLTable>(); 
+    private HashMap<RExpression, SQLTable> tables = new HashMap<RExpression ,SQLTable>(); 
     /** */
     private String url;
     /** */
@@ -44,7 +41,15 @@ public class SQLConsumer implements EventConsumer, ProcessingLifecycleListener
         if (event instanceof RExpressionEvent)
         {
             final RExpressionEvent e = (RExpressionEvent) event;
-            e.
+            final SQLTable table = tables.get(e.getRExpression());
+            if (table != null)
+            {
+                final SQLTuple tuple = table.insert(e);
+                for (final SQLTable t : tables.values())
+                {
+                    t.setCrossReferences(tuple);
+                }
+            }
         }
     }
 
@@ -61,7 +66,7 @@ public class SQLConsumer implements EventConsumer, ProcessingLifecycleListener
                 {
                     for (final RExpression expression : ((RExpressionProvider)provider).getRExpressions())
                     {
-                        tables.add(new SQLTable(expression, connection));
+                        tables.put(expression, new SQLTable(expression, connection));
                     }
                 }
             }
@@ -74,9 +79,9 @@ public class SQLConsumer implements EventConsumer, ProcessingLifecycleListener
         {
             e.printStackTrace();
         }
-        for (final SQLTable table : tables)
+        for (final SQLTable table : tables.values())
         {
-            table.init(tables);
+            table.init(tables.values());
         }
     }
 

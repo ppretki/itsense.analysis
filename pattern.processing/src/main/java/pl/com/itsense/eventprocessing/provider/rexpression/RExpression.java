@@ -57,22 +57,12 @@ public class RExpression
             final Matcher matcher = pattern.matcher(line);
             if (matcher.find())
             {
-                System.out.println(matcher.groupCount());
                 if (matcher.groupCount() == groups.size())
                 {
+                    event = new RExpressionEvent(this);
                     for (final RExpressionGroup group : groups)
                     {
-                        try
-                        {
-                            final String groupValue = matcher.group(group.getIndex());
-                            event = new RExpressionEvent(this);
-                        }
-                        catch (IndexOutOfBoundsException e)
-                        {
-                        }
-                        catch(IllegalStateException e)
-                        {
-                        }
+                        event.setGroup(group, matcher.group(group.getIndex()));
                     }
                 }
             }

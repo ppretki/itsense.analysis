@@ -3,9 +3,13 @@ package pl.com.itsense.eventprocessing.consumer.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import pl.com.itsense.eventprocessing.provider.rexpression.RExpression;
+import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionEvent;
 import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup;
 
 /**
@@ -16,9 +20,17 @@ import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup;
 public final class SQLTable
 {
     /** */
+    private int recordCount = 0;
+    /** */
     private final RExpression expression;
     /** */
     private final Connection connection;
+    /** */
+    private LinkedList<SQLTable> references = new LinkedList<SQLTable>();
+    /** */
+    private final LinkedHashMap<Integer, SQLTuple> tuples = new LinkedHashMap<Integer, SQLTuple>();
+    /** */
+    private final HashMap<SQLTable, SQLTuple> waiting = new HashMap<SQLTable, SQLTuple>(); 
     /** */
     public SQLTable(final RExpression expression, final Connection connection)
     {
@@ -28,7 +40,7 @@ public final class SQLTable
     /**
      * 
      */
-    public void init(final List<SQLTable> tables)
+    public void init(final Collection<SQLTable> tables)
     {
         final String createTable = getCreateTableStatement(tables);
         try
@@ -41,13 +53,27 @@ public final class SQLTable
             e.printStackTrace();
         }
     }
-    
-    
+    /**
+     * 
+     */
+    public SQLTuple insert(final RExpressionEvent event)
+    {
+        final SQLTuple tuple = new SQLTuple(this, recordCount++, event);
+        tuples.put(tuple.getId(), tuple);
+        for (final SQLTable table : references)
+        {
+            if (waiting.get(table) == null)
+            {
+                waiting.put(table, tuple);
+            }
+        }
+        return tuple;
+    }
     /**
      * 
      * @return
      */
-    private String getCreateTableStatement(final List<SQLTable> tables)
+    private String getCreateTableStatement(final Collection<SQLTable> tables)
     {
         final StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ").append(expression.getId()).append(" (");
@@ -58,9 +84,64 @@ public final class SQLTable
         }
         for (final SQLTable table : tables)
         {
+            references.add(table);
+            waiting.put(table, null);
             sb.append(table.expression.getId()).append(" INTEGER ").append(",");
         }
         sb.append(" PRIMARY KEY ( id ));");
         return sb.toString();
+    }
+    /**
+     * 
+     * @param tuple
+     */
+    public void setCrossReferences(final SQLTuple tuple)
+    {
+       final SQLTuple t = waiting.get(tuple.getTable());
+       if (t != null && (tuple != t))
+       {
+           t.setReference(tuple);
+           waiting.put(tuple.getTable(), next(t));
+           if (isComplete(t))
+           {
+               save(t);
+           }
+       }
+    }
+    
+    private boolean isComplete(final SQLTuple tuple)
+    {
+        boolean complete = false;
+        for (final SQLTable table : references)
+        {
+            if (tuple.getReference(table) == null)
+            {
+                complete = false;
+                break;
+            }
+        }
+        return complete;
+    }
+    /**
+     * 
+     * @return
+     */
+    private SQLTuple next(final SQLTuple tuple)
+    {
+        return tuples.get(tuple.getId() + 1);
+    }
+    
+    private void save(final SQLTuple tuple)
+    {
+        System.out.println("Save = " + tuple);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public String getName()
+    {
+        return expression.getId();
     }
 }
