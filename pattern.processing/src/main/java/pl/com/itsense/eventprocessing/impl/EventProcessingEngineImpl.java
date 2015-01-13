@@ -30,7 +30,7 @@ public class EventProcessingEngineImpl extends ProgressProviderImpl implements E
     public void run()
     {
         if (!providers.isEmpty())
-        { 
+        {
             for (final EventProvider provider : providers)
             {
                 provider.init();

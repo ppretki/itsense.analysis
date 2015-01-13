@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import pl.com.itsense.eventprocessing.provider.rexpression.RExpression;
@@ -28,7 +27,7 @@ public final class SQLTable
     /** */
     private LinkedList<SQLTable> references = new LinkedList<SQLTable>();
     /** */
-    private final LinkedHashMap<Integer, SQLTuple> tuples = new LinkedHashMap<Integer, SQLTuple>();
+    private final LinkedList<SQLTuple> tuples = new LinkedList<SQLTuple>();
     /** */
     private final HashMap<SQLTable, SQLTuple> waiting = new HashMap<SQLTable, SQLTuple>(); 
     /** */
@@ -59,7 +58,7 @@ public final class SQLTable
     public SQLTuple insert(final RExpressionEvent event)
     {
         final SQLTuple tuple = new SQLTuple(this, recordCount++, event);
-        tuples.put(tuple.getId(), tuple);
+        tuples.add(tuple);
         for (final SQLTable table : references)
         {
             if (waiting.get(table) == null)
@@ -77,7 +76,7 @@ public final class SQLTable
     {
         final StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ").append(expression.getId()).append(" (");
-        sb.append(" id INTEGER not NULL, ");
+        sb.append(" id BIGINT NOT NULL,");
         for(final RExpressionGroup group : expression.getGroups())
         {
             sb.append(group.getName()).append(" ").append(group.getType()).append(",");
@@ -86,7 +85,7 @@ public final class SQLTable
         {
             references.add(table);
             waiting.put(table, null);
-            sb.append(table.expression.getId()).append(" INTEGER ").append(",");
+            sb.append(table.expression.getId()).append(" BIGINT ").append(",");
         }
         sb.append(" PRIMARY KEY ( id ));");
         return sb.toString();
@@ -101,17 +100,17 @@ public final class SQLTable
        if (t != null && (tuple != t))
        {
            t.setReference(tuple);
-           waiting.put(tuple.getTable(), next(t));
            if (isComplete(t))
            {
                save(t);
+               waiting.put(tuple.getTable(), next(t));
            }
        }
     }
     
     private boolean isComplete(final SQLTuple tuple)
     {
-        boolean complete = false;
+        boolean complete = true;
         for (final SQLTable table : references)
         {
             if (tuple.getReference(table) == null)
@@ -133,7 +132,15 @@ public final class SQLTable
     
     private void save(final SQLTuple tuple)
     {
-        System.out.println("Save = " + tuple);
+        try
+        {
+            final Statement stmt = connection.createStatement();
+            stmt.executeUpdate(tuple.insertInto());
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -144,4 +151,13 @@ public final class SQLTable
     {
         return expression.getId();
     }
+    /**
+     * 
+     * @return
+     */
+    public RExpression getExpression()
+    {
+        return expression;
+    }
+    
 }

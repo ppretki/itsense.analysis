@@ -1,9 +1,9 @@
 package pl.com.itsense.eventprocessing.consumer.sql;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionEvent;
+import pl.com.itsense.eventprocessing.provider.rexpression.RExpressionGroup;
 /**
  * 
  */
@@ -69,21 +69,23 @@ public final class SQLTuple
     public String insertInto()
     {
         final StringBuffer sb = new StringBuffer();
-        sb.append("INSERT INTO ").append(table.getName()).append(" (");
-        final StringBuffer tables = new StringBuffer();
-        final StringBuffer values = new StringBuffer();
+        final StringBuffer columns = new StringBuffer("ID");
+        final StringBuffer values = new StringBuffer(String.valueOf(id));
+
+        for (final RExpressionGroup group : table.getExpression().getGroups())
+        {
+            columns.append(",").append(group.getName());
+            values.append(",").append(event.getGroup(group));
+        }
+        
         for (final SQLTable table : references.keySet())
         {
             final SQLTuple tuple = references.get(table);
-            if (tables.length() > 0)
-            {
-                tables.append(",");
-                values.append(",");
-            }
-            tables.append(table.getName());
-            values.append(tuple.id);
+            columns.append(",").append(table.getName());
+            values.append(",").append(tuple.id);
         }
-        sb.append(tables).append(" ) VALUES ( ").append(values).append(");");
+        
+        sb.append("INSERT INTO ").append(table.getName()).append(" (").append(columns.toString()).append(") VALUES (").append(values.toString()).append(");");
         return sb.toString();
     }
 
