@@ -9,7 +9,7 @@
 		</rexpressionprovider>
 	</providers>
 	<consumers>
-        <sqlconsumer url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" user="" password=""  driver="org.h2.Driver"/>
-        <!-- <sqlconsumer url="jdbc:postgresql://localhost:5432/pattern" user="ppretki" password="ppretki"  driver="org.postgresql.Driver"/> -->
+        <!-- <sqlconsumer url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" user="" password=""  driver="org.h2.Driver"/> -->
+        <sqlconsumer url="jdbc:postgresql://localhost:5432/pattern" user="ppretki" password="ppretki"  driver="org.postgresql.Driver"/>
 	</consumers>
 </engine>
